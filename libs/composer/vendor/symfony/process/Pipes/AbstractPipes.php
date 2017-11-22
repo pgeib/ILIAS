@@ -20,16 +20,15 @@ use Symfony\Component\Process\Exception\InvalidArgumentException;
  */
 abstract class AbstractPipes implements PipesInterface
 {
-    /** @var array */
     public $pipes = array();
 
-    /** @var string */
     private $inputBuffer = '';
-    /** @var resource|scalar|\Iterator|null */
     private $input;
-    /** @var bool */
     private $blocked = true;
 
+    /**
+     * @param resource|scalar|\Iterator|null $input
+     */
     public function __construct($input)
     {
         if (is_resource($input) || $input instanceof \Iterator) {
@@ -162,9 +161,7 @@ abstract class AbstractPipes implements PipesInterface
             $this->input = null;
             fclose($this->pipes[0]);
             unset($this->pipes[0]);
-        }
-
-        if (!$w) {
+        } elseif (!$w) {
             return array($this->pipes[0]);
         }
     }
