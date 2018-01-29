@@ -707,4 +707,42 @@ interface Factory {
 	 * @return  \ILIAS\UI\Component\Legacy\Legacy
 	 */
 	public function legacy($content);
+
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *       Layout components are page-elements used for the basic construction of
+	 *       the user interface. In ultimo, also the page itself is included here.
+	 *
+	 * ---
+	 *
+	 * @return \ILIAS\UI\Component\Layout\Factory
+	 **/
+	public function layout();
+
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *       MainControls are components that are "always there", depending only
+	 *       on overall configuration or roles of the user, not depending on
+	 *       context.
+	 *       MainControls provide global navigation and information.
+	 *
+	 *   rivals:
+	 *     1: >
+	 *        ViewControls are used to change the visualisation of, or rather within,
+	 *        components.
+	 *
+	 * rules:
+	 *   usage:
+	 *     1: MainControls MUST NOT change persistent data in any way.
+	 *   accessibility:
+	 *     1:
+	 * ---
+	 *
+	 * @return \ILIAS\UI\Component\MainControls\Factory
+	 **/
+	public function mainControls();
 }

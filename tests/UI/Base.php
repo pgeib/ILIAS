@@ -47,6 +47,8 @@ class NoUIFactory implements Factory {
 	public function breadcrumbs(array $crumbs) {}
 	public function chart() {}
 	public function input() {}
+	public function layout() {}
+	public function mainControls() {}
 }
 
 class LoggingRegistry implements ResourceRegistry {
