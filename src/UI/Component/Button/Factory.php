@@ -209,5 +209,46 @@ interface Factory {
 	 */
 	public function tag($label, $action);
 
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *     The iconographic button combines the recognisability of a graphical
+	 *     element with the explicity of a text-label.
+	 *     These button are used in prominent places as triggers for navigation.
+	 *     They are not to be used e.g. as form controls.
+	 *
+	 *   composition: >
+	 *     The iconographic button consists of an icon and a (very short) text.
+	 *
+	 *   effect: >
+	 *     Both, icon and text, form an entity an can only be operated together.
+	 *     The button MAY have a "down"-state: When the button is used to toggle
+	 *     the visibility of a slate, it stays engaged until the slate is closed
+	 *     or it is clicked again.
+	 *
+	 * context: >
+	 *     Iconographic Buttons are used in the Sidebar.
+	 *
+	 * rules:
+	 *   style:
+	 *       1: Iconographic Buttons SHOULD only be used in the Sidebar.
+	 *       2: Iconographic Buttons MUST trigger navigation.
+	 *       3: When used to trigger a slate, the button MUST reflect the slate's state.
+	 *
+	 *   accessibility:
+	 *       1: >
+	 *           The functionality of the Iconographic button MUST be indicated for screen
+	 *           readers by an aria-label.
+	 *       2: >
+	 *           Iconographic buttons MUST define aria-pressed attribute.
+	 *
+	 * ---
+	 * @param	\ILIAS\UI\Component\Icon\Icon | \ILIAS\UI\Component\Glyph\Glyph		$icon
+	 * @param	string		$label
+	 * @param	string		$action
+	 * @return  \ILIAS\UI\Component\Button\Iconographic
+	 */
+	public function iconographic($icon, $label, $action);
 
 }
