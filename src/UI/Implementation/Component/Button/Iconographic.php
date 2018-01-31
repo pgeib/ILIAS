@@ -12,17 +12,17 @@ class Iconographic extends Button implements C\Button\Iconographic {
 	/**
 	 * @var 	ILIAS\UI\Component\Icon\Icon | \ILIAS\UI\Component\Glyph\Glyph
 	 */
-	protected $icon;
+	protected $icon_or_glyph;
 
 	/**
 	 * @var 	bool
 	 */
 	protected $engaged = false;
 
-	public function __construct($icon, $label, $action) {
+	public function __construct($icon_or_glyph, $label, $action) {
 		$this->checkStringArg("label", $label);
 		$this->checkStringArg("action", $action);
-		$this->icon = $icon;
+		$this->icon_or_glyph = $icon_or_glyph;
 		$this->label = $label;
 		$this->action = $action;
 	}
@@ -30,8 +30,8 @@ class Iconographic extends Button implements C\Button\Iconographic {
 	/**
 	 * @inheritdoc
 	 */
-	public function getIcon() {
-		return $this->icon;
+	public function getIconOrGlyph() {
+		return $this->icon_or_glyph;
 	}
 
 	/**

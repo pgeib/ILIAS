@@ -52,8 +52,7 @@ class Factory implements B\Factory {
 	/**
 	 * @inheritdoc
 	 */
-	//public function iconographic(\ILIAS\UI\Component\Icon $icon, $label, $action) {
-	public function iconographic($icon, $label, $action) {
-		return new Iconographic($icon, $label, $action);
+	public function iconographic($icon_or_glyph, $label, $action) {
+		return new Iconographic($icon_or_glyph, $label, $action);
 	}
 }

@@ -10,7 +10,7 @@ interface Iconographic extends Button {
 	/**
 	 * @return ILIAS\UI\Component\Icon\Icon | \ILIAS\UI\Component\Glyph\Glyph
 	 */
-	public function getIcon();
+	public function getIconOrGlyph();
 
 	/**
 	 * @param 	bool 	$state

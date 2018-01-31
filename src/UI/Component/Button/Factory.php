@@ -244,11 +244,11 @@ interface Factory {
 	 *           Iconographic buttons MUST define aria-pressed attribute.
 	 *
 	 * ---
-	 * @param	\ILIAS\UI\Component\Icon\Icon | \ILIAS\UI\Component\Glyph\Glyph		$icon
+	 * @param	\ILIAS\UI\Component\Icon\Icon | \ILIAS\UI\Component\Glyph\Glyph		$icon_or_glyph
 	 * @param	string		$label
 	 * @param	string		$action
 	 * @return  \ILIAS\UI\Component\Button\Iconographic
 	 */
-	public function iconographic($icon, $label, $action);
+	public function iconographic($icon_or_glyph, $label, $action);
 
 }
