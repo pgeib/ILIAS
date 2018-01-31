@@ -23,21 +23,21 @@ class Factory implements Layout\Factory {
 	/**
 	 * @inheritdoc
 	 */
-	public function metabar(){
-		return new Metabar();
+	public function metabar(\ILIAS\UI\Component\Image\Image $logo){
+		return new Metabar($logo);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function sidebar($entries, $active=null){
+	public function sidebar(array $entries, $active=null){
 		return new Sidebar($this->signal_generator, $entries, $active);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function sidebarEntry($button, MainControls\Menu\Slate $slate=null) {
+	public function sidebarEntry(\ILIAS\UI\Component\Button\Iconographic $button, MainControls\Menu\Slate $slate=null) {
 		return new SidebarEntry($button, $slate);
 	}
 

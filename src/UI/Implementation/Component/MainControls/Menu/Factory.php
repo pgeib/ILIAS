@@ -30,6 +30,6 @@ class Factory implements Menu\Factory {
 	 * @inheritdoc
 	 */
 	public function plank(){
-		return new Plank($this->signal_generator);
+		return new Plank();
 	}
 }

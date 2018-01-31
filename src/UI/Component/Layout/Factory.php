@@ -12,13 +12,12 @@ interface Factory {
      *   purpose: >
      *     The metabar is a unique page section to accomodate elements that
      *     should permamently be in sight of the user.
-     *     Contents of the bar are never modified except by administrative configuration.
-     *     The metabar is not for navigation; user-reactions to system notifications
-     *     are OK, though.
+     *     Contents of the bar are never modified, but may depend on (user-) configuration.
      *
      *   composition: >
      *     The metabar always features the logo on the left hand side, while
-     *     further elements are placed on the right hand side.
+     *     further elements (prompts) are placed on the right hand side.
+     *     The last element to the right will be the logout-button.
      *
      *   effect: >
      *     The bar is rendered horizontally on top of the page.
@@ -28,11 +27,12 @@ interface Factory {
      *   usage:
      *     1: The metabar is unique for the page - there MUST be but one.
      *     2: Elements in the metabar MUST NOT vary according to context.
-     *     3: Metabar MUST NOT have exclusively navigational elements.
+     *     3: New elements in the metabar MUST be approved by JF.
      *
      *   composition:
      *     1: The bar MUST contain the logo.
      *     2: The bar SHOULD contain prompts.
+     *     3: The bar MUST contain a logout-button.
      *
      *   style:
      *     1: The bar MUST have a fixed height.
@@ -40,7 +40,7 @@ interface Factory {
      *
      * @return  \ILIAS\UI\Component\Layout\Metabar
      */
-    public function metabar();
+    public function metabar(\ILIAS\UI\Component\Image\Image $logo);
 
     /**
      * ---
@@ -52,32 +52,25 @@ interface Factory {
      *     like the user's profile or administrative settings.
      *
      *     The contents of the bar are never modified by changing context,
-     *     but may vary according to e.g. the current user's permissions.
+     *     but may vary according to e.g. the current user's permissions or
+     *     or settings of the installation.
      *
      *   composition: >
      *     The sidebar holds Iconographic Buttons. Usually, a button is associated
      *     with a Slate that provides further navigational options.
-     *
-     *   effect: >
-     *     The Sidebar is always visible and available (except in exam/kiosk mode).
-     *
      *     In a desktop environment, a vertical bar is rendered on the left side
      *     of the screen covering the full height minus the header-area.
      *     Entries are aligned vertically.
+     *
+     *
+     *   effect: >
+     *     The Sidebar is always visible and available (except in exam/kiosk mode).
      *
      *     Like the header, the bar is a static screen element unaffected by scrolling.
      *     Thus, entries will become inaccessible when the window is of smaller height
      *     than the height of all entries together.
      *
      *     The contents of the bar itself will not scroll.
-     *
-     *     Width of content- and footer-area is limited to a maximum of the
-     *     overall available width minus that of the bar.
-     *
-     *     For mobile devices, the bar is rendered horizontally on the bottom
-     *     of the screen with the entries aligned horizontally.
-     *     Again, entries will become inacessible, if the window/screen is smaller
-     *     than the width of all entries summed up.
      *
      *     When clicking a button, usually a Slate with further options is expanded.
      *     There is but one active slate in the bar.
@@ -115,16 +108,16 @@ interface Factory {
      *
      * rules:
      *   usage:
-     *     1: The sidebar is unique for the page - there MUST be but one.
+     *     1: There SHOULD be a sidebar on the page. Kiosk-Mode is the only exception.
+     *     2: If there is a sidebar, it MUST be unique for the page.
      *
      *   composition:
-     *     1: The bar MUST NOT contain items other than buttons.
-     *     2: The bar MUST contain at least one button.
-     *     3: The bar SHOULD NOT contain more than five buttons.
+     *     1: The bar MUST NOT contain items other than iconographic buttons.
+     *     2: The bar MUST contain at least one iconographic button.
+     *     3: The bar SHOULD NOT contain more than five iconographic buttons.
      *
      *   style:
      *     1: The bar MUST have a fixed witdth (desktop).
-     *     2: The bar MUST have a fixed height (mobile).
      *
      *   interaction:
      *     1: >
@@ -140,24 +133,26 @@ interface Factory {
      * @param  int|null  $active
      * @return  \ILIAS\UI\Component\Layout\Sidebar
      */
-    public function sidebar($entries, $active=null);
+    public function sidebar(array $entries, $active=null);
 
 
         /**
      * ---
      * description:
      *   purpose: >
-     *     The sidebar entry bundles a button and a slate.
+     *     The sidebar entry bundles an iconographic button and a slate.
      *   composition: >
-     *     There is no composition of this component.
+     *     There is no composition (=visual appearance) of this component itself -
+     *     its button will be rendered in the sidebar with a signal triggering
+     *     its slate.
      *
      * ----
      *
-     * @param  \ILIAS\UI\Component\Button\Iconographic | \ILIAS\UI\Component\Glyph\Glyph   $button
+     * @param  \ILIAS\UI\Component\Button\Iconographic   $button
      * @param  \ILIAS\UI\Component\MainControls\Menu\Slate | null   $slate
      * @return      \ILIAS\UI\Component\Layout\SidebarEntry
      */
-    public function sidebarEntry($button, MainControls\Menu\Slate $slate=null);
+    public function sidebarEntry(\ILIAS\UI\Component\Button\Iconographic $button, MainControls\Menu\Slate $slate=null);
 
 
 	/**

@@ -31,14 +31,12 @@ interface Factory {
      *
      *   rivals:
      *     Awareness Tool: >
-     *        As the Awareness Tool does not actually target potentially
-     *        permanent notifications to the user and offers further functionality
-     *        when an entry is expanded, it cannot be properly enclosed in the
-     *        Notification Center and should reside next to it.
+     *        2do
      *
      * rules:
      *   usage:
-     *     1: There MUST be but one notification center on the page.
+     *     1: The Notification Center MUST be unique for the page.
+     *     2: The Notification Center MUST be in the metabar.
      *
 	* ----
 	*
@@ -58,7 +56,7 @@ interface Factory {
      *     or direct functionality like e.g. answering a chat-request.
      *
      *   composition: >
-     *      The Notification Center is visualized as a glyph with a novelty counter.
+     *      The Notification Center is visualized as a glyph with a status counter.
      *
      *   effect: >
      *      When the glyph is clicked, a popover expands and gives access to
@@ -72,7 +70,8 @@ interface Factory {
      *
      * rules:
      *   usage:
-     *     1: There MUST be but one awareness-tool on the page.
+     *     1: There MUST be but one Awareness Tool on the page.
+     *     2: The Awareness Tool MUST be in the metabar.
      *---
      *
      * @return  \ILIAS\UI\Component\MainControls\Prompts\AwarenessTool

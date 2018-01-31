@@ -23,13 +23,8 @@ class Metabar implements C\Layout\Metabar {
 	private $elements = array();
 
 
-	/**
-	 * @inheritdoc
-	 */
-	public function withLogo($logo) {
-		$clone = clone $this;
-		$clone->logo = $logo;
-		return $clone;
+	public function __construct(C\Image\Image $logo) {
+		$this->logo = $logo;
 	}
 
 	/**

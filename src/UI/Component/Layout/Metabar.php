@@ -10,12 +10,6 @@ use \ILIAS\UI\Component as C;
 interface Metabar extends C\Component {
 
 	/**
-	 * @param 	\ILIAS\UI\Component\Image\Image
-	 * @return 	Metabar
-	 */
-	public function withLogo($logo);
-
-	/**
 	 *  @return 	\ILIAS\UI\Component\Image\Image
 	 */
 	public function getLogo();

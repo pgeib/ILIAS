@@ -98,6 +98,9 @@ class Renderer extends AbstractComponentRenderer {
             $tpl->setVariable("ELEMENT", $default_renderer->render($element));
             $tpl->parseCurrentBlock();
         }
+        //2do: this must be a glyph with proper action
+        $logout = $f->icon()->standard('','')->withAbbreviation('X');
+        $tpl->setVariable("LOGOUT", $default_renderer->render($logout));
 
         return $tpl->get();
     }

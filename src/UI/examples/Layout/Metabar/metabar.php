@@ -12,14 +12,10 @@ function buildMetabar($f) {
         "src/UI/examples/Image/HeaderIconLarge.svg",
         "Thumbnail Example"
     );
-    $logout = $f->icon()->standard('','')->withAbbreviation('O');
 
-
-    return $f->layout()->metabar()
-        ->withLogo($logo)
+    return $f->layout()->metabar($logo)
         ->withElement($nc)
-        ->withElement($awt)
-        ->withElement($logout);
+        ->withElement($awt);
 }
 
 function metabar() {
