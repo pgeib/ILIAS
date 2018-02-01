@@ -29,10 +29,6 @@ class SidebarEntry implements C\Layout\SidebarEntry {
 	public function __construct($button, C\MainControls\Menu\Slate $slate=null) {
 		$this->button = $button;
 		$this->slate = $slate;
-
-		if($slate) {
-			$this->button = $button->withOnClick($slate->getToggleSignal());
-		}
 	}
 
 	/**

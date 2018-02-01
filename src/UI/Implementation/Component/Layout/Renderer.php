@@ -33,11 +33,15 @@ class Renderer extends AbstractComponentRenderer {
         foreach ($component->getEntries() as $entry) {
             $engaged = ($counter === $component->getActive());
             $slate = $entry->getSlate();
-
-            //if a buttons comes with a slate, sidebarentry will set the action
-            $button = $entry->getButton()
+            $button = $entry->getButton();
+            if($slate) {
+                //if a buttons comes with a slate, its action is to open the slate.
+                $button = $button->withOnClick($slate->getToggleSignal());
+            }
+            $button = $button
                 ->appendOnClick($entry_signal)
                 ->withEngagedState($engaged);
+
 
             $tpl->setCurrentBlock("trigger_item");
             $tpl->setVariable("BUTTON", $default_renderer->render($button));
