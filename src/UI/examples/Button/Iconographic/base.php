@@ -4,12 +4,14 @@ function base() {
 	$f = $DIC->ui()->factory();
 	$renderer = $DIC->ui()->renderer();
 
-	$ico = $f->icon()->standard('someExample', 'Example');
-	$ico = $ico->withAbbreviation('E')->withSize('medium');
+	$ico = $f->icon()
+		->standard('someExample', 'Example')
+		->withAbbreviation('E')
+		->withSize('medium');
 	$button = $f->button()->iconographic($ico, 'Icon', '#');
 
-	$ico = $f->glyph()->briefcase();
-	$button2 = $f->button()->iconographic($ico, 'Glyph', '#');
+	$glyph = $f->glyph()->briefcase();
+	$button2 = $f->button()->iconographic($glyph, 'Glyph', '#');
 
 	return $renderer->render([
 		$button,

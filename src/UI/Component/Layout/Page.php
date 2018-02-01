@@ -27,7 +27,7 @@ interface Page extends C\Component {
 	public function withMetabar(C\Layout\Metabar $metabar);
 
 	/**
-	 * @return 	ILIAS\UI\Component\Layout\Metabar
+	 * @return 	ILIAS\UI\Component\Layout\Metabar | null
 	 */
 	public function getMetabar();
 
@@ -38,7 +38,7 @@ interface Page extends C\Component {
 	public function withSidebar(C\Layout\Sidebar $sidebar);
 
 	/**
-	 * @return 	ILIAS\UI\Component\Layout\Sidebar
+	 * @return 	ILIAS\UI\Component\Layout\Sidebar | null
 	 */
 	public function getSidebar();
 }

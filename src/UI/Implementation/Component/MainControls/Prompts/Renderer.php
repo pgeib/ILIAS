@@ -69,10 +69,7 @@ class Renderer extends AbstractComponentRenderer {
         $tpl = $this->getTemplate("Prompts/tpl.awarenesstool.html", true, true);
 
         $contents = $component->getContents();
-
         $glyph = $f->glyph()->user("#");
-            //->withOnClick($popover->getShowSignal());
-
         if($counter = $component->getCounter()) {
             $glyph = $glyph ->withCounter($f->counter()->status($counter));
         }

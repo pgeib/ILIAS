@@ -53,36 +53,36 @@ il.UI.maincontrols.menu = il.UI.maincontrols.menu || {};
 			slate_backbtn.removeClass('inactive');
 			slate_backbtn.addClass('active');
 
-            slate_contents.html([
-            	'<div class="il-maincontrol-menu-plank">',
+			slate_contents.html([
+				'<div class="il-maincontrol-menu-plank">',
 					'<div class="plank-element">...loading...</div>',
 				'</div>'
 			].join(''));
-            slate_contents.load(signalData.options.url, function() {
-                console.log('loaded');
-            });
+			slate_contents.load(signalData.options.url, function() {
+				console.log('loaded');
+			});
 
-        };
+		};
 
-        var _appendToHistory = function (id, slate_contents) {
-        	if(! _history[id]) {
-        		_history[id] = [];
-        	}
-        	_history[id].push(slate_contents.clone(true, true)); //clone with events, in depth
-        };
+		var _appendToHistory = function (id, slate_contents) {
+			if(! _history[id]) {
+				_history[id] = [];
+			}
+			_history[id].push(slate_contents.clone(true, true)); //clone with events, in depth
+		};
 
-        var navigateBack = function (id) {
-        	var slate_contents = $('#' + id + ' .il-maincontrol-menu-slate-content'),
-        		slate_backbtn = $('#' + id + ' .il-maincontrol-menu-slate-back');
+		var navigateBack = function (id) {
+			var slate_contents = $('#' + id + ' .il-maincontrol-menu-slate-content'),
+				slate_backbtn = $('#' + id + ' .il-maincontrol-menu-slate-back');
 
-        	content = _history[id].pop();
-        	slate_contents.replaceWith(content);
+			content = _history[id].pop();
+			slate_contents.replaceWith(content);
 
-        	if(_history[id].length === 0) {
-        		slate_backbtn.removeClass('active');
+			if(_history[id].length === 0) {
+				slate_backbtn.removeClass('active');
 				slate_backbtn.addClass('inactive');
-        	}
-        };
+			}
+		};
 
 		return {
 			onToggle: onToggle,
