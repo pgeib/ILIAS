@@ -499,4 +499,28 @@ interface Factory {
 	 * @return	\ILIAS\UI\Component\Glyph\Glyph
 	 */
 	public function comment($action = null);
+
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *       The Logout Glyph is used to log out the user from ILIAS.
+	 *   composition: >
+	 *       The Logout Glyph uses the glyphicon-log-out.
+	 *   effect: >
+	 *       Upon clicking the current user is either logged out directly or presented
+	 *       with an interruptive modal to confirm or cancel the logout.
+	 *
+	 * rules:
+	 *   composition:
+	 *       1: >
+	 *          Novelty and Status Counter MUST NOT be used with this.
+	 *   accessibility:
+	 *       1: >
+	 *          The aria-label MUST be ‘Logout'.
+	 * ---
+	 * @param	string|null	$action
+	 * @return	\ILIAS\UI\Component\Glyph\Glyph
+	 */
+	public function logout($action = null);
 }

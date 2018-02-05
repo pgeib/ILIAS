@@ -80,13 +80,10 @@ class Renderer extends AbstractComponentRenderer {
 			$tpl->setVariable("ELEMENT", $default_renderer->render($element));
 			$tpl->parseCurrentBlock();
 		}
-		//2do: this must be a glyph with proper action
-		$logout = $f->icon()->standard('','')->withAbbreviation('X');
-		$tpl->setVariable("LOGOUT", $default_renderer->render($logout));
-
+		$logout_glyph = $f->glyph()->logout(ILIAS_HTTP_PATH .'/logout.php');
+		$tpl->setVariable("LOGOUT", $default_renderer->render($logout_glyph));
 		return $tpl->get();
 	}
-
 
 	protected function renderPage(Component\Layout\Page $component, RendererInterface $default_renderer) {
 		$tpl = $this->getTemplate("tpl.page.html", true, true);

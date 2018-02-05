@@ -31,6 +31,7 @@ interface Glyph extends \ILIAS\UI\Component\Component, \ILIAS\UI\Component\JavaS
 	const NOTE = "note";
 	const COMMENT = "comment";
 	const BRIEFCASE = "briefcase";
+	const LOGOUT = "logout";
 
 
 	/**

@@ -61,6 +61,7 @@ class Glyph implements C\Glyph\Glyph {
 		, self::NOTE
 		, self::COMMENT
 		, self::BRIEFCASE
+		, self::LOGOUT
 		);
 
 
