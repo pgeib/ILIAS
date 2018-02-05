@@ -8593,55 +8593,6 @@ nav {
   position: relative;
   width: 80px;
   z-index: 1;
-  /*
-	****************************************
-	nth-child selector ist not usefull when
-	something changes in the sidebar.
-	add an additional class/id for each item in
-	sidebar e.g btn-default.navigation
-	****************************************
-
-
-	.btn-iconographic:nth-child(1) .icon {
-		background-image: url('images/icon-sb-cockpit.svg');
-	}
-
-	.btn-iconographic:nth-child(2) .icon {
-		background-image: url('images/icon-sb-navigation.svg');
-	}
-
-	.btn-iconographic:nth-child(3) .icon {
-		background-image: url('images/icon-sb-search.svg');
-	}
-
-	.btn-iconographic:nth-child(4) .icon {
-		background-image: url('images/icon-sb-help.svg');
-	}
-
-	.btn-iconographic:nth-child(5) .icon {
-		background-image: url('images/icon-sb-more.svg');
-	}
-
-	.btn-iconographic.engaged:nth-child(1) .icon {
-		background-image: url('images/icon-sb-cockpit-engaged.svg');
-	}
-
-	.btn-iconographic.engaged:nth-child(2) .icon {
-		background-image: url('images/icon-sb-navigation-engaged.svg');
-	}
-
-	.btn-iconographic.engaged:nth-child(3) .icon {
-		background-image: url('images/icon-sb-search-engaged.svg');
-	}
-
-	.btn-iconographic.engaged:nth-child(4) .icon {
-		background-image: url('images/icon-sb-help-engaged.svg');
-	}
-
-	.btn-iconographic.engaged:nth-child(5) .icon {
-		background-image: url('images/icon-sb-more-engaged.svg');
-	}
-	*/
 }
 .il-sidebar-triggers .btn-iconographic {
   align-items: center;
@@ -8658,7 +8609,13 @@ nav {
   width: 100%;
 }
 .il-sidebar-triggers .btn-iconographic.engaged {
-  background-color: #ffffff;
+  /*
+			background-color: @bg-sidebar-engaged;
+			background-color: @il-glyph-highlighted-hover-color;
+			background-color: @brand-primary;
+			background-color: @il-secondary-container-bg;
+			*/
+  background-color: #cecece;
   color: #4a4a4a;
 }
 .il-sidebar-triggers .btn-iconographic:focus {
