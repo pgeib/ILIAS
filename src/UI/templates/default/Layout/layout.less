@@ -86,6 +86,7 @@ grid-based layout
     "sidebar content"
     "footer footer"; // not supported IE
     height: 100%;
+	overflow: hidden;
 	width: 100%;
 	&.with-engaged-slates {
 		grid-template-columns: @slate-width + @trigger-width 1fr;
@@ -194,13 +195,8 @@ nav {
 		}
 	}
 
-
-	.icon .abbreviation {
-		display: none;
-	}
-
 	&.engaged {
-		background: #fff;
+		background: #ffffff;
 	}
 }
 
@@ -223,9 +219,10 @@ main {
 }
 
 .il-layout-page-content {
-	grid-area: content;
-	padding: 20px;
 	display: grid;
+	grid-area: content;
+	overflow: auto;
+	padding: 20px;
 }
 
 /* Footer */

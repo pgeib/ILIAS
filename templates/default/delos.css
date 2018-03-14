@@ -8525,6 +8525,7 @@ grid-based layout
   grid-template-rows: 75px 1fr 75px;
   grid-template-areas: "header header" "sidebar content" "footer footer";
   height: 100%;
+  overflow: hidden;
   width: 100%;
 }
 .il-layout-page.with-engaged-slates {
@@ -8621,11 +8622,8 @@ nav {
 .il-sidebar-triggers .btn-iconographic:focus {
   outline: none;
 }
-.il-sidebar-triggers .icon .abbreviation {
-  display: none;
-}
 .il-sidebar-triggers.engaged {
-  background: #fff;
+  background: #ffffff;
 }
 .il-sidebar-slates {
   box-shadow: 1px 0 1px #cccccc;
@@ -8641,9 +8639,10 @@ main {
   display: block;
 }
 .il-layout-page-content {
-  grid-area: content;
-  padding: 20px;
   display: grid;
+  grid-area: content;
+  overflow: auto;
+  padding: 20px;
 }
 /* Footer */
 footer {

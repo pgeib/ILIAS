@@ -44,9 +44,6 @@ class Renderer extends AbstractComponentRenderer {
 		if ($component instanceof Component\Button\Tag) {
 			$tpl_name = "tpl.tag.html";
 		}
-		if ($component instanceof Component\Button\Tag) {
-			$tpl_name = "tpl.tag.html";
-		}
 		if ($component instanceof Component\Button\Iconographic) {
 			$tpl_name = "tpl.iconographic.html";
 		}
