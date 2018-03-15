@@ -24,7 +24,12 @@ if ($_GET['new_ui'] == '1') {
 		$f->panel()->standard('Demo Content',
 			$f->legacy("some content<br>some content<br>some content<br>x.")),
 		$f->panel()->standard('Demo Content 2',
+			$f->legacy("some content<br>some content<br>some content<br>x.")),
+		$f->panel()->standard('Demo Content 3',
+			$f->legacy("some content<br>some content<br>some content<br>x.")),
+		$f->panel()->standard('Demo Content 4',
 			$f->legacy("some content<br>some content<br>some content<br>x."))
+
 	);
 
 	$metabar = buildMetabar($f);

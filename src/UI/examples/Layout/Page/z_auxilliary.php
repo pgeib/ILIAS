@@ -6,8 +6,8 @@ function z_auxilliary() {
 function _initIliasForPreview() {
 	chdir('../../../../../');
 	require_once("Services/Init/classes/class.ilInitialisation.php");
-	include_once('src/UI/examples/Layout/Metabar/metabar.php');
-	include_once('src/UI/examples/Layout/Page/page.php');
+	require_once('./src/UI/examples/Layout/Metabar/metabar.php');
+	require_once('./src/UI/examples/Layout/Page/ui.php');
 	ilInitialisation::initILIAS();
 }
 
