@@ -68,7 +68,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				$entity,
 				$owner,
 				$this->user,
-				10,
+				100,
 				[
 					CourseAction::CONTEXT_USER_BOOKING,
 					CourseAction::CONTEXT_EMPLOYEE_BOOKING,
@@ -80,7 +80,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				$entity,
 				$owner,
 				$this->user,
-				70,
+				200,
 				[
 					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
 					CourseAction::CONTEXT_MY_TRAININGS
@@ -90,7 +90,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				$entity,
 				$owner,
 				$this->user,
-				80,
+				600,
 				[
 					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
 					CourseAction::CONTEXT_MY_TRAININGS
@@ -221,9 +221,15 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 			$ret[] = $this->createCourseInfoObject($entity
 				, $this->lng->txt("period").":"
 				, $times_formatted
+				, 100
+				, [CourseInfo::CONTEXT_SEARCH_DETAIL_INFO]
+			);
+
+			$ret[] = $this->createCourseInfoObject($entity
+				, $this->lng->txt("period").":"
+				, $times_formatted
 				, 310
-				, [CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
-					CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO,
+				, [CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO,
 					CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
 				  ]
 			);
@@ -351,14 +357,23 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 			}
 
 			$ret[] = $this->createCourseInfoObject($entity
-					, $this->lng->txt("trainer")
-					, $tutor_names
-					, 1500
-					, [
-						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
-						CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
-					  ]
-				);
+				, $this->lng->txt("trainer")
+				, $tutor_names
+				, 700
+				, [CourseInfo::CONTEXT_SEARCH_DETAIL_INFO]
+			);
+
+			$ret[] = $this->createCourseInfoObject($entity
+				, $this->lng->txt("trainer")
+				, $tutor_names
+				, 1500
+				, [
+					CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO
+					, CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO
+					, CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
+					, CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
+				  ]
+			);
 		}
 
 		return $ret;
@@ -590,9 +605,23 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				$ret[] = $this->createCourseInfoObject($entity
 					, $txt("title")
 					, $provider
+					, 600
+					, [CourseInfo::CONTEXT_SEARCH_DETAIL_INFO]
+				);
+			}
+
+			if($provider != "") {
+				$ret[] = $this->createCourseInfoObject($entity
+					, $txt("title")
+					, $provider
 					, 1100
-					, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
-					);
+					, [
+						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO
+						, CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO
+						, CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
+						, CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
+					  ]
+				);
 			}
 		}
 		return $ret;
