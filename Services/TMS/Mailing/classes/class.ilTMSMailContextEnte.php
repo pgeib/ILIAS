@@ -43,6 +43,13 @@ abstract class ilTMSMailContextEnte implements Mailing\MailContext {
 	}
 
 	/**
+	 * Return the owner of the context
+	 */
+	public function owner() {
+		return $this->owner;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	protected function getEntityRefId() {
