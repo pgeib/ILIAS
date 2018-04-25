@@ -238,3 +238,10 @@ if( !$ilDB->tableExists('tms_cat_settings') )
 <?php
 	$ilCtrlStructureReader->getStructure();
 ?>
+
+<#21>
+<?php
+require_once("Services/TMS/ScheduledEvents/classes/Schedule.php");
+$db = new Schedule($ilDB);
+$db->createPrimaryKeyForParams();
+?>
