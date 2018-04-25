@@ -187,6 +187,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 		foreach($this->getGroups() as $group_title => $options)
 		{
 			foreach($options as $value => $option_title) {
+				$option_title = htmlentities($option_title);
 				$tpl->setCurrentBlock("prop_select_option");
 				$tpl->setVariable("VAL_SELECT_OPTION", $value);
 				$tpl->setVariable("TXT_SELECT_OPTION_TITLE", $option_title);
@@ -202,7 +203,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 			}
 
 			$tpl->setCurrentBlock("prop_groupstart");
-			$tpl->setVariable("HEADER", $group_title);
+			$tpl->setVariable("HEADER", htmlentities($group_title));
 			$tpl->parseCurrentBlock();
 		}
 
