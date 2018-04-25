@@ -19,7 +19,7 @@ class Player {
 	const COMMAND_NEXT	= "next";
 	const COMMAND_CONFIRM = "confirm";
 	const COMMAND_PREVIOUS = "previous";
-	const COMMAND_SAVE = "save";
+	const COMMAND_SAVE = "save_step";
 
 	/**
 	 * @var Wizard
@@ -97,7 +97,6 @@ class Player {
 		}
 
 		if ($content = $this->maybeRunOverview($state, count($steps))) {
-			assert('is_null($post)');
 			return $content;
 		}
 
@@ -197,6 +196,12 @@ class Player {
 		$this->state_db->save($state);
 		$step_number = $state->getStepNumber();
 
+		if($step_number < 0) {
+			while ($state->getStepNumber() < 0) {
+				$state = $state->withNextStep();
+			}
+			$this->state_db->save($state);
+		}
 		return $this->runStep($state);
 	}
 
@@ -212,7 +217,6 @@ class Player {
 		if($step_number > 0) {
 			$form->addCommandButton(self::COMMAND_PREVIOUS, $this->ilias_bindings->txt("previous"));
 		}
-		$form->addCommandButton(self::COMMAND_SAVE, $this->ilias_bindings->txt("save"));
 		$form->addCommandButton(self::COMMAND_NEXT, $this->ilias_bindings->txt("next"));
 		$form->addCommandButton(self::COMMAND_ABORT, $this->ilias_bindings->txt("abort"));
 

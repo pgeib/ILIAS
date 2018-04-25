@@ -270,4 +270,15 @@ class Schedule implements ScheduledEvents\DB {
 		}
 	}
 
+
+	/**
+	 * Configure primary key on table
+	 *
+	 * @return void
+	 */
+	public function createPrimaryKeyForParams(){
+		$this->db->addPrimaryKey(static::TABLE_NAME_PARAMS, array("id", "pkey"));
+	}
+
+
 }
