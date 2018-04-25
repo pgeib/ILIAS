@@ -226,7 +226,7 @@ trait LinkHelper {
 	 *       injected dependencies, also LinkHelper should get a new name then.
 	 * @return bool | null
 	 */
-	protected function maybeShowRequestInfo($xccr_plugin = null)
+	protected function maybeShowRequestInfo($xccr_plugin = null, $waiting_time = 30000)
 	{
 		$requests = $this->getUsersDueRequests($this->getUser(), $this->getCourseCreationPlugin());
 		if (count($requests) === 0) {
@@ -236,8 +236,15 @@ trait LinkHelper {
 		// a time. See e.g. TMS-1013.
 		assert('count($requests) == 1');
 		list($request) = $requests;
-		$message = sprintf($this->getLng()->txt("course_creation_message"), $this->getTrainingTitleByRequest($request));
-		$this->sendInfo($message);
+		$tpl = new \ilTemplate("tpl.open_requests.html", true, true, "src/TMS");
+		$tpl->setVariable("MESSAGE",
+			sprintf(
+				$this->getLng()->txt("course_creation_message"),
+				$this->getTrainingTitleByRequest($request)
+			)
+		);
+		$tpl->setVariable("TIMEOUT", $waiting_time);
+		$this->sendInfo($tpl->get());
 
 		return true;
 	}
