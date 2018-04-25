@@ -22,8 +22,8 @@ class catFilterDatePeriodGUI extends catFilterGUI {
 		$duration = new ilDateDurationInputGUI($this->filter->label(), "filter[$this->path]");
 		$duration->setInfo($this->filter->description());
 		$duration->setShowTime(false);
-		$duration->setStartText($this->gLng->txt("gev_filter_period_from"));
-		$duration->setEndText($this->gLng->txt("gev_filter_period_to"));
+		$duration->setStartText($this->gLng->txt("tms_filter_period_from"));
+		$duration->setEndText($this->gLng->txt("tms_filter_period_to"));
 		
 		if($this->val) {
 			$start_date = \DateTime::createFromFormat('d.m.Y',$this->val["start"])->format('Y-m-d');
