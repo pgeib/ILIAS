@@ -434,7 +434,6 @@ class ilErrorHandling extends PEAR
 			global $ilLog;
 
 			if(is_object($ilLog)) {
-				$message = "----------\n";
 				$message .= $exception->getMessage().' in '.$exception->getFile().":".$exception->getLine();
 				$ilLog->error($exception->getCode().' '.$message);
 			}
@@ -467,7 +466,6 @@ class ilErrorHandling extends PEAR
 				if ($level >= E_USER_NOTICE) {	
 					
 					if ($ilLog) {				
-						$severity = "----------";
 						$severity .= Whoops\Util\Misc::TranslateErrorCode($level);
 						$ilLog->write("\n\n".$severity." - ".$message."\n".$file." - line ".$line."\n");
 					}
