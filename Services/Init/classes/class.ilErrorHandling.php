@@ -434,7 +434,7 @@ class ilErrorHandling extends PEAR
 			global $ilLog;
 
 			if(is_object($ilLog)) {
-				$message .= $exception->getMessage().' in '.$exception->getFile().":".$exception->getLine();
+				$message = $exception->getMessage().' in '.$exception->getFile().":".$exception->getLine();
 				$ilLog->error($exception->getCode().' '.$message);
 			}
 			
@@ -446,8 +446,9 @@ class ilErrorHandling extends PEAR
 	public function handlePreWhoops($level, $message, $file, $line)
 	{
 		global $ilLog;
-
+		
 		if ($level & error_reporting()) {
+			
 			// correct-with-php5-removal JL start
 			// ignore all E_STRICT that are E_NOTICE (or nothing at all) in PHP7
 			if (version_compare(PHP_VERSION, '7.0.0', '<')) {
@@ -460,13 +461,13 @@ class ilErrorHandling extends PEAR
 				}
 			}
 			// correct-with-php5-removal end
+
 			if (!$this->isDevmodeActive()) {
 				// log E_USER_NOTICE, E_STRICT, E_DEPRECATED, E_USER_DEPRECATED only
-
 				if ($level >= E_USER_NOTICE) {	
 					
 					if ($ilLog) {				
-						$severity .= Whoops\Util\Misc::TranslateErrorCode($level);
+						$severity = Whoops\Util\Misc::TranslateErrorCode($level);
 						$ilLog->write("\n\n".$severity." - ".$message."\n".$file." - line ".$line."\n");
 					}
 					return true;
