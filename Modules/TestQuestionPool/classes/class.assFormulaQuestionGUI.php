@@ -1012,7 +1012,7 @@ class assFormulaQuestionGUI extends assQuestionGUI
 	)
 	{
 		// get the solution of the user for the active pass or from the last pass if allowed
-		$user_solution = "";
+		$user_solution = array();
 		if(($active_id > 0) && (!$show_correct_solution))
 		{
 			$solutions = array();
@@ -1071,7 +1071,15 @@ class assFormulaQuestionGUI extends assQuestionGUI
 		$questionoutput   = $template->get();
 		$solutiontemplate = new ilTemplate("tpl.il_as_tst_solution_output.html", TRUE, TRUE, "Modules/TestQuestionPool");
 		$feedback = ($show_feedback) ? $this->getGenericFeedbackOutput($active_id, $pass) : "";
-		if (strlen($feedback)) $solutiontemplate->setVariable("FEEDBACK", $this->object->prepareTextareaOutput( $feedback, true ));
+		if (strlen($feedback))
+		{
+			$cssClass = ( $this->hasCorrectSolution($active_id, $pass) ?
+				ilAssQuestionFeedback::CSS_CLASS_FEEDBACK_CORRECT : ilAssQuestionFeedback::CSS_CLASS_FEEDBACK_WRONG
+			);
+			
+			$solutiontemplate->setVariable("ILC_FB_CSS_CLASS", $cssClass);
+			$solutiontemplate->setVariable("FEEDBACK", $this->object->prepareTextareaOutput( $feedback, true ));
+		}
 		$solutiontemplate->setVariable("SOLUTION_OUTPUT", $questionoutput);
 
 		$solutionoutput = $solutiontemplate->get();

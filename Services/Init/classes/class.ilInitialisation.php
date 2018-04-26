@@ -37,18 +37,25 @@ class ilInitialisation
 		// We do not need this characters in any case, so it is
 		// feasible to filter them everytime. POST parameters
 		// need attention through ilUtil::stripSlashes() and similar functions)
-		if (is_array($_GET))
-		{
-			foreach($_GET as $k => $v)
-			{
-				// \r\n used for IMAP MX Injection
-				// ' used for SQL Injection
-				$_GET[$k] = str_replace(array("\x00", "\n", "\r", "\\", "'", '"', "\x1a"), "", $v);
+		$_GET = self::recursivelyRemoveUnsafeCharacters($_GET);
+	}
 
-				// this one is for XSS of any kind
-				$_GET[$k] = strip_tags($_GET[$k]);
+	protected static function recursivelyRemoveUnsafeCharacters($var) {
+		if (is_array($var)) {
+			$mod = [];
+			foreach ($var as $k => $v) {
+				$k = self::recursivelyRemoveUnsafeCharacters($k);
+				$mod[$k] = self::recursivelyRemoveUnsafeCharacters($v);
 			}
+			return $mod;
 		}
+		return strip_tags(
+			str_replace(
+				array("\x00", "\n", "\r", "\\", "'", '"', "\x1a"),
+				"",
+				$var
+			)
+		);
 	}
 
 	/**
@@ -1286,6 +1293,12 @@ class ilInitialisation
 		$tpl = new ilTemplate("tpl.main.html", true, true);
 		self::initGlobal("tpl", $tpl);
 
+		if (ilContext::hasUser()) {
+			require_once 'Services/User/classes/class.ilUserRequestTargetAdjustment.php';
+			$request_adjuster = new ilUserRequestTargetAdjustment($ilUser, $GLOBALS['DIC']['ilCtrl']);
+			$request_adjuster->adjust();
+		}
+
 		// load style sheet depending on user's settings
 		$location_stylesheet = ilUtil::getStyleSheetLocation();
 		$tpl->setVariable("LOCATION_STYLESHEET",$location_stylesheet);
@@ -1586,11 +1599,6 @@ class ilInitialisation
 			ilInitialisation::goToPublicSection();
 			return true;
 		}
-
-		require_once 'Services/User/classes/class.ilUserRequestTargetAdjustment.php';
-		$request_adjuster = new ilUserRequestTargetAdjustment($ilUser, $GLOBALS['ilCtrl']);
-		$request_adjuster->adjust(); // possible redirect
-
 
 		//cat-tms-patch start
 		if($_COOKIE["_redirect_booking"] && !is_null($_COOKIE["_redirect_booking"])) {
