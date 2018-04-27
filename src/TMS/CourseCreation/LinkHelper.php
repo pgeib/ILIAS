@@ -226,7 +226,7 @@ trait LinkHelper {
 	 *       injected dependencies, also LinkHelper should get a new name then.
 	 * @return bool | null
 	 */
-	protected function maybeShowRequestInfo($xccr_plugin = null, $waiting_time = 30000)
+	protected function maybeShowRequestInfo(\ilCourseCreationPlugin $xccr_plugin = null, $waiting_time = 30000)
 	{
 		$requests = $this->getUsersDueRequests($this->getUser(), $this->getCourseCreationPlugin());
 		if (count($requests) === 0) {
@@ -276,7 +276,7 @@ trait LinkHelper {
 	 *       injected dependencies.
 	 * @return ILIAS\TMS\CourseCreation/Request[]
 	 */
-	protected function getUsersDueRequests(\ilObjUser $user, $xccr_plugin = null)
+	protected function getUsersDueRequests(\ilObjUser $user, \ilCourseCreationPlugin $xccr_plugin = null)
 	{
 		$cached_requests = $this->getCachedRequests((int)$user->getId());
 		if ($cached_requests !== null) {
