@@ -37,6 +37,11 @@ class _TMS_CourseCreation_CourseListGUIExtension extends _TMS_CourseCreation_Cou
 	protected function getCreateCourseAccessGranted() {
 		return $this->create_course_access_granted;
 	}
+
+	public $no_open_requests = true;
+	protected function noOpenRequests() {
+		return $this->no_open_requests;
+	}
 }
 
 class _TMS_CourseCreation_CourseListGUIExtension_Bare {
