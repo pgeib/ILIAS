@@ -231,7 +231,7 @@ trait LinkHelper {
 	 */
 	protected function maybeShowRequestInfo(\ilCourseCreationPlugin $xccr_plugin = null, $waiting_time = 30000)
 	{
-		$requests = $this->getUsersDueRequests($this->getUser(), $this->getCourseCreationPlugin());
+		$requests = $this->getUsersDueRequests($this->getUser(), $xccr_plugin);
 		if (count($requests) === 0) {
 			return;
 		}
