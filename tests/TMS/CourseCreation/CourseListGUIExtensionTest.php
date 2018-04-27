@@ -1,8 +1,9 @@
-<?php
++<?php
 
 /* Copyright (c) 2018 Richard Klees <richard.klees@concepts-and-training.de> */
 
 use ILIAS\TMS\CourseCreation\CourseListGUIExtension;
+use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__."/../../../Services/Language/classes/class.ilLanguage.php");
 require_once(__DIR__."/../../../Services/UICore/classes/class.ilTemplate.php");
@@ -58,7 +59,7 @@ class _TMS_CourseCreation_CourseListGUIExtension_Bare {
 	}
 }
 
-class TMS_CourseCreation_CourseListGUIExtensionTest extends PHPUnit_Framework_TestCase {
+class TMS_CourseCreation_CourseListGUIExtensionTest extends TestCase {
 	const CREATE_COURSE_ACTION_LNG_VAR = "create_course_from_template";
 
 	public function setUp() {
