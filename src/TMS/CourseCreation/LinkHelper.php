@@ -215,13 +215,13 @@ trait LinkHelper {
 	 * @param \ilCourseCreationPlugin | null	$xccr_plugin
 	 * @param int 	$waiting_time
 	 *
-	 * @return bool | null
+	 * @return bool
 	 */
 	protected function maybeShowRequestInfo(\ilCourseCreationPlugin $xccr_plugin = null, $waiting_time = 30000)
 	{
 		$requests = $this->getUsersDueRequests($this->getUser(), $xccr_plugin);
 		if (count($requests) === 0) {
-			return;
+			return false;
 		}
 
 		// This assertion assumes that every user is only allowed to create one training at
