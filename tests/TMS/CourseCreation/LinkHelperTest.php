@@ -19,11 +19,11 @@ class LinkHelperMock {
 	protected function sendInfo() {
 	}
 
-	public function _maybeShowRequestInfo() {
-		return $this->maybeShowRequestInfo();
+	public function _maybeShowRequestInfo(\ilCourseCreationPlugin $xccr_plugin = null, $waiting_time = 30000) {
+		return $this->maybeShowRequestInfo($xccr_plugin, $waiting_time);
 	}
 
-	public function _getUsersDueRequests($user, $plugin = null) {
+	public function _getUsersDueRequests($user, \ilCourseCreationPlugin $plugin = null) {
 		return $this->getUsersDueRequests($user, $plugin);
 	}
 
@@ -55,7 +55,7 @@ class LinkHelperTest extends TestCase {
 			->getMock();
 
 		$link_helper = $this->getMockBuilder(LinkHelperMock::class)
-			->setMethods(array("getUsersDueRequests", "getUser", "getCourseCreationPlugin", "sendInfo"))
+			->setMethods(array("getUsersDueRequests", "getUser", "sendInfo"))
 			->getMock();
 
 		$link_helper->expects($this->never())
@@ -64,10 +64,6 @@ class LinkHelperTest extends TestCase {
 		$link_helper->expects($this->once())
 			->method("getUsersDueRequests")
 			->will($this->returnValue(array()));
-
-		$link_helper->expects($this->once())
-			->method("getCourseCreationPlugin")
-			->will($this->returnValue(null));
 
 		$link_helper->expects($this->once())
 			->method("getUser")
@@ -97,7 +93,6 @@ class LinkHelperTest extends TestCase {
 				array(
 					"getUsersDueRequests"
 					, "getUser"
-					, "getCourseCreationPlugin"
 					, "sendInfo"
 					, "getTrainingTitleByRequest"
 					, "getLng"
@@ -112,10 +107,6 @@ class LinkHelperTest extends TestCase {
 		$link_helper->expects($this->once())
 			->method("getUsersDueRequests")
 			->will($this->returnValue(array($request)));
-
-		$link_helper->expects($this->once())
-			->method("getCourseCreationPlugin")
-			->will($this->returnValue(null));
 
 		$link_helper->expects($this->once())
 			->method("getTrainingTitleByRequest");
@@ -162,7 +153,6 @@ class LinkHelperTest extends TestCase {
 					array(
 						"getUsersDueRequests"
 						, "getUser"
-						, "getCourseCreationPlugin"
 						, "sendInfo"
 						, "getTrainingTitleByRequest"
 						, "getLng"
@@ -179,10 +169,6 @@ class LinkHelperTest extends TestCase {
 				->will($this->returnValue(array($request)));
 
 			$link_helper->expects($this->once())
-				->method("getCourseCreationPlugin")
-				->will($this->returnValue($xccr_plugin));
-
-			$link_helper->expects($this->once())
 				->method("getTrainingTitleByRequest");
 
 			$link_helper->expects($this->once())
@@ -197,7 +183,7 @@ class LinkHelperTest extends TestCase {
 				->method("getUser")
 				->will($this->returnValue($usr));
 
-			$this->assertTrue($link_helper->_maybeShowRequestInfo());
+			$this->assertTrue($link_helper->_maybeShowRequestInfo($xccr_plugin));
 		}
 	}
 
