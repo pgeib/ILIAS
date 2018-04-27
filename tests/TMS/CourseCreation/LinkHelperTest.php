@@ -50,7 +50,7 @@ class LinkHelperTest extends TestCase {
 	}
 
 	public function test_user_has_no_open_request() {
-		$usr = $this->getMockBuilder(ilObjUser::class)
+		$usr = $this->getMockBuilder("ilObjUser")
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -75,7 +75,7 @@ class LinkHelperTest extends TestCase {
 	public function test_user_has_open_requests() {
 		$txt_message = "This is the user info";
 
-		$usr = $this->getMockBuilder(ilObjUser::class)
+		$usr = $this->getMockBuilder("ilObjUser")
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -114,7 +114,7 @@ class LinkHelperTest extends TestCase {
 	}
 
 	public function test_user_has_open_cached_requests() {
-		$usr = $this->getMockBuilder(ilObjUser::class)
+		$usr = $this->getMockBuilder("ilObjUser")
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -142,7 +142,7 @@ class LinkHelperTest extends TestCase {
 	}
 
 	public function test_user_has_no_cached_request_and_no_plugin() {
-		$usr = $this->getMockBuilder(ilObjUser::class)
+		$usr = $this->getMockBuilder("ilObjUser")
 			->setMethods(array("getId"))
 			->disableOriginalConstructor()
 			->getMock();
@@ -176,7 +176,7 @@ class LinkHelperTest extends TestCase {
 	}
 
 	public function test_set_request_from_plugin_object() {
-		$usr = $this->getMockBuilder(ilObjUser::class)
+		$usr = $this->getMockBuilder("ilObjUser")
 			->setMethods(array("getId"))
 			->disableOriginalConstructor()
 			->getMock();
