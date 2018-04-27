@@ -222,8 +222,11 @@ trait LinkHelper {
 	}
 
 	/**
-	 * TODO: This should be moved to ILIAS\TMS\CourseCreation\LinkHelper, with tests and properly
-	 *       injected dependencies, also LinkHelper should get a new name then.
+	 * Shows request info if it is neccessary
+	 *
+	 * @param \ilCourseCreationPlugin | null	$xccr_plugin
+	 * @param int 	$waiting_time
+	 *
 	 * @return bool | null
 	 */
 	protected function maybeShowRequestInfo(\ilCourseCreationPlugin $xccr_plugin = null, $waiting_time = 30000)
@@ -272,8 +275,11 @@ trait LinkHelper {
 	}
 
 	/**
-	 * TODO: This should be moved to ILIAS\TMS\CourseCreation\LinkHelper, with tests and properly
-	 *       injected dependencies.
+	 * Get the open requests for single user
+	 *
+	 * @param \ilObjUser 	$user
+	 * @param \ilCourseCreationPlugin 	$xccr_plugin
+	 *
 	 * @return ILIAS\TMS\CourseCreation/Request[]
 	 */
 	protected function getUsersDueRequests(\ilObjUser $user, \ilCourseCreationPlugin $xccr_plugin = null)
