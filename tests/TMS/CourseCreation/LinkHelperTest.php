@@ -37,18 +37,6 @@ class LinkHelperMock {
  * @group needsInstalledILIAS
  */
 class LinkHelperTest extends TestCase {
-	public static function setUpBeforeClass() {
-		require_once("./Services/User/classes/class.ilObjUser.php");
-		require_once("./Services/Language/classes/class.ilLanguage.php");
-
-		if(file_exists(
-				"./Customizing/global/plugins/Services/Cron/CronHook/CourseCreation/classes/class.ilCourseCreationPlugin.php"
-			)
-		) {
-			require_once("./Customizing/global/plugins/Services/Cron/CronHook/CourseCreation/classes/class.ilCourseCreationPlugin.php");
-		}
-	}
-
 	public function test_user_has_no_open_request() {
 		$usr = $this->getMockBuilder("ilObjUser")
 			->disableOriginalConstructor()
