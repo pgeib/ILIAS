@@ -24,18 +24,6 @@ trait LinkHelper {
 	abstract protected function getUser();
 
 	/**
-	 * @return \ilCourseCreationPlugin
-	 */
-	protected function getCourseCreationPlugin() {
-		require_once("Services/Component/classes/class.ilPluginAdmin.php");
-		if (!\ilPluginAdmin::isPluginActive("xccr")) {
-			return null;
-		}
-
-		return \ilPluginAdmin::getPluginObjectById("xccr");
-	}
-
-	/**
 	 * Send an info message to user gui
 	 *
 	 * @param string 	$message
