@@ -143,8 +143,13 @@ class LinkHelperTest extends TestCase {
 
 	public function test_user_has_no_cached_request_and_no_plugin() {
 		$usr = $this->getMockBuilder(ilObjUser::class)
+			->setMethods(array("getId"))
 			->disableOriginalConstructor()
 			->getMock();
+
+		$usr->expects($this->once())
+			->method("getId")
+			->will($this->returnValue(10));
 
 		$link_helper = $this->getMockBuilder(LinkHelperMock::class)
 			->setMethods(
@@ -161,11 +166,61 @@ class LinkHelperTest extends TestCase {
 
 		$link_helper->expects($this->once())
 			->method("getCachedRequests")
+			->with($this->equalTo(10))
 			->will($this->returnValue(null));
 
 		$link_helper->expects($this->never())
 			->method("setCachedRequests");
 
 		$this->assertEquals(array(), $link_helper->_getUsersDueRequests($usr));
+	}
+
+	public function test_set_request_from_plugin_object() {
+		$usr = $this->getMockBuilder(ilObjUser::class)
+			->setMethods(array("getId"))
+			->disableOriginalConstructor()
+			->getMock();
+
+		$xccr_plugin = $this->getMockBuilder("ilCourseCreationPlugin")
+			->disableOriginalConstructor()
+			->setMethods(array("getActions"))
+			->getMock();
+
+		$xccr_actions = $this->getMockBuilder("CourseCreationActions")
+			->disableOriginalConstructor()
+			->setMethods(array("getDueRequestsOf"))
+			->getMock();
+
+		$link_helper = $this->getMockBuilder(LinkHelperMock::class)
+			->setMethods(
+				array(
+					"getCachedRequests"
+					, "setCachedRequests"
+				)
+			)
+			->getMock();
+
+		$link_helper->expects($this->exactly(2))
+			->method("getCachedRequests")
+			->with($this->equalTo(10))
+			->will($this->onConsecutiveCalls(null, array()));
+
+		$link_helper->expects($this->once())
+			->method("setCachedRequests")
+			->with($this->equalTo(10), $this->equalTo(array()));
+
+		$usr->expects($this->exactly(3))
+			->method("getId")
+			->will($this->returnValue(10));
+
+		$xccr_actions->expects($this->once())
+			->method("getDueRequestsOf")
+			->will($this->returnValue(array()));
+
+		$xccr_plugin->expects($this->once())
+			->method("getActions")
+			->will($this->returnValue($xccr_actions));
+
+		$this->assertEquals(array(), $link_helper->_getUsersDueRequests($usr, $xccr_plugin));
 	}
 }
