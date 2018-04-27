@@ -29,8 +29,7 @@ trait CourseListGUIExtension {
 	 * @inheritdoc
 	 */
 	protected function getUser() {
-		global $DIC;
-		return $DIC->user();
+		return $this->user;
 	}
 
 	/**
