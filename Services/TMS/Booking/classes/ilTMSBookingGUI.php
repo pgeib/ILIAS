@@ -54,6 +54,7 @@ abstract class ilTMSBookingGUI {
 		$this->g_user = $DIC->user();
 		$this->g_lng = $DIC->language();
 		$this->g_db = $DIC->database();
+		$this->g_eventhandler = $DIC['ilAppEventHandler'];
 
 		$this->g_lng->loadLanguageModule('tms');
 
@@ -111,6 +112,7 @@ abstract class ilTMSBookingGUI {
 			, (int)$this->g_user->getId()
 			, $crs_ref_id
 			, $usr_id
+			, $this->getEventOnFinishCallback()
 			);
 		$player = new Wizard\Player
 			( $ilias_bindings
@@ -138,6 +140,27 @@ abstract class ilTMSBookingGUI {
 	 * @return void
 	 */
 	abstract protected function setParameter($crs_ref_id, $usr_id);
+
+	/**
+	 * Get the event to throw when the process is finished.
+	 *
+	 * @param int 	$acting_usr_id
+	 * @param int 	$target_usr_id
+	 * @param int 	$crs_ref_id
+	 * @return string
+	 */
+	abstract protected function getEventOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id);
+
+	/**
+	 * Wrap getEventOnFinish to be called from the Wizard.
+	 *
+	 * @return callable
+	 */
+	protected function getEventOnFinishCallback() {
+		return function($acting_usr_id, $target_usr_id, $crs_ref_id) {
+			return $this->getEventOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id);
+		};
+	}
 
 	/**
 	 * Get the title of the player.
@@ -391,6 +414,7 @@ abstract class ilTMSBookingGUI {
 	protected function getDuplicatedCourseMessage($usr_id) {
 		return array($this->g_lng->txt("duplicate_course_booked"));
 	}
+
 }
 
 /**

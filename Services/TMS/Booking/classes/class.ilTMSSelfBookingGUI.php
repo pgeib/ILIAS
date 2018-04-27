@@ -22,7 +22,7 @@ class ilTMSSelfBookingGUI extends \ilTMSBookingGUI {
 	}
 
 	/**
-	 * @inheritdocs
+	 * @inheritdoc
 	 */
 	protected function setParameter($crs_ref_id, $usr_id) {
 		assert('is_int($crs_ref_id) || is_null($crs_ref_id)');
@@ -33,10 +33,18 @@ class ilTMSSelfBookingGUI extends \ilTMSBookingGUI {
 	}
 
 	/**
-	 * @inheritdocs
+	 * @inheritdoc
 	 */
 	protected function getPlayerTitle() {
 		return $this->g_lng->txt("booking");
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function getEventOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id){
+		$event = Booking\Actions::EVENT_USER_BOOKED_COURSE;
+		return $event;
 	}
 }
 

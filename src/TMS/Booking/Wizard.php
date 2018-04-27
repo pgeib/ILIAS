@@ -46,24 +46,26 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	protected $process_db;
 
 	/**
-	 * @param	string $wizard_id
 	 * @param	\ArrayAccess|array $dic
-	 * @param	string	$component_class	the user that performs the wizard
-	 * @param	int	$acting_user_id			the user that performs the wizard
-	 * @param	int	$crs_ref_id 			course that should get booked
-	 * @param	int	$target_user_id			the user the booking is made for
+	 * @param	string 	$component_class
+	 * @param	int		$acting_user_id			the user that performs the wizard
+	 * @param	int		$crs_ref_id 			course that should get booked
+	 * @param	int		$target_user_id			the user the booking is made for
+	 * @param	callable | null	$finish_event_callback 	when the wizard is finished, execute this.
 	 */
-	public function __construct($dic, $component_class, $acting_user_id, $crs_ref_id, $target_user_id) {
+	public function __construct($dic, $component_class, $acting_user_id, $crs_ref_id, $target_user_id, $finish_event_callback) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_string($component_class)');
 		assert('is_int($acting_user_id)');
 		assert('is_int($crs_ref_id)');
 		assert('is_int($target_user_id)');
+		assert('is_callable($finish_event_callback) || is_null($finish_event_callback)');
 		$this->dic = $dic;
 		$this->component_class = $component_class;
 		$this->acting_user_id = $acting_user_id;
 		$this->crs_ref_id = $crs_ref_id;
 		$this->target_user_id = $target_user_id;
+		$this->finish_event_callback = $finish_event_callback;
 	}
 
 	/**
@@ -153,6 +155,51 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @inheritdoc
 	 */
 	public function finish() {
-		// Nothing to do here...
+		if(! is_null($this->finish_event_callback)) {
+			$event = call_user_func(
+				$this->finish_event_callback,
+				$this->acting_user_id,
+				$this->target_user_id,
+				$this->crs_ref_id
+			);
+			$this->fireBookingEvent($event, $this->target_user_id, $this->crs_ref_id);
+		}
+	}
+
+	/**
+	 * Lookup the course's obj_id.
+	 * @param int 	$crs_ref_id
+	 * @return int
+	 */
+	protected function lookupObjId($crs_ref_id) {
+		assert('is_int($crs_ref_id)');
+		$crs_obj_id = (int)\ilObject::_lookupObjId($crs_ref_id);
+		return $crs_obj_id;
+	}
+
+	/**
+	 * Raises an event with course ids and user id as params.
+	 * @param string 	$event
+	 * @param int 	$usr_id
+	 * @param int 	$crs_ref_id
+	 * @return void
+	 */
+	protected function fireBookingEvent($event, $usr_id, $crs_ref_id) {
+		assert('is_string($event)');
+		assert('is_int($usr_id)');
+		assert('is_int($crs_ref_id)');
+
+		$crs_obj_id = $this->lookupObjId($crs_ref_id);
+
+		$il_event_handler = $this->getDIC()['ilAppEventHandler'];
+		$il_event_handler->raise(
+			'Modules/Course',
+			$event,
+			array(
+				 'crs_ref_id' => $crs_ref_id,
+				 'obj_id' => $crs_obj_id,
+				 'usr_id' => $usr_id
+			 )
+		 );
 	}
 }
