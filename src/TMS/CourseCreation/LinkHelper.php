@@ -223,10 +223,26 @@ trait LinkHelper {
 		if (count($requests) === 0) {
 			return;
 		}
+
 		// This assertion assumes that every user is only allowed to create one training at
 		// a time. See e.g. TMS-1013.
 		assert('count($requests) == 1');
 		list($request) = $requests;
+		$this->sendInfo($this->getMessage($request, $waiting_time));
+
+		return true;
+	}
+
+	/**
+	 * Get the message should be shown
+	 *
+	 * @param \ILIAS\TMS\CourseCreation\Request 	$request
+	 * @param int 	$waiting_time
+	 *
+	 * @return string
+	 */
+	protected function getMessage(\ILIAS\TMS\CourseCreation\Request $request, $waiting_time) {
+		require_once("Services/UICore/classes/class.ilTemplate.php");
 		$tpl = new \ilTemplate("tpl.open_requests.html", true, true, "src/TMS");
 		$tpl->setVariable("MESSAGE",
 			sprintf(
@@ -235,9 +251,8 @@ trait LinkHelper {
 			)
 		);
 		$tpl->setVariable("TIMEOUT", $waiting_time);
-		$this->sendInfo($tpl->get());
 
-		return true;
+		return $tpl->get();
 	}
 
 	/**
