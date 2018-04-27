@@ -105,6 +105,13 @@ class TMS_CourseCreation_CourseListGUIExtensionTest extends TestCase {
 		$this->assertCount(0, $commands);
 	}
 
+	public function test_does_not_insert_command_if_access_and_open_requests() {
+		$this->gui_fake->create_course_access_granted = true;
+		$this->gui_fake->no_open_requests = false;
+		$commands = $this->gui_fake->getCommands();
+		$this->assertCount(0, $commands);
+	}
+
 	public function test_getCreateCourseCommandLngVar() {
 		$this->bare->lng = $this->createMock(\ilLanguage::class);
 
