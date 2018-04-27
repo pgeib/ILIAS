@@ -1,6 +1,8 @@
 <?php
 
-require_once("tests/TMS/CourseCreation/ilCourseCreationPlugin.php");
+if (!class_exists(\ilCourseCreationPlugin::class)) {
+	require_once("tests/TMS/CourseCreation/ilCourseCreationPlugin.php");
+}
 
 use ILIAS\TMS\CourseCreation\LinkHelper;
 use ILIAS\TMS\CourseCreation\Request;
