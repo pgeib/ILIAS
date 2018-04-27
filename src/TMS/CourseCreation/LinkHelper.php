@@ -4,6 +4,8 @@
 
 namespace ILIAS\TMS\CourseCreation;
 
+require_once("./Services/User/classes/class.ilObjUser.php");
+
 /**
  * Some common methods to help with the creation of links to the course creation.
  */
