@@ -54,7 +54,6 @@ abstract class ilTMSBookingGUI {
 		$this->g_user = $DIC->user();
 		$this->g_lng = $DIC->language();
 		$this->g_db = $DIC->database();
-		$this->g_eventhandler = $DIC['ilAppEventHandler'];
 
 		$this->g_lng->loadLanguageModule('tms');
 
@@ -414,7 +413,6 @@ abstract class ilTMSBookingGUI {
 	protected function getDuplicatedCourseMessage($usr_id) {
 		return array($this->g_lng->txt("duplicate_course_booked"));
 	}
-
 }
 
 /**
