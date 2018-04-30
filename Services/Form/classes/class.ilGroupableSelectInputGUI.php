@@ -205,7 +205,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 			}
 
 			$tpl->setCurrentBlock("prop_groupstart");
-			$tpl->setVariable("HEADER", $this->getAdjustTitle($group_title));
+			$tpl->setVariable("HEADER", htmlentities($this->getAdjustTitle($group_title)));
 			$tpl->parseCurrentBlock();
 		}
 
