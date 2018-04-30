@@ -1,8 +1,9 @@
-<?php
++<?php
 
 /* Copyright (c) 2018 Richard Klees <richard.klees@concepts-and-training.de> */
 
 use ILIAS\TMS\CourseCreation\CourseListGUIExtension;
+use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__."/../../../Services/Language/classes/class.ilLanguage.php");
 require_once(__DIR__."/../../../Services/UICore/classes/class.ilTemplate.php");
@@ -36,6 +37,11 @@ class _TMS_CourseCreation_CourseListGUIExtension extends _TMS_CourseCreation_Cou
 	protected function getCreateCourseAccessGranted() {
 		return $this->create_course_access_granted;
 	}
+
+	public $no_open_requests = true;
+	protected function noOpenRequests() {
+		return $this->no_open_requests;
+	}
 }
 
 class _TMS_CourseCreation_CourseListGUIExtension_Bare {
@@ -58,7 +64,7 @@ class _TMS_CourseCreation_CourseListGUIExtension_Bare {
 	}
 }
 
-class TMS_CourseCreation_CourseListGUIExtensionTest extends PHPUnit_Framework_TestCase {
+class TMS_CourseCreation_CourseListGUIExtensionTest extends TestCase {
 	const CREATE_COURSE_ACTION_LNG_VAR = "create_course_from_template";
 
 	public function setUp() {
@@ -95,6 +101,13 @@ class TMS_CourseCreation_CourseListGUIExtensionTest extends PHPUnit_Framework_Te
 
 	public function test_does_not_insert_command_if_no_access() {
 		$this->gui_fake->create_course_access_granted = false;
+		$commands = $this->gui_fake->getCommands();
+		$this->assertCount(0, $commands);
+	}
+
+	public function test_does_not_insert_command_if_access_and_open_requests() {
+		$this->gui_fake->create_course_access_granted = true;
+		$this->gui_fake->no_open_requests = false;
 		$commands = $this->gui_fake->getCommands();
 		$this->assertCount(0, $commands);
 	}
