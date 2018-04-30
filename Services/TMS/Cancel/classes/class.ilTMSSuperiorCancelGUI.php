@@ -32,7 +32,7 @@ class ilTMSSuperiorCancelGUI extends \ilTMSCancelGUI {
 	/**
 	 * @inheritdoc
 	 */
-	protected function getEventOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id){
+	protected function callOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id){
 		$event = Booking\Actions::EVENT_SUPERIOR_CANCELED_COURSE;
 
 		require_once("Services/Membership/classes/class.ilWaitingList.php");
@@ -40,7 +40,7 @@ class ilTMSSuperiorCancelGUI extends \ilTMSCancelGUI {
 		if(\ilWaitingList::_isOnList($target_usr_id, $crs_id))  {
 			$event = Booking\Actions::EVENT_SUPERIOR_CANCELED_WAITING;
 		}
-		return $event;
+		$this->fireBookingEvent($event, $target_usr_id, $crs_ref_id);
 	}
 }
 

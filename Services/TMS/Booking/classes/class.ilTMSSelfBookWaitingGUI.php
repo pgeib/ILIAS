@@ -49,9 +49,9 @@ class ilTMSSelfBookWaitingGUI extends \ilTMSBookingGUI {
 	/**
 	 * @inheritdoc
 	 */
-	protected function getEventOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id){
+	protected function callOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id){
 		$event = Booking\Actions::EVENT_USER_BOOKED_WAITING;
-		return $event;
+		$this->fireBookingEvent($event, $target_usr_id, $crs_ref_id);
 	}
 }
 

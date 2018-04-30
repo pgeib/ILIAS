@@ -46,6 +46,11 @@ abstract class ilTMSCancelGUI  extends Wizard\Player {
 	 */
 	protected $parent_cmd;
 
+	/**
+	 * @var ilAppEventHandler
+	 */
+	protected $g_event_handler;
+
 	public function __construct($parent_gui, $parent_cmd, $execute_show = true) {
 		global $DIC;
 
@@ -53,7 +58,7 @@ abstract class ilTMSCancelGUI  extends Wizard\Player {
 		$this->g_ctrl = $DIC->ctrl();
 		$this->g_user = $DIC->user();
 		$this->g_lng = $DIC->language();
-
+		$this->g_event_handler = $DIC['ilAppEventHandler'];
 		$this->g_lng->loadLanguageModule('tms');
 
 		$this->parent_gui = $parent_gui;
@@ -99,7 +104,7 @@ abstract class ilTMSCancelGUI  extends Wizard\Player {
 			, (int)$this->g_user->getId()
 			, $crs_ref_id
 			, $usr_id
-			, $this->getEventOnFinishCallback()
+			, $this->getOnFinishClosure()
 			);
 		$player = new Wizard\Player
 			( $ilias_bindings
@@ -118,25 +123,36 @@ abstract class ilTMSCancelGUI  extends Wizard\Player {
 		}
 	}
 
-/**
-	 * Get the event to throw when the process is finished.
+	/**
+	 * Execute this when the player is finished.
 	 *
 	 * @param int 	$acting_usr_id
 	 * @param int 	$target_usr_id
 	 * @param int 	$crs_ref_id
-	 * @return string
+	 * @return void
 	 */
-	abstract protected function getEventOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id);
+	abstract protected function callOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id);
 
 	/**
-	 * Wrap getEventOnFinish to be called from the Wizard.
+	 * Wrap callOnFinish to be called from the Wizard.
 	 *
 	 * @return callable
 	 */
-	protected function getEventOnFinishCallback() {
+	protected function getOnFinishClosure() {
 		return function($acting_usr_id, $target_usr_id, $crs_ref_id) {
-			return $this->getEventOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id);
+			return $this->callOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id);
 		};
+	}
+
+	/**
+	 * Lookup the course's obj_id.
+	 * @param int 	$crs_ref_id
+	 * @return int
+	 */
+	protected function lookupObjId($crs_ref_id) {
+		assert('is_int($crs_ref_id)');
+		$crs_obj_id = (int)\ilObject::_lookupObjId($crs_ref_id);
+		return $crs_obj_id;
 	}
 
 	/**
@@ -189,6 +205,30 @@ abstract class ilTMSCancelGUI  extends Wizard\Player {
 
 		$employees = $this->getUsersWhereCurrentCanViewBookings((int)$this->g_user->getId());
 		return array_key_exists($usr_id, $employees);
+	}
+
+	/**
+	 * Raises an event with course ids and user id as params.
+	 * @param string 	$event
+	 * @param int 	$usr_id
+	 * @param int 	$crs_ref_id
+	 * @return void
+	 */
+	protected function fireBookingEvent($event, $usr_id, $crs_ref_id) {
+		assert('is_string($event)');
+		assert('is_int($usr_id)');
+		assert('is_int($crs_ref_id)');
+
+		$crs_obj_id = $this->lookupObjId($crs_ref_id);
+		$this->g_event_handler->raise(
+			'Modules/Course',
+			$event,
+			array(
+				 'crs_ref_id' => $crs_ref_id,
+				 'obj_id' => $crs_obj_id,
+				 'usr_id' => $usr_id
+			 )
+		 );
 	}
 
 }
