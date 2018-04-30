@@ -245,6 +245,7 @@ trait LinkHelper {
 	 */
 	protected function getMessage(\ILIAS\TMS\CourseCreation\Request $request, $waiting_time) {
 		require_once("Services/UICore/classes/class.ilTemplate.php");
+		$this->getLng()->loadLanguageModule("tms");
 		$tpl = new \ilTemplate("tpl.open_requests.html", true, true, "src/TMS");
 		$tpl->setVariable("MESSAGE",
 			sprintf(
