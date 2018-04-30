@@ -45,6 +45,14 @@ class ilTMSSelfBookWaitingGUI extends \ilTMSBookingGUI {
 	protected function getPlayerTitle() {
 		return $this->g_lng->txt("booking_waiting");
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function callOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id){
+		$event = Booking\Actions::EVENT_USER_BOOKED_WAITING;
+		$this->fireBookingEvent($event, $target_usr_id, $crs_ref_id);
+	}
 }
 
 /**

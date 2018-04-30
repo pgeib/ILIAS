@@ -23,7 +23,7 @@ class _BookingWizard extends Booking\Wizard{
 		return $this->getDIC();
 	}
 	public function _getComponentClass() {
-		return $this->getComponentClass();	
+		return $this->getComponentClass();
 	}
 }
 
@@ -40,37 +40,37 @@ class TMS_Booking_WizardTest extends PHPUnit_Framework_TestCase {
 			->disableArgumentCloning()
 			->disallowMockingUnknownTypes()
 			->setMockClassName("BookingStep".$this->step_count)
-			->getMock();		
+			->getMock();
 	}
 
 	public function test_getId() {
 		$component_class = "SOME_CLASS";
 		$wizard_id = "{$component_class}_1_2_3";
-		$wizard = new _BookingWizard([], $component_class, 1, 2, 3);
+		$wizard = new _BookingWizard([], $component_class, 1, 2, 3, null);
 		$this->assertSame($wizard_id, $wizard->getId());
 	}
 
 	public function test_getDIC() {
 		$dic = ["my" => "container"];
-		$wizard = new _BookingWizard($dic, "", 0, 0, 0);
+		$wizard = new _BookingWizard($dic, "", 0, 0, 0, null);
 		$this->assertSame($dic, $wizard->_getDIC());
 	}
 
 	public function test_getUserId() {
 		$user_id = 42;
-		$wizard = new _BookingWizard([], "", 0, 0, $user_id);
+		$wizard = new _BookingWizard([], "", 0, 0, $user_id, null);
 		$this->assertEquals($user_id, $wizard->_getUserId());
 	}
 
 	public function test_getEntityRefId() {
 		$crs_id = 23;
-		$wizard = new _BookingWizard([], "", 0, $crs_id, 0);
+		$wizard = new _BookingWizard([], "", 0, $crs_id, 0, null);
 		$this->assertEquals($crs_id, $wizard->_getEntityRefId());
 	}
 
 	public function test_getComponentClass() {
 		$component_class = "THIS_IS_COMPONENT_CLASS";
-		$wizard = new _BookingWizard([], $component_class, 0, 0, 0);
+		$wizard = new _BookingWizard([], $component_class, 0, 0, 0, null);
 		$this->assertEquals($component_class, $wizard->_getComponentClass());
 	}
 
@@ -163,7 +163,7 @@ class TMS_Booking_WizardTest extends PHPUnit_Framework_TestCase {
 
 		$wizard = $this->getMockBuilder(_BookingWizard::class)
 			->setMethods(["getSortedSteps"])
-			->setConstructorArgs([[], "", $active_user_id, $crs_ref_id, $target_user_id])
+			->setConstructorArgs([[], "", $active_user_id, $crs_ref_id, $target_user_id, null])
 			->getMock();
 
 		$component1 = $this->createStepMock();
@@ -191,4 +191,5 @@ class TMS_Booking_WizardTest extends PHPUnit_Framework_TestCase {
 
 		$step1->processStep([]);
 	}
+
 }

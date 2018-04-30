@@ -49,6 +49,14 @@ class ilTMSSuperiorBookingGUI extends \ilTMSBookingGUI {
 	protected function getDuplicatedCourseMessage($usr_id) {
 		return array(sprintf($this->g_lng->txt("superior_duplicate_course_booked"), ilObjUser::_lookupFullname($usr_id)));
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function callOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id){
+		$event = Booking\Actions::EVENT_SUPERIOR_BOOKED_COURSE;
+		$this->fireBookingEvent($event, $target_usr_id, $crs_ref_id);
+	}
 }
 
 /**
