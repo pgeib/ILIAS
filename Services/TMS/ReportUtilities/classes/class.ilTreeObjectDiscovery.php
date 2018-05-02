@@ -8,7 +8,7 @@ use ILIAS\TMS\ReportUtilities\TreeObjectDiscovery;
 class ilTreeObjectDiscovery implements TreeObjectDiscovery
 {
 
-	protected $tree;
+	protected $g_tree;
 
 	public function __construct(\ilTree $tree)
 	{
