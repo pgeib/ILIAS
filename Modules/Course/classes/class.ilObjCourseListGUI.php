@@ -43,6 +43,11 @@ class ilObjCourseListGUI extends ilObjectListGUI
 		// general commands array
 		include_once('Modules/Course/classes/class.ilObjCourseAccess.php');
 		$this->commands = ilObjCourseAccess::_getCommands();
+
+		// cat-tms-patch start
+		global $DIC;
+		$this->user = $DIC->user();
+		// cat-tms-patch end
 	}
 	
 	/**

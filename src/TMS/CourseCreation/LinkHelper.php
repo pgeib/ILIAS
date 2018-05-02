@@ -4,6 +4,8 @@
 
 namespace ILIAS\TMS\CourseCreation;
 
+require_once("./Services/User/classes/class.ilObjUser.php");
+
 /**
  * Some common methods to help with the creation of links to the course creation.
  */
@@ -22,18 +24,6 @@ trait LinkHelper {
 	 * @return \ilObjUser
 	 */
 	abstract protected function getUser();
-
-	/**
-	 * @return \ilCourseCreationPlugin
-	 */
-	protected function getCourseCreationPlugin() {
-		require_once("Services/Component/classes/class.ilPluginAdmin.php");
-		if (!\ilPluginAdmin::isPluginActive("xccr")) {
-			return null;
-		}
-
-		return \ilPluginAdmin::getPluginObjectById("xccr");
-	}
 
 	/**
 	 * Send an info message to user gui
@@ -222,24 +212,50 @@ trait LinkHelper {
 	}
 
 	/**
-	 * TODO: This should be moved to ILIAS\TMS\CourseCreation\LinkHelper, with tests and properly
-	 *       injected dependencies, also LinkHelper should get a new name then.
-	 * @return bool | null
+	 * Shows request info if it is neccessary
+	 *
+	 * @param \ilCourseCreationPlugin | null	$xccr_plugin
+	 * @param int 	$waiting_time
+	 *
+	 * @return bool
 	 */
-	protected function maybeShowRequestInfo($xccr_plugin = null)
+	protected function maybeShowRequestInfo(\ilCourseCreationPlugin $xccr_plugin = null, $waiting_time = 30000)
 	{
-		$requests = $this->getUsersDueRequests($this->getUser(), $this->getCourseCreationPlugin());
+		$requests = $this->getUsersDueRequests($this->getUser(), $xccr_plugin);
 		if (count($requests) === 0) {
-			return;
+			return false;
 		}
+
 		// This assertion assumes that every user is only allowed to create one training at
 		// a time. See e.g. TMS-1013.
 		assert('count($requests) == 1');
 		list($request) = $requests;
-		$message = sprintf($this->getLng()->txt("course_creation_message"), $this->getTrainingTitleByRequest($request));
-		$this->sendInfo($message);
+		$this->sendInfo($this->getMessage($request, $waiting_time));
 
 		return true;
+	}
+
+	/**
+	 * Get the message should be shown
+	 *
+	 * @param \ILIAS\TMS\CourseCreation\Request 	$request
+	 * @param int 	$waiting_time
+	 *
+	 * @return string
+	 */
+	protected function getMessage(\ILIAS\TMS\CourseCreation\Request $request, $waiting_time) {
+		require_once("Services/UICore/classes/class.ilTemplate.php");
+		$this->getLng()->loadLanguageModule("tms");
+		$tpl = new \ilTemplate("tpl.open_requests.html", true, true, "src/TMS");
+		$tpl->setVariable("MESSAGE",
+			sprintf(
+				$this->getLng()->txt("course_creation_message"),
+				$this->getTrainingTitleByRequest($request)
+			)
+		);
+		$tpl->setVariable("TIMEOUT", $waiting_time);
+
+		return $tpl->get();
 	}
 
 	/**
@@ -265,11 +281,14 @@ trait LinkHelper {
 	}
 
 	/**
-	 * TODO: This should be moved to ILIAS\TMS\CourseCreation\LinkHelper, with tests and properly
-	 *       injected dependencies.
+	 * Get the open requests for single user
+	 *
+	 * @param \ilObjUser 	$user
+	 * @param \ilCourseCreationPlugin 	$xccr_plugin
+	 *
 	 * @return ILIAS\TMS\CourseCreation/Request[]
 	 */
-	protected function getUsersDueRequests(\ilObjUser $user, $xccr_plugin = null)
+	protected function getUsersDueRequests(\ilObjUser $user, \ilCourseCreationPlugin $xccr_plugin = null)
 	{
 		$cached_requests = $this->getCachedRequests((int)$user->getId());
 		if ($cached_requests !== null) {

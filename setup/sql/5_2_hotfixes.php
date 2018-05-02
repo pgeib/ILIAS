@@ -427,3 +427,23 @@ if($rp_ops_id && $ep_ops_id && $w_ops_id)
 require_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
 ilDBUpdateNewObjectType::addRBACTemplate('orgu', 'il_orgu_employee', "OrgUnit Employee Role Template", null);
 ?>
+<#26>
+<?php
+	$ilDB->manipulate('UPDATE exc_mem_ass_status SET status='.$ilDB->quote('notgraded', 'text').' WHERE status = '.$ilDB->quote('', 'text'));
+?>
+<#27>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+<#28>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+<#29>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+<#30>
+<?php
+$ilDB->modifyTableColumn('il_dcl_tableview', 'roles',array('type' => 'clob'));
+?>

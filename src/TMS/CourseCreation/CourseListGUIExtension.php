@@ -4,12 +4,15 @@
 
 namespace ILIAS\TMS\CourseCreation;
 
+require_once("Services/TMS/PluginObjectFactory.php");
+
 /**
  * Enhances a course list gui with methods required for display of the action to
  * create the course.
  */
 trait CourseListGUIExtension {
 	use LinkHelper;
+	use \PluginObjectFactory;
 
 	/**
 	 * @return	\ilCtrl
@@ -29,8 +32,7 @@ trait CourseListGUIExtension {
 	 * @inheritdoc
 	 */
 	protected function getUser() {
-		global $DIC;
-		return $DIC->user();
+		return $this->user;
 	}
 
 	/**

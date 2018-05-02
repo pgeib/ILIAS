@@ -46,24 +46,31 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	protected $process_db;
 
 	/**
-	 * @param	string $wizard_id
-	 * @param	\ArrayAccess|array $dic
-	 * @param	string	$component_class	the user that performs the wizard
-	 * @param	int	$acting_user_id			the user that performs the wizard
-	 * @param	int	$crs_ref_id 			course that should get booked
-	 * @param	int	$target_user_id			the user the booking is made for
+	 * @var	callable
 	 */
-	public function __construct($dic, $component_class, $acting_user_id, $crs_ref_id, $target_user_id) {
+	protected $call_on_finish;
+
+	/**
+	 * @param	\ArrayAccess|array $dic
+	 * @param	string 	$component_class
+	 * @param	int		$acting_user_id			the user that performs the wizard
+	 * @param	int		$crs_ref_id 			course that should get booked
+	 * @param	int		$target_user_id			the user the booking is made for
+	 * @param	callable | null	$call_on_finish 	when the wizard is finished, execute this.
+	 */
+	public function __construct($dic, $component_class, $acting_user_id, $crs_ref_id, $target_user_id, $call_on_finish) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_string($component_class)');
 		assert('is_int($acting_user_id)');
 		assert('is_int($crs_ref_id)');
 		assert('is_int($target_user_id)');
+		assert('is_callable($call_on_finish) || is_null($call_on_finish)');
 		$this->dic = $dic;
 		$this->component_class = $component_class;
 		$this->acting_user_id = $acting_user_id;
 		$this->crs_ref_id = $crs_ref_id;
 		$this->target_user_id = $target_user_id;
+		$this->call_on_finish = $call_on_finish;
 	}
 
 	/**
@@ -153,6 +160,14 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @inheritdoc
 	 */
 	public function finish() {
-		// Nothing to do here...
+		if(! is_null($this->call_on_finish)) {
+			call_user_func(
+				$this->call_on_finish,
+				$this->acting_user_id,
+				$this->target_user_id,
+				$this->crs_ref_id
+			);
+		}
 	}
+
 }
