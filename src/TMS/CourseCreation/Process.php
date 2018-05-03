@@ -13,10 +13,12 @@ class Process {
 	const SOAP_TIMEOUT_IN_S = 30;
 	const EDU_TRACKING = "xetr";
 	const COURSE_CLASSIFICATION = "xccl";
+	const SESSION = "sess";
 
 	private static $RUN_AT_LAST = array(
 		self::EDU_TRACKING,
-		self::COURSE_CLASSIFICATION
+		self::COURSE_CLASSIFICATION,
+		self::SESSION
 	);
 
 	/**
