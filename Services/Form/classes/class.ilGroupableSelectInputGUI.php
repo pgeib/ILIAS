@@ -221,7 +221,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 	private function getAdjustTitle($title)
 	{
 		assert('is_string($title)');
-		if(strlen($title) >= $this->length) {
+		if($this->getTextLength() > 0 && strlen($title) >= $this->getTextLength()) {
 			return substr($title, 0, $this->getTextLength())."...";
 		}
 		return $title;
