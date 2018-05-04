@@ -77,7 +77,7 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$si = new SI();
 		$writer = $this->export_writer[$format_id];
 		assert('is_int($format_id)');
-		$path = sys_get_temp_dir();
+		$path = rtrim(sys_get_temp_dir(),DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
 		$writer->setPath($path);
 		$filename = ltrim(str_replace($path,'',tempnam($path, 'xlsx_write')), DIRECTORY_SEPARATOR);
