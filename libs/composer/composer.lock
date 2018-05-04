@@ -4,8 +4,77 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "93daed6b43870ba46c0e24a456bd531a",
+    "hash": "56f900875dc4d13c7b09f76b5cee352a",
+    "content-hash": "f16eda87d6472611cf086ac674faa519",
     "packages": [
+        {
+            "name": "box/spout",
+            "version": "v2.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/box/spout.git",
+                "reference": "3681a3421a868ab9a65da156c554f756541f452b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/box/spout/zipball/3681a3421a868ab9a65da156c554f756541f452b",
+                "reference": "3681a3421a868ab9a65da156c554f756541f452b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xmlreader": "*",
+                "ext-zip": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.0"
+            },
+            "suggest": {
+                "ext-iconv": "To handle non UTF-8 CSV files (if \"php-intl\" is not already installed or is too limited)",
+                "ext-intl": "To handle non UTF-8 CSV files (if \"iconv\" is not already installed)"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Box\\Spout\\": "src/Spout"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Adrien Loison",
+                    "email": "adrien@box.com"
+                }
+            ],
+            "description": "PHP Library to read and write spreadsheet files (CSV, XLSX and ODS), in a fast and scalable way",
+            "homepage": "https://www.github.com/box/spout",
+            "keywords": [
+                "OOXML",
+                "csv",
+                "excel",
+                "memory",
+                "odf",
+                "ods",
+                "office",
+                "open",
+                "php",
+                "read",
+                "scale",
+                "spreadsheet",
+                "stream",
+                "write",
+                "xlsx"
+            ],
+            "time": "2017-09-25 19:44:35"
+        },
         {
             "name": "conceptsandtraining/ente",
             "version": "3.1.2",
@@ -40,7 +109,46 @@
                 }
             ],
             "description": "An entity component framework for ILIAS.",
-            "time": "2018-02-21T09:51:11+00:00"
+            "time": "2018-02-21 09:51:11"
+        },
+        {
+            "name": "conceptsandtraining/lib-excel-wrapper",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/conceptsandtraining/lib-excel-wrapper.git",
+                "reference": "ba9881b4973041fff60f43bffdc5738e4710beab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/conceptsandtraining/lib-excel-wrapper/zipball/ba9881b4973041fff60f43bffdc5738e4710beab",
+                "reference": "ba9881b4973041fff60f43bffdc5738e4710beab",
+                "shasum": ""
+            },
+            "require": {
+                "box/spout": "^2.4"
+            },
+            "type": "library",
+            "extra": {
+                "box/spout": {
+                    "source": "https://github.com/box/spout",
+                    "used_version": "v2.4.0",
+                    "wrapped_by": null
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "CaT\\Libs\\ExcelWrapper\\": "./src"
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "support": {
+                "source": "https://github.com/conceptsandtraining/lib-excel-wrapper/tree/master",
+                "issues": "https://github.com/conceptsandtraining/lib-excel-wrapper/issues"
+            },
+            "time": "2017-04-03 07:52:55"
         },
         {
             "name": "cweagans/composer-patches",
@@ -84,7 +192,7 @@
                 }
             ],
             "description": "Provides a way to patch Composer packages.",
-            "time": "2016-03-28T18:54:21+00:00"
+            "time": "2016-03-28 18:54:21"
         },
         {
             "name": "eluceo/ical",
@@ -140,7 +248,7 @@
                 "ics",
                 "php calendar"
             ],
-            "time": "2017-10-26T11:20:58+00:00"
+            "time": "2017-10-26 11:20:58"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -184,7 +292,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2016-07-16T12:58:58+00:00"
+            "time": "2016-07-16 12:58:58"
         },
         {
             "name": "filp/whoops",
@@ -245,7 +353,7 @@
                 "throwable",
                 "whoops"
             ],
-            "time": "2017-11-23T18:22:44+00:00"
+            "time": "2017-11-23 18:22:44"
         },
         {
             "name": "geshi/geshi",
@@ -282,7 +390,7 @@
             ],
             "description": "Generic Syntax Highlighter",
             "homepage": "http://qbnz.com/highlighter/",
-            "time": "2016-02-01T23:14:34+00:00"
+            "time": "2016-02-01 23:14:34"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -347,7 +455,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20T17:10:46+00:00"
+            "time": "2017-03-20 17:10:46"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -424,7 +532,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "2015-11-12T13:51:40+00:00"
+            "time": "2015-11-12 13:51:40"
         },
         {
             "name": "moment/moment",
@@ -478,7 +586,7 @@
                 "time",
                 "validate"
             ],
-            "time": "2016-07-04T06:39:29+00:00"
+            "time": "2016-07-04 06:39:29"
         },
         {
             "name": "monolog/monolog",
@@ -556,7 +664,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-07-29T03:23:52+00:00"
+            "time": "2016-07-29 03:23:52"
         },
         {
             "name": "phansys/getid3",
@@ -602,7 +710,7 @@
                 "tags"
             ],
             "abandoned": "james-heinrich/getid3",
-            "time": "2012-12-04T17:31:30+00:00"
+            "time": "2012-12-04 17:31:30"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -667,7 +775,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2017-01-09T09:33:47+00:00"
+            "time": "2017-01-09 09:33:47"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -725,7 +833,7 @@
                 "xlsx"
             ],
             "abandoned": "phpoffice/phpspreadsheet",
-            "time": "2015-05-01T07:00:55+00:00"
+            "time": "2015-05-01 07:00:55"
         },
         {
             "name": "pimple/pimple",
@@ -771,7 +879,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-09-11T15:10:35+00:00"
+            "time": "2015-09-11 15:10:35"
         },
         {
             "name": "psr/http-message",
@@ -821,7 +929,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "psr/log",
@@ -868,7 +976,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "robloach/component-installer",
@@ -916,7 +1024,46 @@
                 }
             ],
             "description": "Allows installation of Components via Composer.",
-            "time": "2015-08-10T12:35:38+00:00"
+            "time": "2015-08-10 12:35:38"
+        },
+        {
+            "name": "setasign/fpdf",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Setasign/FPDF.git",
+                "reference": "2c68c9e6c034ac3187d25968790139a73184cdb1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Setasign/FPDF/zipball/2c68c9e6c034ac3187d25968790139a73184cdb1",
+                "reference": "2c68c9e6c034ac3187d25968790139a73184cdb1",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "fpdf.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "no usage restriction"
+            ],
+            "authors": [
+                {
+                    "name": "Olivier Plathey",
+                    "email": "oliver@fpdf.org",
+                    "homepage": "http://fpdf.org/"
+                }
+            ],
+            "description": "FPDF is a PHP class which allows to generate PDF files with pure PHP. F from FPDF stands for Free: you may use it for any kind of usage and modify it to suit your needs.",
+            "homepage": "http://www.fpdf.org",
+            "keywords": [
+                "fpdf",
+                "pdf"
+            ],
+            "time": "2016-01-01 17:47:15"
         },
         {
             "name": "symfony/process",
@@ -965,7 +1112,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-28T11:13:48+00:00"
+            "time": "2016-07-28 11:13:48"
         },
         {
             "name": "symfony/yaml",
@@ -1014,7 +1161,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-17T14:02:08+00:00"
+            "time": "2016-07-17 14:02:08"
         },
         {
             "name": "technosophos/LibRIS",
@@ -1057,7 +1204,7 @@
                 "RIS",
                 "Reference"
             ],
-            "time": "2012-03-14T16:36:15+00:00"
+            "time": "2012-03-14 16:36:15"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -1125,7 +1272,7 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2015-09-12T10:08:34+00:00"
+            "time": "2015-09-12 10:08:34"
         }
     ],
     "packages-dev": [
@@ -1181,7 +1328,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2015-06-14 21:17:01"
         },
         {
             "name": "mikey179/vfsStream",
@@ -1227,7 +1374,7 @@
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
             "homepage": "http://vfs.bovigo.org/",
-            "time": "2016-07-18T14:02:57+00:00"
+            "time": "2016-07-18 14:02:57"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1281,7 +1428,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27T11:43:31+00:00"
+            "time": "2015-12-27 11:43:31"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -1326,7 +1473,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-09-30T07:12:33+00:00"
+            "time": "2016-09-30 07:12:33"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -1373,7 +1520,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2016-06-10T07:14:17+00:00"
+            "time": "2016-06-10 07:14:17"
         },
         {
             "name": "phpspec/prophecy",
@@ -1435,7 +1582,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2016-06-07T08:13:47+00:00"
+            "time": "2016-06-07 08:13:47"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1497,7 +1644,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-06T15:47:00+00:00"
+            "time": "2015-10-06 15:47:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1544,7 +1691,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2015-06-21T13:08:43+00:00"
+            "time": "2015-06-21 13:08:43"
         },
         {
             "name": "phpunit/php-text-template",
@@ -1585,7 +1732,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21T13:50:34+00:00"
+            "time": "2015-06-21 13:50:34"
         },
         {
             "name": "phpunit/php-timer",
@@ -1629,7 +1776,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2016-05-12T18:03:57+00:00"
+            "time": "2016-05-12 18:03:57"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -1678,7 +1825,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2015-09-15T10:49:45+00:00"
+            "time": "2015-09-15 10:49:45"
         },
         {
             "name": "phpunit/phpunit",
@@ -1750,7 +1897,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-07-21T06:48:14+00:00"
+            "time": "2016-07-21 06:48:14"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1806,7 +1953,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-10-02T06:51:40+00:00"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "sebastian/comparator",
@@ -1870,7 +2017,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2015-07-26T15:48:44+00:00"
+            "time": "2015-07-26 15:48:44"
         },
         {
             "name": "sebastian/diff",
@@ -1922,7 +2069,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08T07:14:41+00:00"
+            "time": "2015-12-08 07:14:41"
         },
         {
             "name": "sebastian/environment",
@@ -1972,7 +2119,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18T05:49:44+00:00"
+            "time": "2016-08-18 05:49:44"
         },
         {
             "name": "sebastian/exporter",
@@ -2039,7 +2186,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17T09:04:28+00:00"
+            "time": "2016-06-17 09:04:28"
         },
         {
             "name": "sebastian/global-state",
@@ -2090,7 +2237,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12T03:26:01+00:00"
+            "time": "2015-10-12 03:26:01"
         },
         {
             "name": "sebastian/recursion-context",
@@ -2143,7 +2290,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2015-11-11T19:50:13+00:00"
+            "time": "2015-11-11 19:50:13"
         },
         {
             "name": "sebastian/version",
@@ -2178,7 +2325,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2015-06-21T13:59:46+00:00"
+            "time": "2015-06-21 13:59:46"
         },
         {
             "name": "webmozart/assert",
@@ -2228,14 +2375,15 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-08-09T15:02:57+00:00"
+            "time": "2016-08-09 15:02:57"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "phansys/getid3": 10,
-        "geshi/geshi": 20
+        "geshi/geshi": 20,
+        "conceptsandtraining/lib-excel-wrapper": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

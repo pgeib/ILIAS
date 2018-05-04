@@ -1,5 +1,9 @@
 <?php
 require_once 'Services/Table/classes/class.ilTable2GUI.php';
+
+use CaT\Libs\ExcelWrapper as ExcelWrapper;
+use CaT\Libs\ExcelWrapper\Style as Style;
+use CaT\Libs\ExcelWrapper\Spout\SpoutInterpreter as SI;
 /**
  * Table with selectable columns for report taking care of requested fields
  */
@@ -8,18 +12,111 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	protected $order = [];
 	protected $selectable = [];
 	protected $internal_sorting_columns = [];
+	protected $export_writer = [];
+
 
 	public function __construct($a_parent_gui, $a_cmd) {
-		global $ilCtrl;
-
+		global $DIC;
+		$g_ctrl = $DIC['ilCtrl'];
+		$this->setId("elpt_".$a_parent_gui->id);
 		parent::__construct($a_parent_gui, $a_cmd);
 		$this->setEnableTitle(false);
 		$this->setTopCommands(false);
 		$this->setEnableHeader(true);
-		$this->setFormAction($ilCtrl->getFormAction($a_parent_gui,$a_cmd));
+		$this->setFormAction($g_ctrl->getFormAction($a_parent_gui,$a_cmd));
 		$this->columns_determined = false;
-		$this->setId("report_table");
 		$this->setExternalSorting(true);
+		$this->export_formats = [];
+	}
+
+	/**
+	 * Configure an export path via some ExcelWrapper\Writer
+	 *
+	 * @param	ExcelWrapper\Writer	$writer
+	 * @param	int	$format_id
+	 * @param	string	$export_format_title
+	 * @param	string	$export_format_mine
+	 * @return 	void
+	 */
+	public function addExporter(
+		ExcelWrapper\Writer $writer,
+		$format_id,
+		$export_format_title,
+		$export_format_mine)
+	{
+		assert('is_int($format_id)');
+		assert('is_string($export_format_title)');
+		assert('is_string($export_format_mine)');
+		$this->export_formats[$format_id] = $export_format_title;
+		$this->export_writer[$format_id] = $writer;
+		$this->export_mime[$format_id] = $export_format_mine;
+	}
+
+	/**
+	 * @inheritsdoc
+	 */
+	public function exportData($format_id, $send = false)
+	{
+		assert('is_int($format_id)');
+		if($this->dataExists()) {
+			if(!array_key_exists($format_id, $this->export_writer)) {
+				throw new \InvalidArgumentException('unknown format');
+			}
+			$this->exportByFormat((int)$format_id, $send);
+		}
+	}
+
+	/**
+	 * Export data via an ExcelWrapper\Writer corresponding to $format_id
+	 *
+	 * @param	int	$format_id
+	 * @param	bool	$send
+	 */
+	protected function exportByFormat($format_id, $send = false)
+	{
+		$si = new SI();
+		$writer = $this->export_writer[$format_id];
+		assert('is_int($format_id)');
+		$path = sys_get_temp_dir();
+
+		$writer->setPath($path);
+		$filename = ltrim(str_replace($path,'',tempnam($path, 'xlsx_write')), DIRECTORY_SEPARATOR);
+		$writer->setFileName($filename);
+		$writer->openFile();
+		$header_style = new Style();
+		$header_style = $header_style->withBold(true);
+		$data_style = new Style();
+		$columns = $this->relevantColumns();
+		$writer->setColumnStyle('A',$si->interpret($header_style));
+		$header = [];
+
+		foreach ($columns as $column_id => $metadata) {
+			$header[] = $metadata['txt'];
+		}
+		$writer->addRow($header);
+		$writer->setColumnStyle('A',$si->interpret($data_style));
+
+		foreach ($this->row_data as $data_set) {
+			$row = [];
+			foreach ($columns as $column_id => $metadata) {
+				$row[] = $data_set[$column_id];
+			}
+			$writer->addRow($row);
+		}
+
+		$writer->close();
+		if($send) {
+
+			\ilUtil::deliverFile(
+				$path.DIRECTORY_SEPARATOR.$filename,
+				'report',
+				$this->export_mime[$format_id],
+				false,
+				true,
+				true);
+			exit();
+		}
+
 	}
 
 	/**
@@ -171,4 +268,5 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		}
 		return $space;
 	}
+
 }
