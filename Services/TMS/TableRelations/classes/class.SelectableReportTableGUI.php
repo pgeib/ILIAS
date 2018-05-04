@@ -42,14 +42,18 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		ExcelWrapper\Writer $writer,
 		$format_id,
 		$export_format_title,
-		$export_format_mine)
+		$export_format_mine,
+		$export_format
+		)
 	{
 		assert('is_int($format_id)');
 		assert('is_string($export_format_title)');
 		assert('is_string($export_format_mine)');
+		assert('is_string($export_format)');
 		$this->export_formats[$format_id] = $export_format_title;
 		$this->export_writer[$format_id] = $writer;
 		$this->export_mime[$format_id] = $export_format_mine;
+		$this->export_format[$format_id] = $export_format;
 	}
 
 	/**
@@ -91,6 +95,9 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$header = [];
 
 		foreach ($columns as $column_id => $metadata) {
+			if($metadata['no_excel']) {
+				continue;
+			}
 			$header[] = $metadata['txt'];
 		}
 		$writer->addRow($header);
@@ -99,6 +106,9 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		foreach ($this->row_data as $data_set) {
 			$row = [];
 			foreach ($columns as $column_id => $metadata) {
+				if($metadata['no_excel']) {
+					continue;
+				}
 				$row[] = $data_set[$column_id];
 			}
 			$writer->addRow($row);
@@ -109,7 +119,7 @@ class SelectableReportTableGUI extends ilTable2GUI {
 
 			\ilUtil::deliverFile(
 				$path.DIRECTORY_SEPARATOR.$filename,
-				'report',
+				'report.'.$this->export_format[$format_id],
 				$this->export_mime[$format_id],
 				false,
 				true,
