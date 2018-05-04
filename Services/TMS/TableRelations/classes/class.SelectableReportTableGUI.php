@@ -29,6 +29,15 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$this->export_formats = [];
 	}
 
+	/**
+	 * Configure an export path via some ExcelWrapper\Writer
+	 *
+	 * @param	ExcelWrapper\Writer	$writer
+	 * @param	int	$format_id
+	 * @param	string	$export_format_title
+	 * @param	string	$export_format_mine
+	 * @return 	void
+	 */
 	public function addExporter(
 		ExcelWrapper\Writer $writer,
 		$format_id,
@@ -43,6 +52,9 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$this->export_mime[$format_id] = $export_format_mine;
 	}
 
+	/**
+	 * @inheritsdoc
+	 */
 	public function exportData($format_id, $send = false)
 	{
 		assert('is_int($format_id)');
@@ -54,6 +66,12 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		}
 	}
 
+	/**
+	 * Export data via an ExcelWrapper\Writer corresponding to $format_id
+	 *
+	 * @param	int	$format_id
+	 * @param	bool	$send
+	 */
 	protected function exportByFormat($format_id, $send = false)
 	{
 		$si = new SI();
