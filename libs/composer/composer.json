@@ -21,8 +21,15 @@
 		"psr/log": "^1.0.1",
 		"eluceo/ical": "0.11.4",
 		"conceptsandtraining/ente": "v3.*",
+		"conceptsandtraining/lib-excel-wrapper": "dev-master",
 		"setasign/fpdf": "^1.8"
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/conceptsandtraining/lib-excel-wrapper"
+		}
+	],
 	"require-dev": {
 		"mikey179/vfsStream": "^1.6",
 		"phpunit/phpunit": "^4.8",

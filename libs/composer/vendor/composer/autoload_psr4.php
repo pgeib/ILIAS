@@ -18,5 +18,7 @@ return array(
     'ILIAS\\' => array($baseDir . '/../../src'),
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
+    'CaT\\Libs\\ExcelWrapper\\' => array($vendorDir . '/conceptsandtraining/lib-excel-wrapper/src'),
     'CaT\\Ente\\' => array($vendorDir . '/conceptsandtraining/ente/src'),
+    'Box\\Spout\\' => array($vendorDir . '/box/spout/src/Spout'),
 );
