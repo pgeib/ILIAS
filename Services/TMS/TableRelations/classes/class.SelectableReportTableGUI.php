@@ -261,22 +261,36 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$this->determineSelectedColumns();
 		$this->spanColumns();
 		$this->setExternalSorting(true);
+		$requested = [];
 		foreach($this->relevantFields() as $id => $field) {
 			$space->request($field,$id);
+			$requested[] = $id;
 		}
 		$this->determineOffsetAndOrder(true);
-		$order_column_id = $this->getOrderField();
-		if(isset($this->relevantColumns()[$order_column_id])) {
-			$order_direction = $this->getOrderDirection();
-			if(in_array($order_column_id, $this->internal_sorting_columns)) {
-				$this->setExternalSorting(false);
-			} else {
-				$space->orderBy( array_keys($this->fields[$order_column_id]),$order_direction);
+		$order_fields = $this->determineOrderFields();
+		foreach ($order_fields as $id => $field) {
+			if(!in_array($id, $requested)) {
+				$space->request($field, $id);
 			}
-		} else {
-			$space->orderBy(array(key($this->relevantColumns())),'asc');
 		}
+		$order_direction = $this->getOrderDirection();
+		$space->orderBy(array_keys($order_fields),$order_direction);
 		return $space;
+	}
+
+	protected function determineOrderFields() {
+		// this actually loads order column id in ilTable2GUI
+		$order_column_id = $this->getOrderField();
+		$return = [];
+		if(array_key_exists($order_column_id, $this->selectable)
+			&& array_key_exists('sort', $this->selectable[$order_column_id])) {
+			return $this->fields[$order_column_id];
+		}
+		if(array_key_exists($order_column_id, $this->persistent)
+			&& array_key_exists('sort', $this->persistent[$order_column_id])) {
+			return $this->fields[$order_column_id];
+		}
+		return [];
 	}
 
 	/**
