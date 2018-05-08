@@ -279,4 +279,21 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		return $space;
 	}
 
+	/**
+	 * Define the columns that are selected, when a user calls the report for the first time
+	 * via the column ids.
+	 *
+	 * @param	int|string[]	$column_ids
+	 * @return	void
+	 */
+	public function setDefaultSelectedColumns(array $column_ids)
+	{
+		foreach ($column_ids as $column_id) {
+			if(!array_key_exists($column_id, $this->selectable)) {
+				throw new \InvalidArgumentException($column_id.' does not exist or is not selectable and thus may not be default selected');
+			}
+			$this->selectable[$column_id]['default'] = true;
+		}
+	}
+
 }
