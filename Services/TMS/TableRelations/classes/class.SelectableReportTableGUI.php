@@ -5,7 +5,9 @@ use CaT\Libs\ExcelWrapper as ExcelWrapper;
 use CaT\Libs\ExcelWrapper\Style as Style;
 use CaT\Libs\ExcelWrapper\Spout\SpoutInterpreter as SI;
 /**
- * Table with selectable columns for report taking care of requested fields
+ * Table with selectable columns for report taking care of requested fields.
+ * The object has to work in a way, such that a consumer of it may adjust
+ * the whole configuration after instantiation.
  */
 class SelectableReportTableGUI extends ilTable2GUI {
 	protected $persistent = [];
@@ -13,7 +15,11 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	protected $selectable = [];
 	protected $internal_sorting_columns = [];
 	protected $export_writer = [];
+	protected $default_order_column;
+	protected $default_order_direction = self::ORDER_ASC;
 
+	const ORDER_ASC = 'asc';
+	const ORDER_DESC = 'desc';
 
 	public function __construct($a_parent_gui, $a_cmd) {
 		global $DIC;
@@ -23,6 +29,8 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$this->setEnableTitle(false);
 		$this->setTopCommands(false);
 		$this->setEnableHeader(true);
+		$this->determineOffsetAndOrder(true);
+		$g_ctrl->setParameter($a_parent_gui,$this->getNavParameter(),$this->nav_value);
 		$this->setFormAction($g_ctrl->getFormAction($a_parent_gui,$a_cmd));
 		$this->columns_determined = false;
 		$this->setExternalSorting(true);
@@ -261,22 +269,47 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$this->determineSelectedColumns();
 		$this->spanColumns();
 		$this->setExternalSorting(true);
+		$requested = [];
 		foreach($this->relevantFields() as $id => $field) {
 			$space->request($field,$id);
+			$requested[] = $id;
 		}
-		$this->determineOffsetAndOrder(true);
-		$order_column_id = $this->getOrderField();
-		if(isset($this->relevantColumns()[$order_column_id])) {
-			$order_direction = $this->getOrderDirection();
-			if(in_array($order_column_id, $this->internal_sorting_columns)) {
-				$this->setExternalSorting(false);
-			} else {
-				$space->orderBy( array_keys($this->fields[$order_column_id]),$order_direction);
+		$order_fields = $this->determineOrderFields();
+		foreach ($order_fields as $id => $field) {
+			if(!in_array($id, $requested)) {
+				$space->request($field, $id);
 			}
-		} else {
-			$space->orderBy(array(key($this->relevantColumns())),'asc');
 		}
+		$order_direction = $this->determineOrderDirection();
+		$space->orderBy(array_keys($order_fields),$order_direction);
 		return $space;
+	}
+
+	protected function determineOrderFields() {
+		// this actually loads order column id in ilTable2GUI
+		$order_column_id = $this->getOrderField();
+		if((string)$order_column_id === '') {
+			$order_column_id = $this->default_order_column;
+		}
+		$return = [];
+		if(array_key_exists($order_column_id, $this->selectable)
+			&& array_key_exists('sort', $this->selectable[$order_column_id])) {
+			return $this->fields[$order_column_id];
+		}
+		if(array_key_exists($order_column_id, $this->persistent)
+			&& array_key_exists('sort', $this->persistent[$order_column_id])) {
+			return $this->fields[$order_column_id];
+		}
+		return [];
+	}
+
+	protected function determineOrderDirection()
+	{
+		$order_column_id = $this->getOrderField();
+		if((string)$order_column_id === '') {
+			return $this->default_order_direction;
+		}
+		return $this->getOrderDirection();
 	}
 
 	/**
@@ -296,4 +329,25 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		}
 	}
 
+	/**
+	 * Configure default order parameters of table. This is to be used instead of standard methods
+	 * ilTable2GUI::setDefaultOrderField and ilTable2GUI::setDefaultOrderDirection.
+	 *
+	 * @param	string	$column_id
+	 * @param	string	$direction
+	 */
+	public function setDefaultOrderColumn($column_id, $direction)
+	{
+		assert('is_string($column_id)');
+		if(!array_key_exists($column_id, $this->selectable) && !array_key_exists($column_id, $this->persistent)) {
+			throw new \InvalidArgumentException($column_id.' is not a valid column');
+		}
+		if($direction !== self::ORDER_DESC && $direction !== self::ORDER_ASC) {
+			throw new \InvalidArgumentException($direction.' is not a valid order direction parameter');
+		}
+		$this->default_order_column = $column_id;
+		$this->default_order_direction = $direction;
+		$this->setDefaultOrderField($column_id);
+		$this->setDefaultOrderDirection($direction);
+	}
 }
