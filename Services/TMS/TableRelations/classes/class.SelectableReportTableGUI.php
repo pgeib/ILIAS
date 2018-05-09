@@ -18,20 +18,25 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	protected $default_order_column;
 	protected $default_order_direction = self::ORDER_ASC;
 
+	protected $g_ctrl;
+
+	protected $parent_gui;
+	protected $cmd;
+
 	const ORDER_ASC = 'asc';
 	const ORDER_DESC = 'desc';
 
 	public function __construct($a_parent_gui, $a_cmd) {
 		global $DIC;
 		$g_ctrl = $DIC['ilCtrl'];
+		$this->g_ctrl = $g_ctrl;
+		$this->parent_gui = $a_parent_gui;
+		$this->cmd = $a_cmd;
 		$this->setId("elpt_".$a_parent_gui->id);
 		parent::__construct($a_parent_gui, $a_cmd);
 		$this->setEnableTitle(false);
 		$this->setTopCommands(false);
 		$this->setEnableHeader(true);
-		$this->determineOffsetAndOrder(true);
-		$g_ctrl->setParameter($a_parent_gui,$this->getNavParameter(),$this->nav_value);
-		$this->setFormAction($g_ctrl->getFormAction($a_parent_gui,$a_cmd));
 		$this->columns_determined = false;
 		$this->setExternalSorting(true);
 		$this->export_formats = [];
@@ -266,6 +271,7 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	 * According to selection request fields from space
 	 */
 	public function prepareTableAndSetRelevantFields($space) {
+		$this->determineOffsetAndOrder(true);
 		$this->determineSelectedColumns();
 		$this->spanColumns();
 		$this->setExternalSorting(true);
@@ -282,15 +288,16 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		}
 		$order_direction = $this->determineOrderDirection();
 		$space->orderBy(array_keys($order_fields),$order_direction);
+		$this->setOrderField($this->determineOrderColumnId());
+		$this->setOrderDirection($order_direction);
+		$this->g_ctrl->setParameter($this->parent_gui,$this->getNavParameter(),$this->nav_value);
+		$this->setFormAction($this->g_ctrl->getFormAction($this->parent_gui,$this->cmd));
 		return $space;
 	}
 
 	protected function determineOrderFields() {
 		// this actually loads order column id in ilTable2GUI
-		$order_column_id = $this->getOrderField();
-		if((string)$order_column_id === '') {
-			$order_column_id = $this->default_order_column;
-		}
+		$order_column_id = $this->determineOrderColumnId();
 		$return = [];
 		if(array_key_exists($order_column_id, $this->selectable)
 			&& array_key_exists('sort', $this->selectable[$order_column_id])) {
@@ -303,10 +310,19 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		return [];
 	}
 
+	protected function determineOrderColumnId()
+	{
+		$order_column_id = $this->getOrderField();
+		if((string)$order_column_id === '' || !array_key_exists($order_column_id, $this->fields)) {
+			$order_column_id = $this->default_order_column;
+		}
+		return $order_column_id;
+	}
+
 	protected function determineOrderDirection()
 	{
 		$order_column_id = $this->getOrderField();
-		if((string)$order_column_id === '') {
+		if((string)$order_column_id === '' || !array_key_exists($order_column_id, $this->fields)) {
 			return $this->default_order_direction;
 		}
 		return $this->getOrderDirection();
