@@ -16,7 +16,7 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	protected $internal_sorting_columns = [];
 	protected $export_writer = [];
 	protected $default_order_column;
-	protected $default_order_direction;
+	protected $default_order_direction = self::ORDER_ASC;
 
 	const ORDER_ASC = 'asc';
 	const ORDER_DESC = 'desc';
