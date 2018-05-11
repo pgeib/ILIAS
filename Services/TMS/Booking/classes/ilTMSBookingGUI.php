@@ -62,6 +62,8 @@ abstract class ilTMSBookingGUI {
 		$this->g_lng = $DIC->language();
 		$this->g_db = $DIC->database();
 		$this->g_event_handler = $DIC['ilAppEventHandler'];
+		$this->g_tree = $DIC->repositoryTree();
+		$this->g_objDefinition = $DIC["objDefinition"];
 		$this->g_lng->loadLanguageModule('tms');
 
 		$this->parent_gui = $parent_gui;
@@ -105,7 +107,8 @@ abstract class ilTMSBookingGUI {
 			return $ilias_bindings->redirectToPreviousLocation(array($this->g_lng->txt("no_permissions_to_book")), false);
 		}
 
-		if($this->duplicateCourseBooked($crs_ref_id, $usr_id)) {
+		$skip_duplicate_check = $this->duplicateStepsMayBeSkipped($crs_ref_id);
+		if(!$skip_duplicate_check && $this->duplicateCourseBooked($crs_ref_id, $usr_id)) {
 			$this->setParameter(null, null);
 			return $ilias_bindings->redirectToPreviousLocation($this->getDuplicatedCourseMessage($usr_id), false);
 		}
@@ -455,6 +458,53 @@ abstract class ilTMSBookingGUI {
 				 'usr_id' => $usr_id
 			 )
 		 );
+	}
+
+	/**
+	 * Checks the duplicate function should be skipped
+	 *
+	 * @param int 	$crs_ref_id
+	 *
+	 * @return bool
+	 */
+	protected function duplicateStepsMayBeSkipped($crs_ref_id) {
+		$xbkms = $this->getAllChildrenOfByType($crs_ref_id, "xbkm");
+		foreach ($xbkms as $xbkm) {
+			if($xbkm->getBooking()->getSkipDuplicateCheck()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get all children by type recursive
+	 *
+	 * @param int 	$ref_id
+	 * @param string 	$search_type
+	 *
+	 * @return Object 	of search type
+	 */
+	protected function getAllChildrenOfByType($ref_id, $search_type) {
+		$childs = $this->g_tree->getChilds($ref_id);
+		$ret = array();
+
+		foreach ($childs as $child) {
+			$type = $child["type"];
+			if($type == $search_type) {
+				$ret[] = \ilObjectFactory::getInstanceByRefId($child["child"]);
+			}
+
+			if($this->g_objDefinition->isContainer($type)) {
+				$rec_ret = $this->getAllChildrenOfByType($child["child"], $search_type);
+				if(! is_null($rec_ret)) {
+					$ret = array_merge($ret, $rec_ret);
+				}
+			}
+		}
+
+		return $ret;
 	}
 }
 
