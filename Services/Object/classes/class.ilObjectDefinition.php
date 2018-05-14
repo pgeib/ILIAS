@@ -10,7 +10,7 @@ require_once('./Services/Repository/classes/class.ilObjectPlugin.php');
 * @author Alex Killing <alex.killing@gmx.de>
 * @version $Id$
 *
-* @externalTableAccess ilObjDefReader on il_object_def, il_object_subobj, il_object_group 
+* @externalTableAccess ilObjDefReader on il_object_def, il_object_subobj, il_object_group
 */
 class ilObjectDefinition// extends ilSaxParser
 {
@@ -35,7 +35,7 @@ class ilObjectDefinition// extends ilSaxParser
 	* @access private
 	*/
 	var $obj_data;
-	
+
 	var $sub_types = array();
 
 	const MODE_REPOSITORY = 1;
@@ -44,19 +44,19 @@ class ilObjectDefinition// extends ilSaxParser
 
 	/**
 	* Constructor
-	* 
+	*
 	* setup ILIAS global object
 	* @access	public
 	*/
 	function __construct()
 	{
 		global $ilias;
-		
+
 		$this->readDefinitionData();
 		$this->ilias = $ilias;
-		
+
 		//parent::__construct(ILIAS_ABSOLUTE_PATH."/objects.xml");
-		
+
 		// removing this line leads to segmentation faults in
 		// learning module editor with
 		// - PHP 5.2.1, libxml 2.6.22, libxslt 1.1.15 (MacOsX)
@@ -67,11 +67,11 @@ class ilObjectDefinition// extends ilSaxParser
 		// (needs further investigation)
 		// OK with:
 		// - PHP 5.1.2, libxml 2.6.24, libxslt 1.1.15
-		
+
 		//
 		// Replacing all "=&" with "=" in xml5compliance seems to solve the problem
 		//
-		
+
 //		$this->startParsing();
 	}
 
@@ -197,7 +197,7 @@ class ilObjectDefinition// extends ilSaxParser
 		}
 	}
 
-		
+
 	/**
 	* Read object definition data
 	*/
@@ -287,7 +287,7 @@ class ilObjectDefinition// extends ilSaxParser
 	{
 		return (bool) $this->obj_data[$a_obj_name]["checkbox"];
 	}
-	
+
 	/**
 	* get translation type (sys, db or 0)s
 	*
@@ -297,7 +297,7 @@ class ilObjectDefinition// extends ilSaxParser
 	function getTranslationType($a_obj_name)
 	{
 		global $ilDB;
-		
+
 		if ($a_obj_name == "root")
 		{
 			if (!isset($this->root_trans_type))
@@ -317,15 +317,15 @@ class ilObjectDefinition// extends ilSaxParser
 			}
 			return $this->root_trans_type;
 		}
-		
+
 		if (isset($this->obj_data[$a_obj_name]))
 		{
 			return $this->obj_data[$a_obj_name]["translate"];
 		}
-		
+
 		return "";
 	}
-	
+
 
 	/**
 	* Does object permits stopping inheritance?
@@ -358,7 +358,7 @@ class ilObjectDefinition// extends ilSaxParser
 	function getDevModeAll()
 	{
 		$types = array_keys($this->obj_data);
-		
+
 		foreach ($types as $type)
 		{
 			if ($this->getDevMode($type))
@@ -428,7 +428,7 @@ class ilObjectDefinition// extends ilSaxParser
 	function getAllRBACObjects()
 	{
 		$types = array_keys($this->obj_data);
-		
+
 		foreach ($types as $type)
 		{
 			if ($this->isRBACObject($type))
@@ -472,16 +472,16 @@ class ilObjectDefinition// extends ilSaxParser
 	{
 		return (bool) $this->obj_data[$a_obj_name]["allow_copy"];
 	}
-	
+
 	public function allowExport($a_obj_name)
 	{
 		return (bool) $this->obj_data[$a_obj_name]['export'];
 	}
-	
+
 	/**
 	 * Check whether the creation of local roles is allowed
 	 * Currently disabled for type "root" and "adm"
-	 * @return 
+	 * @return
 	 */
 	public function hasLocalRoles($a_obj_type)
 	{
@@ -489,12 +489,12 @@ class ilObjectDefinition// extends ilSaxParser
 		{
 			case 'root':
 				return FALSE;
-				
+
 			default:
 				return TRUE;
 		}
 	}
-	
+
 	/**
 	* get all subobjects by type
 	*
@@ -506,7 +506,7 @@ class ilObjectDefinition// extends ilSaxParser
 	function getSubObjects($a_obj_type,$a_filter = true)
 	{
 		global $ilSetting;
-		
+
 		$subs = array();
 
 		if ($subobjects = $this->obj_data[$a_obj_type]["subobjects"])
@@ -523,7 +523,7 @@ class ilObjectDefinition// extends ilSaxParser
 					if (!($ilSetting->get("obj_dis_creation_".$data)))
 					{
 						$subs[$data] = $sub;
-						
+
 						// determine position
 						$pos = ($ilSetting->get("obj_add_new_pos_".$data) > 0)
 							? (int) $ilSetting->get("obj_add_new_pos_".$data)
@@ -537,7 +537,7 @@ class ilObjectDefinition// extends ilSaxParser
 
 			return $subs2;
 		}
-		
+
 		return $subs;
 	}
 
@@ -557,7 +557,7 @@ class ilObjectDefinition// extends ilSaxParser
 	function getSubObjectsRecursively($a_obj_type,$a_include_source_obj = true, $a_add_admin_objects = false)
 	{
 		global $ilSetting;
-		
+
 		// This associative array is used to collect all subobject types.
 		// key=>type, value=data
 		$recursivesubs = array();
@@ -568,7 +568,7 @@ class ilObjectDefinition// extends ilSaxParser
 
 		// This array is used to keep track of the object types, we
 		// have called function getSubobjects() already. This is to
-		// prevent endless loops, for object types that support 
+		// prevent endless loops, for object types that support
 		// themselves as subobject types either directly or indirectly.
 		$done = array();
 
@@ -576,13 +576,13 @@ class ilObjectDefinition// extends ilSaxParser
 		{
 			$type = array_pop($to_do);
 			$done[] = $type;
-			
+
 			// no recovery folder subitems
 			if($type == 'recf')
 			{
 				continue;
 			}
-			
+
 			// Hide administration if desired
 			if(!$a_add_admin_objects and $type == 'adm')
 			{
@@ -596,7 +596,7 @@ class ilObjectDefinition// extends ilSaxParser
 			foreach ($subs as $subtype => $data)
 			{
 				#vd('------------------------->'.$subtype);
-				
+
 				// Hide role templates and folder from view
 				if($this->getDevMode($subtype) or !$this->isRBACObject($subtype))
 				{
@@ -610,7 +610,7 @@ class ilObjectDefinition// extends ilSaxParser
 				{
 					continue;
 				}
-				
+
 				$recursivesubs[$subtype] = $data;
 				if (! in_array($subtype, $done)
 				&& ! in_array($subtype, $to_do))
@@ -619,7 +619,7 @@ class ilObjectDefinition// extends ilSaxParser
 				}
 			}
 		}
-		
+
 		if($a_include_source_obj)
 		{
 			if(!isset($recursivesubs[$a_obj_type]))
@@ -632,7 +632,7 @@ class ilObjectDefinition// extends ilSaxParser
 		}
 		return ilUtil::sortArray($recursivesubs, "pos", ASC, true, true);
 	}
-	
+
 
 	/**
 	* get all subjects except (rolf) of the adm object
@@ -649,6 +649,15 @@ class ilObjectDefinition// extends ilSaxParser
 		{
 			switch($key)
 			{
+			/**
+			 * cat-tms-patch start
+			 */
+				//enable orgu-settings in role-template (orgu is sub of adm).
+				case "orgu":
+			/**
+			 * cat-tms-patch end
+			 */
+
 				case "rolf":
 					// DO NOTHING
 					break;
@@ -663,7 +672,7 @@ class ilObjectDefinition// extends ilSaxParser
 
 		return $tmp_subs ? $tmp_subs : array();
 	}
-		
+
 	/**
 	* get only creatable subobjects by type
 	*
@@ -677,9 +686,9 @@ class ilObjectDefinition// extends ilSaxParser
 	{
 		$subobjects = $this->getSubObjects($a_obj_type);
 
-		// remove role folder object from list 
+		// remove role folder object from list
 		unset($subobjects["rolf"]);
-		
+
 		$sub_types = array_keys($subobjects);
 
 		// remove object types in development from list
@@ -702,7 +711,7 @@ class ilObjectDefinition// extends ilSaxParser
 				unset($subobjects[$type]);
 			}
 		}
-		
+
 		if ($a_obj_type == "prg") {
 			// ask study program which objects are allowed to create on the concrete node.
 			require_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
@@ -711,7 +720,7 @@ class ilObjectDefinition// extends ilSaxParser
 
 		return $subobjects;
 	}
-	
+
 	/**
 	* get a string of all subobjects by type
 	*
@@ -728,17 +737,17 @@ class ilObjectDefinition// extends ilSaxParser
 
 			$string = "'".implode("','", $data)."'";
 		}
-		
+
 		return $string;
 	}
-	
+
 	/**
 	 * Check if object type is container ('crs','fold','grp' ...)
 	 *
 	 * @access public
 	 * @param string object type
 	 * @return bool
-	 * 
+	 *
 	 */
 	public function isContainer($a_obj_name)
 	{
@@ -802,7 +811,7 @@ class ilObjectDefinition// extends ilSaxParser
 
 	/**
 	* end tag handler
-	* 
+	*
 	* @param	ressouce	internal xml_parser_handler
 	* @param	string		element tag name
 	* @access	private
@@ -813,7 +822,7 @@ class ilObjectDefinition// extends ilSaxParser
 		$this->current_tag_name = '';
 	}
 
-	
+
 	function __filterObjects(&$subobjects)
 	{
 		foreach($subobjects as $type => $data)
@@ -825,10 +834,10 @@ class ilObjectDefinition// extends ilSaxParser
 			}
 		}
 	}
-	
+
 	/**
 	* checks if object type is a system object
-	* 
+	*
 	* system objects are those object types that are only used for
 	* internal purposes and to keep the object type model consistent.
 	* Typically they are used in the administation, exist only once
@@ -843,7 +852,7 @@ class ilObjectDefinition// extends ilSaxParser
 	{
 		return (bool) $this->obj_data[$a_obj_name]["system"];
 	}
-	
+
 	/**
 	* Check, whether object type is a side block.
 	*
@@ -865,7 +874,7 @@ class ilObjectDefinition// extends ilSaxParser
 
 		$set = $ilDB->queryF("SELECT * FROM il_object_def WHERE component = %s",
 			array("text"), array($a_component_type."/".$a_component_name));
-			
+
 		$types = array();
 		while($rec = $ilDB->fetchAssoc($set))
 		{
@@ -874,7 +883,7 @@ class ilObjectDefinition// extends ilSaxParser
 				$types[] = $rec;
 			}
 		}
-		
+
 		return $types;
 	}
 
@@ -887,12 +896,12 @@ class ilObjectDefinition// extends ilSaxParser
 
 		$set = $ilDB->queryF("SELECT component FROM il_object_def WHERE id = %s",
 			array("text"), array($a_obj_type));
-			
+
 		if ($rec = $ilDB->fetchAssoc($set))
 		{
 			return $rec["component"];
 		}
-		
+
 		return "";
 	}
 
@@ -903,7 +912,7 @@ class ilObjectDefinition// extends ilSaxParser
 	static function getGroupedRepositoryObjectTypes($a_parent_obj_type)
 	{
 		global $ilDB;
-		
+
 		$set = $ilDB->query("SELECT * FROM il_object_group");
 		$groups = array();
 		while ($gr_rec = $set->fetchRow(ilDBConstants::FETCHMODE_ASSOC))
@@ -914,7 +923,7 @@ class ilObjectDefinition// extends ilSaxParser
 		$global_cache = ilCachedComponentData::getInstance();
 
 		$recs = $global_cache->lookupGroupedRepObj($a_parent_obj_type);
-		
+
 		$grouped_obj = array();
 		foreach((array)$recs as $rec)
 		{
@@ -958,7 +967,7 @@ class ilObjectDefinition// extends ilSaxParser
 	function getAllRepositoryTypes($a_incl_adm = false)
 	{
 		$types = array_keys($this->obj_data);
-		
+
 		foreach ($types as $type)
 		{
 			if ($this->isAllowedInRepository($type) &&
@@ -971,7 +980,7 @@ class ilObjectDefinition// extends ilSaxParser
 		return $rbactypes ? $rbactypes : array();
 	}
 
-	
+
 	/**
 	* checks if object type can be used in workspace context
 	*
@@ -993,7 +1002,7 @@ class ilObjectDefinition// extends ilSaxParser
 	{
 		return (bool) $this->obj_data[$a_obj_name]['administration'];
 	}
-	
+
 	/**
 	 * Check whether type belongs to inactive plugin
 	 *
@@ -1008,7 +1017,7 @@ class ilObjectDefinition// extends ilSaxParser
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Get advanced meta data objects
 	 *
@@ -1054,7 +1063,7 @@ class ilObjectDefinition// extends ilSaxParser
 			? (int) $ilSetting->get("obj_add_new_pos_".$a_type)
 			: (int) $this->obj_data[$a_type]["default_pos"];
 	}
-	
+
 	/**
 	 * Get plugin object info
 	 * @return type
@@ -1071,21 +1080,21 @@ class ilObjectDefinition// extends ilSaxParser
 		}
 		return $plugins;
 	}
-		
+
 	/**
 	 * Get all object types which are defined as container in an explorer context
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getExplorerContainerTypes()
-	{						
-		$res = $grp_map = $cnt_grp = array();		
-		
+	{
+		$res = $grp_map = $cnt_grp = array();
+
 		// all repository object types
 		foreach ($this->getSubObjectsRecursively("root") as $rtype)
-		{				
+		{
 			$type = $rtype["name"];
-			
+
 			// obsolete
 			if($type == "rolf")
 			{
@@ -1111,17 +1120,17 @@ class ilObjectDefinition// extends ilSaxParser
 				$res[] = $type;
 			}
 		}
-		
+
 		// add complete groups (cat => rcat, catr; crs => rcrs, crsr; ...)
 		foreach($cnt_grp as $grp)
 		{
 			$res = array_merge($res, $grp_map[$grp]);
 		}
-		
+
 		// add very special case
 		$res[] = "itgr";
-		
-		return array_unique($res);		
+
+		return array_unique($res);
 	}
 
 	/**
