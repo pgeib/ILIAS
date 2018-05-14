@@ -366,4 +366,18 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$this->setDefaultOrderField($column_id);
 		$this->setDefaultOrderDirection($direction);
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function determineOffsetAndOrder($a_omit_offset = false)
+	{
+		if ($this->nav_determined) {
+			return true;
+		}
+		if($_POST[$this->getNavParameter()]) {
+			$this->nav_value = $_POST[$this->getNavParameter()];
+		}
+		parent::determineOffsetAndOrder($a_omit_offset);
+	}
 }
