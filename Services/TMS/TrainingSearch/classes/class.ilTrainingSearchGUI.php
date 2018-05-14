@@ -21,6 +21,7 @@ class ilTrainingSearchGUI {
 
 	const PAGE_SIZE = 10;
 	const PAGINATION_PARAM = "pagination";
+	const DROPDOWN_AT_PAGES = 1;
 
 	/**
 	 * @var ilTemplate
@@ -195,7 +196,8 @@ class ilTrainingSearchGUI {
 				->withTotalEntries(count($bookable_trainings))
 				->withPageSize(self::PAGE_SIZE)
 				->withCurrentPage($current_page)
-				->withTargetURL($link, self::PAGINATION_PARAM);
+				->withTargetURL($link, self::PAGINATION_PARAM)
+				->withDropdownAt(self::DROPDOWN_AT_PAGES);
 			$offset = $pagination->getOffset();
 			$limit = self::PAGE_SIZE;
 			$view_control[] = $pagination;
