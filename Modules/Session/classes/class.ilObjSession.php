@@ -618,7 +618,7 @@ class ilObjSession extends ilObject
 	 *
 	 * @return void
 	 */
-	protected function updateFromAgenda() {
+	public function updateFromAgenda() {
 		include_once('./Modules/Session/classes/class.ilEventItems.php');
 		$event_items = (new \ilEventItems($this->getId()))->getItems();
 		foreach ($event_items as $event_item) {
