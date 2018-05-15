@@ -22,6 +22,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		'COURSE_END_DATE' => 'placeholder_desc_crs_enddate',
 		'TRAINER_FIRST_NAME' => 'placeholder_desc_crs_trainer_firstname',
 		'TRAINER_LAST_NAME' => 'placeholder_desc_crs_trainer_lastname',
+		'ALL_TRAINERS' => 'placeholder_desc_crs_all_trainers',
 		'OFFICE_FIRST_NAME' => 'placeholder_desc_crs_admin_firstname',
 		'OFFICE_LAST_NAME' => 'placeholder_desc_crs_admin_lastname',
 		'OFFICE_MAIL' => 'placeholder_desc_crs_admin_mail',
@@ -88,6 +89,8 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 				return $this->trainerFirstname();
 			case 'TRAINER_LAST_NAME':
 				return $this->trainerLastname();
+			case 'ALL_TRAINERS':
+				return $this->trainerAll();
 			case 'OFFICE_FIRST_NAME':
 				return $this->adminFirstname();
 			case 'OFFICE_LAST_NAME':
@@ -194,22 +197,39 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	 * @return string | null
 	 */
 	public function trainerFirstname() {
-		$trainer = $this->getTrainer();
-		if($trainer !== null) {
-			return $trainer->getFirstname();
+		$trainers = $this->getTrainers();
+		if(count($trainers) === 0) {
+			return null;
 		}
-		return $trainer;
+		$trainer = array_shift($trainers);
+		return $trainer->getFirstname();
 	}
 
 	/**
 	 * @return string | null
 	 */
 	public function trainerLastname() {
-		$trainer = $this->getTrainer();
-		if($trainer !== null) {
-			return $trainer->getLastname();
+		$trainers = $this->getTrainers();
+		if(count($trainers) === 0) {
+			return null;
 		}
-		return $trainer;
+		$trainer = array_shift($trainers);
+		return $trainer->getLastname();
+	}
+
+	/**
+	 * @return string | null
+	 */
+	public function trainerAll() {
+		$trainers = $this->getTrainers();
+		if(count($trainers) === 0) {
+			return null;
+		}
+		$buf = [];
+		foreach ($trainers as $trainer) {
+			$buf[] =  $trainer->getFirstname() .' ' .$trainer->getLastname();
+		}
+		return implode(', ', $buf);
 	}
 
 	/**
@@ -422,18 +442,19 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	}
 
 	/**
-	 * Get first member with trainer-role
+	 * Get members with trainer-role
 	 *
-	 * @return ilObjUser | null
+	 * @return ilObjUser[]
 	 */
-	protected function getTrainer() {
+	protected function getTrainers() {
 		$participants = $this->getCourseObject()->getMembersObject();
 		$trainers = $participants->getTutors();
-		if(count($trainers) > 0) {
-			$trainer_id = (int)$trainers[0];
-			return new \ilObjUser($trainer_id);
+		$ret = [];
+		foreach ($trainers as $trainer_id) {
+
+			$ret[] = new \ilObjUser((int)$trainer_id);
 		}
-		return null;
+		return $ret;
 	}
 
 	/**
