@@ -43,4 +43,11 @@ interface MailingOccasion extends Component {
 	 */
 	public function getMails($event, $parameter);
 
+	/**
+	 * Occasions might be scheduled; get the next date the event is due.
+	 *
+	 * @return \DateTime | null
+	 */
+	public function getNextScheduledDate();
+
 }
