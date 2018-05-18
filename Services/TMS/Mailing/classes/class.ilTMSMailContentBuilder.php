@@ -139,7 +139,8 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 			$images_path = sprintf(self::CUSTOM_IMAGES, $this->skin);
 			if(is_dir($images_path)) {
 				$files = $this->readDir($images_path);
-				return $files;
+				$images = preg_grep ('/\.jpg$/i', $files);
+				return $images;
 			}
 			return [];
 		}
