@@ -16,6 +16,9 @@ require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 abstract class ilTMSBookingGUI {
 	use \ILIAS\TMS\MyUsersHelper;
 
+	const SELF_BOOKING = "self_booking";
+	const SUPERIOR_BOOKING = "booking_superior";
+
 	/**
 	 * @var ilTemplate
 	 */
@@ -64,6 +67,7 @@ abstract class ilTMSBookingGUI {
 		$this->g_event_handler = $DIC['ilAppEventHandler'];
 		$this->g_tree = $DIC->repositoryTree();
 		$this->g_objDefinition = $DIC["objDefinition"];
+		$this->g_access = $DIC->access();
 		$this->g_lng->loadLanguageModule('tms');
 
 		$this->parent_gui = $parent_gui;
@@ -102,7 +106,10 @@ abstract class ilTMSBookingGUI {
 			, $this->getOverViewDescription()
 			);
 
-		if((int)$this->g_user->getId() !== $usr_id && !$this->checkIsSuperiorEmployeeBelowCurrent($usr_id)) {
+		$booking_allowed = $this->bookingAllowed($crs_ref_id, $usr_id);
+		if(!$booking_allowed
+			|| ((int)$this->g_user->getId() !== $usr_id && !$this->checkIsSuperiorEmployeeBelowCurrent($usr_id))
+		) {
 			$this->setParameter(null, null);
 			return $ilias_bindings->redirectToPreviousLocation(array($this->g_lng->txt("no_permissions_to_book")), false);
 		}
@@ -475,6 +482,45 @@ abstract class ilTMSBookingGUI {
 			}
 		}
 
+		return true;
+	}
+
+	/**
+	 * Checks the duplicate function should be skipped
+	 *
+	 * @param int 	$crs_ref_id
+	 * @param int 	$usr_id
+	 *
+	 * @return bool
+	 */
+	protected function bookingAllowed($crs_ref_id, $usr_id) {
+		$xbkms = $this->getAllChildrenOfByType($crs_ref_id, "xbkm");
+
+		if($usr_id == $this->g_user->getId()) {
+			return $this->checkBookingAllowed($xbkms, self::SELF_BOOKING);
+		} else {
+			return $this->checkBookingAllowed($xbkms, self::SUPERIOR_BOOKING);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks there is any bkm where use has permission to self book
+	 *
+	 * @param ilObjBookingModalities[] 	$xbkms
+	 * @param string 	$modus
+	 *
+	 * @return bool
+	 */
+	protected function checkBookingAllowed($xbkms, $modus) {
+		foreach ($xbkms as $xbkm) {
+			if($xbkm->getBooking()->getModus() == $modus
+				&& $this->g_access->checkAccess("book_by_this", "", $xbkm->getRefId())
+			) {
+				return true;
+			}
+		}
 		return false;
 	}
 
