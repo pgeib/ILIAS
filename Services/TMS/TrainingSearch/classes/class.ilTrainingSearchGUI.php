@@ -190,22 +190,30 @@ class ilTrainingSearchGUI {
 
 		$view_control = array($button1);
 		$view_control = $this->addSortationObjects($view_control);
-		if ($cmd === self::CMD_SHOW && $this->g_user->getId() == $this->search_user_id) {
-			$link = $this->g_ctrl->getLinkTarget($this, $cmd, "", false, false);
-			$pagination = $this->g_f->viewControl()->pagination()
-				->withTotalEntries(count($bookable_trainings))
-				->withPageSize(self::PAGE_SIZE)
-				->withCurrentPage($current_page)
-				->withTargetURL($link, self::PAGINATION_PARAM)
-				->withDropdownAt(self::DROPDOWN_AT_PAGES);
-			$offset = $pagination->getOffset();
-			$limit = self::PAGE_SIZE;
+
+		$parameter = array(Helper::S_USER,
+			Helper::F_TITLE,
+			Helper::F_TYPE,
+			Helper::F_TOPIC, 
+			Helper::F_DURATION,
+			Helper::F_SORT_VALUE,
+			Helper::F_ONLY_BOOKABLE,
+			Helper::F_IDD_RELEVANT
+		);
+
+		$this->g_ctrl->saveParameter($this, $parameter);
+
+		$link = $this->g_ctrl->getLinkTarget($this, $cmd, "", false, false);
+		$pagination = $this->g_f->viewControl()->pagination()
+			->withTotalEntries(count($bookable_trainings))
+			->withPageSize(self::PAGE_SIZE)
+			->withCurrentPage($current_page)
+			->withTargetURL($link, self::PAGINATION_PARAM)
+			->withDropdownAt(self::DROPDOWN_AT_PAGES);
+		$offset = $pagination->getOffset();
+		$limit = self::PAGE_SIZE;
 			$view_control[] = $pagination;
-		}
-		else {
-			$offset = 0;
-			$limit = null;
-		}
+
 		$content = $this->g_renderer->render($modal).$table->render($view_control, $offset, $limit);
 
 		if(count($bookable_trainings) == 0) {
