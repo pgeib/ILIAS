@@ -1,7 +1,7 @@
 <?php
 namespace ILIAS\UI\Component\Listing;
 /**
- * This is how a factory for glyphs looks like.
+ * This is how a factory for listings looks like.
  */
 interface Factory {
 
@@ -45,5 +45,20 @@ interface Factory {
 	 * @return  \ILIAS\UI\Component\Listing\Descriptive
 	 */
 	public function descriptive(array $items);
+
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *      A workflow presents a list of steps that the user should tackle
+	 *      in a defined order.
+	 *   composition: >
+	 *     The workflow has a title and a list of workflow steps. If the user
+	 *     is currently working on a step, the step is marked as active.
+	 * ----
+	 *
+	 * @return  \ILIAS\UI\Component\Listing\Workflow\Factory
+	 */
+	public function workflow();
 
 }
