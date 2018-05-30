@@ -10,22 +10,73 @@ use ILIAS\UI\Implementation\Component\ComponentHelper;
  * Class Workflow
  * @package ILIAS\UI\Implementation\Component\Listing\Workflow
  */
-class Workflow implements C\Listing\Workflow\Workflow {
+abstract class Workflow implements C\Listing\Workflow\Workflow {
 	use ComponentHelper;
+
+	/**
+	 * @var	string
+	 */
+	private  $title;
 
 	/**
 	 * @var	array
 	 */
 	private  $steps;
 
+	/**
+	 * @var	int
+	 */
+	private  $active;
 
 	/**
-	 * Linear Workflow constructor.
-	 * @param $steps
+	 * Workflow constructor.
+	 * @param 	string 	$title
+	 * @param 	Step[] 	$steps
 	 */
-	public function __construct($steps) {
-		$types = array('string',C\Component::class);
+	public function __construct($title, array $steps) {
+		$this->checkStringArg("string", $title);
+		$types = array('string',Step::class);
 		$this->checkArgListElements("steps", $steps, $types);
+		$this->title = $title;
 		$this->steps = $steps;
+		$this->active = 0;
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getTitle() {
+		return $this->title;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withActive($active) {
+
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActive() {
+
+	}
+
+	/**
+	 * Return the amount of steps of this workflow.
+	 * @return int
+	 */
+	public function getAmountOfSteps() {
+		return count($this->steps);
+	}
+
+	/**
+	 * Get the steps of this workflow.
+	 * @return Step[]
+	 */
+	public function getSteps() {
+		return $this->steps;
+	}
+
 }

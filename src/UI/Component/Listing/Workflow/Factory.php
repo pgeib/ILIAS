@@ -1,10 +1,9 @@
 <?php
-namespace ILIAS\UI\Component\Listing;
+namespace ILIAS\UI\Component\Listing\Workflow;
 /**
  * This is the interface for a workflow factory.
  */
 interface Factory {
-
 
 	/**
 	 * ---
@@ -20,9 +19,11 @@ interface Factory {
 	 *
 	 * ----
 	 *
+	 * @param string 	$label
+	 * @param string 	$description
 	 * @return  \ILIAS\UI\Component\Listing\Workflow\Step
 	 */
-	public function step();
+	public function step($label, $description='');
 
 	/**
 	 * ---
@@ -37,5 +38,5 @@ interface Factory {
 	 *
 	 * @return  \ILIAS\UI\Component\Listing\Workflow\Linear
 	 */
-	public function linear();
+	public function linear($title, array $steps);
 }
