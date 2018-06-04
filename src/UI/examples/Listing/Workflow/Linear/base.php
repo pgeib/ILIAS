@@ -7,12 +7,13 @@ function base() {
 	$renderer = $DIC->ui()->renderer();
 
 	//setup steps
+	$step = $f->step('','');
 	$steps = [
-		$f->step('step1', 'description'),
-		$f->step('step2', 'description'),
-		$f->step('step3', 'description'),
-		$f->step('step4', 'description'),
-		$f->step('step5', 'description')
+		$f->step('step1', 'not applicable')->withStatus($step::STATUS_NOTAPPLICABLE),
+		$f->step('step2', 'completed')->withStatus($step::STATUS_COMPLETED),
+		$f->step('step3', 'in progress, active')->withStatus($step::STATUS_INPROGRESS),
+		$f->step('step4', 'not started'),
+		$f->step('step5', 'not started')
 	];
 
 	//setup linear workflow

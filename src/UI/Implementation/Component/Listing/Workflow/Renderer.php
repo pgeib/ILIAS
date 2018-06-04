@@ -39,7 +39,7 @@ class Renderer extends AbstractComponentRenderer {
 			$tpl->setCurrentBlock("step");
 			$tpl->setVariable("LABEL", $step->getLabel());
 			$tpl->setVariable("DESCRIPTION", $step->getDescription());
-			$tpl->setVariable("STATUS", $step->getStatus());
+
 
 			if($index === 0) {
 				$tpl->touchBlock('first');
@@ -51,11 +51,30 @@ class Renderer extends AbstractComponentRenderer {
 			}
 			if($index === $component->getActive()) {
 				$tpl->touchBlock('active');
-				$tpl->setCurrentBlock("step");
 			} else {
 				$tpl->touchBlock('inactive');
-				$tpl->setCurrentBlock("step");
 			}
+			$tpl->setCurrentBlock("step");
+
+			switch ($step->getStatus()) {
+				case Component\Listing\Workflow\Step::STATUS_NOTAPPLICABLE:
+					$tpl->touchBlock('status_notapplicable');
+					break;
+				case Component\Listing\Workflow\Step::STATUS_INPROGRESS:
+					$tpl->touchBlock('status_inprogress');
+					break;
+				case Component\Listing\Workflow\Step::STATUS_COMPLETED:
+					$tpl->touchBlock('status_completed');
+					break;
+
+				case Component\Listing\Workflow\Step::STATUS_NOTSTARTED:
+				default:
+					$tpl->touchBlock('status_notstarted');
+
+			}
+			$tpl->setCurrentBlock("step");
+
+
 
 			$tpl->parseCurrentBlock();
 		}

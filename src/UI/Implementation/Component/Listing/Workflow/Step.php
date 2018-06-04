@@ -31,11 +31,6 @@ class Step implements C\Listing\Workflow\Step {
 	private  $status;
 
 	/**
-	 * @var	bool
-	 */
-	private  $active;
-
-	/**
 	 * @param string 	$label
 	 * @param string 	$description
 	 */
@@ -45,7 +40,6 @@ class Step implements C\Listing\Workflow\Step {
 		$this->label = $label;
 		$this->description = $description;
 		$this->status = static::STATUS_NOTSTARTED;
-		$this->active = false;
 	}
 
 	/**
@@ -74,6 +68,16 @@ class Step implements C\Listing\Workflow\Step {
 	 * @inheritdoc
 	 */
 	public function withStatus($status) {
+		$valid = [
+			static::STATUS_NOTAPPLICABLE,
+			static::STATUS_NOTSTARTED,
+			static::STATUS_INPROGRESS,
+			static::STATUS_COMPLETED
+		];
+		$this->checkArgIsElement('status', $status, $valid ,'valid status');
 
+		$clone = clone $this;
+		$clone->status = $status;
+		return $clone;
 	}
 }
