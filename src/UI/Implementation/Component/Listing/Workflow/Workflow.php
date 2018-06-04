@@ -53,14 +53,17 @@ abstract class Workflow implements C\Listing\Workflow\Workflow {
 	 * @inheritdoc
 	 */
 	public function withActive($active) {
-
+		$this->checkIntArg("int", $active);
+		$clone = clone $this;
+		$clone->active = $active;
+		return $clone;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function getActive() {
-
+		return $this->active;
 	}
 
 	/**

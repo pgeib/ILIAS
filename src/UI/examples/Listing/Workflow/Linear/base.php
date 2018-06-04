@@ -1,7 +1,7 @@
 <?php
 
 function base() {
-	//Init Factory and Renderer
+	//init Factory and Renderer
 	global $DIC;
 	$f = $DIC->ui()->factory()->listing()->workflow();
 	$renderer = $DIC->ui()->renderer();
@@ -15,8 +15,10 @@ function base() {
 		$f->step('step5', 'description')
 	];
 
-	$wf = $f->linear('Linear Workflow', $steps);
+	//setup linear workflow
+	$wf = $f->linear('Linear Workflow', $steps)
+		->withActive(2);
 
-	//Render
+	//render
 	return $renderer->render($wf);
 }
