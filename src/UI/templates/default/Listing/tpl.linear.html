@@ -10,9 +10,8 @@
 	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 	}
 
-
-	.well {
-		display: flow-root;
+	.il-workflow.linear {
+	    height: 250px;
 	}
 
 	.il-workflow.linear .il-workflow-steps {
@@ -34,7 +33,7 @@
 	}
 
 	.il-workflow.linear .il-workflow-step .line {
-	    border-left: 1px dashed #000;
+	    border-left: 1px dashed #c9d0da;
 	    height: 90%;
 	    left: 15px;
 	    position: relative;
@@ -129,19 +128,24 @@
 	}
 
 	.il-workflow.linear .il-workflow-step.completed .status:before {
-		content: "\e134";
-		font-family: 'Glyphicons Halflings';
-	    top: 1px;
-	    display: inline-block;
-	    font-style: normal;
-	    font-weight: normal;
+	    content: "\e013";
+	    font-family: 'Glyphicons Halflings';
 	    font-size: 14px;
 	    color: #fff;
-	    line-height: 1;
 	    -webkit-font-smoothing: antialiased;
+	    position: relative;
+	    top: 0px;
+	    left: 2px;
 	}
 
-	.il-workflow.linear .il-workflow-step.notstarted .status {
+	.il-workflow.linear .il-workflow-step.completed.first .status:before,
+	.il-workflow.linear .il-workflow-step.completed.last .status:before {
+		top: 4px;
+		left: 7px;
+	}
+
+	.il-workflow.linear .il-workflow-step.notstarted .status,
+	.il-workflow.linear .il-workflow-step.active.notstarted .status {
 		background-color: #c3cad4; /*@brand-info  30% Deckkraft*/
 	}
 
@@ -186,9 +190,7 @@
 		font-size: 1.3em;
 	}
 
-	pre.php {
-	    clear: both;
-	}
+	
 
 </style>
 
@@ -222,11 +224,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- should be used with verital line
-			<div class="line-y"></div>
-			-->
 		</div>
-
 	<!-- END step -->
 	</div>
 </div>
