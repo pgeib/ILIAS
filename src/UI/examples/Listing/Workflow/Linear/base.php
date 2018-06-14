@@ -9,11 +9,15 @@ function base() {
 	//setup steps
 	$step = $f->step('','');
 	$steps = [
-		$f->step('step1', 'not applicable')->withStatus($step::STATUS_NOTAPPLICABLE),
+		$f->step('step1', 'completed')->withStatus($step::STATUS_COMPLETED),
 		$f->step('step2', 'completed')->withStatus($step::STATUS_COMPLETED),
 		$f->step('step3', 'in progress, active')->withStatus($step::STATUS_INPROGRESS),
-		$f->step('step4', 'not started'),
-		$f->step('step5', 'not started')
+		$f->step('step4', 'not applicable')->withStatus($step::STATUS_NOTAPPLICABLE),
+		$f->step('step5', 'in progress')->withStatus($step::STATUS_INPROGRESS),
+		$f->step('step6', 'completed')->withStatus($step::STATUS_COMPLETED),
+		$f->step('step7', 'not started'),
+		$f->step('step8', 'not applicable')->withStatus($step::STATUS_NOTAPPLICABLE),
+		$f->step('step9', 'not started'),
 	];
 
 	//setup linear workflow
