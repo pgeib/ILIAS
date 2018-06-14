@@ -1,7 +1,17 @@
 <style type="text/css">
 
-	.well {
-		display: flow-root;
+	@font-face {
+	  font-family: 'Glyphicons Halflings';
+	  src: url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.eot');
+	  src: url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), 
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.woff2') format('woff2'), 
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.woff') format('woff'), 
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.ttf') format('truetype'), 
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+	}
+
+	.il-workflow.linear.x-axis {
+	    height: 250px;
 	}
 
 	.il-workflow.linear .il-workflow-steps {
@@ -23,7 +33,7 @@
 	}
 
 	.il-workflow.linear .il-workflow-step .line {
-	    border-left: 1px dashed #000;
+	    border-left: 1px dashed #c9d0da;
 	    height: 90%;
 	    left: 15px;
 	    position: relative;
@@ -39,6 +49,10 @@
 
 	.il-workflow.linear .il-workflow-step .status {
 		left: -15px;
+	}
+
+	.il-workflow.linear.x-axis .il-workflow-step .status {
+		left: 0px;
 	}
 
 	.il-workflow.linear.x-axis .il-workflow-steps .il-workflow-step .line {
@@ -113,38 +127,25 @@
 		background-color: #6ea03c; /*brand-success*/
 	}
 
-	.il-workflow.linear .il-workflow-step.completed .status:before,
-	.il-workflow.linear .il-workflow-step.completed .status:after {
-	    content: "";
-	    background-color: #fff;
-	    width: 2px;
-	    height: 15px;
+	.il-workflow.linear .il-workflow-step.completed .status:before {
+	    content: "\e013";
+	    font-family: 'Glyphicons Halflings';
+	    font-size: 14px;
+	    color: #fff;
+	    -webkit-font-smoothing: antialiased;
 	    position: relative;
-	    top: 1px;
-	    left: 12px;
-	    display: inline-block;
-	    transform: rotate(40deg);
+	    top: 0px;
+	    left: 2px;
 	}
 
-	.il-workflow.linear .il-workflow-step.completed .status:after {
-	    transform: rotate(-50deg);
-	    height: 7px;
-	    left: 3px;
+	.il-workflow.linear .il-workflow-step.completed.first .status:before,
+	.il-workflow.linear .il-workflow-step.completed.last .status:before {
+		top: 4px;
+		left: 7px;
 	}
 
-	.il-workflow.linear .il-workflow-step.first.completed .status:before,
-	.il-workflow.linear .il-workflow-step.last.completed .status:before {
-	    left: 16px;
-	    top: 6px;
-	}
-
-	.il-workflow.linear .il-workflow-step.first.completed .status:after,
-	.il-workflow.linear .il-workflow-step.last.completed .status:after {
-	    left: 7px;
-	    top: 5px;
-	}
-
-	.il-workflow.linear .il-workflow-step.notstarted .status {
+	.il-workflow.linear .il-workflow-step.notstarted .status,
+	.il-workflow.linear .il-workflow-step.active.notstarted .status {
 		background-color: #c3cad4; /*@brand-info  30% Deckkraft*/
 	}
 
@@ -189,22 +190,9 @@
 		font-size: 1.3em;
 	}
 
-	/*.il-workflow.linear .il-workflow-step .line-y {
-	    width: 1px;
-	    height: 40px;
-	    border-left: 1px dashed #4c6586; /*@brand-primary*//*
-	    margin: -10px auto;
-	    position: relative;
-	    bottom: 17px;
-	    opacity: .2;
-	}*/
-
-	pre.php {
-	    clear: both;
-	}
+	
 
 </style>
-
 
 
 <div class="il-workflow linear
@@ -236,11 +224,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- should be used with verital line
-			<div class="line-y"></div>
-			-->
 		</div>
-
 	<!-- END step -->
 	</div>
 </div>
