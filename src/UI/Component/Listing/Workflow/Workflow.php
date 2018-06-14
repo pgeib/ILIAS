@@ -20,6 +20,7 @@ interface Workflow extends \ILIAS\UI\Component\Component {
 	 * The step at this position is set to active.
 	 *
 	 * @param 	int 	$active
+	 * @throws InvalidArgumentException 	if $active exceeds the amount of steps
 	 * @return 	Workflow
 	 */
 	public function withActive($active);
@@ -30,4 +31,11 @@ interface Workflow extends \ILIAS\UI\Component\Component {
 	 * @return 	int
 	 */
 	public function getActive();
+
+	/**
+	 * Get the steps of this workflow.
+	 *
+	 * @return Step[]
+	 */
+	public function getSteps();
 }
