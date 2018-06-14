@@ -1,9 +1,4 @@
-
-@brand-primary:  #4c6586;
-@brand-success:  #6ea03c;
-
 @workflow-icon-width: 20px;
-@il-top-bar-height: 40px;
 
 .il-workflow-header {
 	margin-bottom:  @padding-base-horizontal;
@@ -78,9 +73,11 @@
 					background-color: #e6e6e6;
 				}
 			}
-
-
-
+			&.inprogress {
+				.status {
+					background-color: @brand-primary;
+				}
+			}
 
 			.line {
 			    border-left: 1px dashed #c9d0da;
@@ -102,6 +99,13 @@
 				}
 			}
 
+			&.active {
+				.il-workflow-step-label {
+			    	font-size: 120%;
+			    	color: @brand-primary;
+				}
+			}
+
 			&.last {
 				.line {
 					border: none;
@@ -109,9 +113,6 @@
 			}
 		}
 	}
-
-
-
 
 	.il-workflow-step-label,
 	.il-workflow-step-description {
@@ -122,59 +123,53 @@
 	}
 
 
+
+
 	&.x-axis {
 
-		.il-workflow-step-label {
- 			overflow-wrap: break-word;
-		}
+		.il-workflow-step-label,
 		.il-workflow-step-description {
  			overflow-wrap: break-word;
 		}
 
 		.il-workflow-step {
 			display:inline-block;
-
-
-
-
-
-			margin-bottom: 10px;
 		    width: 20%;
+		    margin-bottom: @workflow-icon-width * 3;
 
 		    .line {
-		    	height: 100px;
-		    	left: 0;
-		    	 position: relative;
-		    	border-top: 1px dashed #c9d0da;
+		    	border-top: 1px dashed #c9d0da !important;
 		    	border-left: none;
+				top: @workflow-icon-width * -0.5;
+				position: relative;
 		    }
+
 			.status {
-				left: 0px;
-				margin: 0 auto;
-				float: none;
+				margin: 0 auto !important;
+				top: @workflow-icon-width * -0.5;
+			}
+
+			/*big icons*/
+			&.first,
+			&.last,
+			&.active {
+				.line {
+					top: 0px;
+				}
+				.status {
+					top: @workflow-icon-width * 1.5 * -0.5;
+				}
 			}
 
 			.text {
-			    padding-left: 0px;
-			    bottom: 0;
-			    text-align: center;
-
+			    position: initial !important;
+    			text-align: center;
+	    		margin-top: 0px;
 			}
 
-
-			&.last,
-			&.first {
-				.status {
-					bottom: 16px;
-				}
+			&.active .il-workflow-step-label{
+				line-height: 120%;
 			}
-
-			&.active {
-				.status {
-					bottom: 22px;
-				}
-			}
-
 		}
 	}
 }

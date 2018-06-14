@@ -11,8 +11,8 @@ function vertical() {
 	$steps = [
 		$f->step('step1', 'not applicable')->withStatus($step::STATUS_NOTAPPLICABLE),
 		$f->step('step2', 'completed')->withStatus($step::STATUS_COMPLETED),
-		$f->step('step3', 'in progress'),
-		$f->step('step4', 'not started, active')->withStatus($step::STATUS_INPROGRESS),
+		$f->step('step3', 'not started'),
+		$f->step('step4', 'in progress, active')->withStatus($step::STATUS_INPROGRESS),
 		$f->step('step5', 'not started')
 	];
 
