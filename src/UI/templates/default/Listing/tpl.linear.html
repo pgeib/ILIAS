@@ -1,5 +1,16 @@
 <style type="text/css">
 
+	@font-face {
+	  font-family: 'Glyphicons Halflings';
+	  src: url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.eot');
+	  src: url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), 
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.woff2') format('woff2'), 
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.woff') format('woff'), 
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.ttf') format('truetype'), 
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+	}
+
+
 	.well {
 		display: flow-root;
 	}
@@ -39,6 +50,10 @@
 
 	.il-workflow.linear .il-workflow-step .status {
 		left: -15px;
+	}
+
+	.il-workflow.linear.x-axis .il-workflow-step .status {
+		left: 0px;
 	}
 
 	.il-workflow.linear.x-axis .il-workflow-steps .il-workflow-step .line {
@@ -113,7 +128,20 @@
 		background-color: #6ea03c; /*brand-success*/
 	}
 
-	.il-workflow.linear .il-workflow-step.completed .status:before, 
+	.il-workflow.linear .il-workflow-step.completed .status:before {
+		content: "\e134";
+		font-family: 'Glyphicons Halflings';
+	    top: 1px;
+	    display: inline-block;
+	    font-style: normal;
+	    font-weight: normal;
+	    font-size: 14px;
+	    color: #fff;
+	    line-height: 1;
+	    -webkit-font-smoothing: antialiased;
+	}
+
+	/*.il-workflow.linear .il-workflow-step.completed .status:before, 
 	.il-workflow.linear .il-workflow-step.completed .status:after {
 	    content: "";
 	    background-color: #fff;
@@ -142,7 +170,7 @@
 	.il-workflow.linear .il-workflow-step.last.completed .status:after {
 	    left: 7px;
 	    top: 5px;
-	} 
+	}  */
 
 	.il-workflow.linear .il-workflow-step.notstarted .status {
 		background-color: #c3cad4; /*@brand-info  30% Deckkraft*/
