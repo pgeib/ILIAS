@@ -87,26 +87,4 @@ class LinearWorkflowTest extends ILIAS_UI_TestBase {
 		$this->assertTrue($raised);
 	}
 
-/*
-
-	public function test_render() {
-		$f = $this->buildFactory();
-		$label = "label";
-		$byline = "byline";
-		$name = "name_0";
-		$pwd = $f->password($label, $byline)->withNameFrom($this->name_source);
-
-		$r = $this->getDefaultRenderer();
-		$expected = ""
-			."<div class=\"form-group row\">"
-				."<label for=\"$name\" class=\"control-label col-sm-3\">$label</label>"
-				."<div class=\"col-sm-9\">"
-					."<input type=\"password\" name=\"$name\" class=\"form-control form-control-sm\" />"
-					."<div class=\"help-block\">$byline</div>"
-				."</div>"
-			."</div>";
-		$this->assertHTMLEquals($expected, $r->render($pwd));
-	}
-	*/
-
 }
