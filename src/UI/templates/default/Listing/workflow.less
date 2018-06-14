@@ -1,9 +1,180 @@
-.il-workflow {
-	&.linear {
-		.il-workflow-step.active {
-			.il-workflow-step-label {
-				color: red;
+
+@brand-primary:  #4c6586;
+@brand-success:  #6ea03c;
+
+@workflow-icon-width: 20px;
+@il-top-bar-height: 40px;
+
+.il-workflow-header {
+	margin-bottom:  @padding-base-horizontal;
+	height: @il-top-bar-height;
+}
+
+.il-workflow.linear {
+
+	.il-workflow-steps {
+ 		margin-top:  @workflow-icon-width / 2;
+ 		margin-left: @workflow-icon-width / 2 + 10;
+
+
+		.il-workflow-step {
+
+			.status {
+				width: @workflow-icon-width;
+			    height: @workflow-icon-width;
+			    position: relative;
+			    margin-left: @workflow-icon-width / 2 * -1;
 			}
+
+			/*round icons*/
+			&.first,
+			&.last {
+				.status {
+			    	border-radius: 50%;
+			    }
+			}
+
+			/*icon with check*/
+			&.completed {
+				.status {
+					background-color: @brand-success !important;
+					&:before {
+						content: "\e013";
+					    font-family: 'Glyphicons Halflings';
+					    color: #fff;
+					    position: relative;
+					    font-size: @workflow-icon-width * 0.7;
+					    left: 10%;
+					}
+				}
+			}
+
+			/*big icons*/
+			&.first,
+			&.last,
+			&.active {
+				.status {
+					width: @workflow-icon-width * 1.5;
+					height: @workflow-icon-width * 1.5;
+					margin-left: @workflow-icon-width * 1.5 / 2 * -1;
+
+			    	background-color: @brand-primary;
+				}
+				&.completed {
+					.status:before {
+						font-size: @workflow-icon-width * 1.5 * 0.7;
+					}
+				}
+			}
+
+			&.notstarted {
+				.status {
+					background-color: #c3cad4;/*@brand-info  30% Deckkraft*/
+				}
+			}
+
+			&.notapplicable {
+				.status {
+					background-color: #e6e6e6;
+				}
+			}
+
+
+
+
+			.line {
+			    border-left: 1px dashed #c9d0da;
+			    left: @workflow-icon-width / 2;
+				.text {
+					position: relative;
+			    	top: @workflow-icon-width * -1;
+					/*always big-icon-spacing*/
+			    	left: @workflow-icon-width * 1.5;
+				}
+			}
+
+			/*big icons*/
+			&.first,
+			&.last,
+			&.active {
+				.text {
+			    	top: @workflow-icon-width * -1.5;
+				}
+			}
+
+			&.last {
+				.line {
+					border: none;
+				}
+			}
+		}
+	}
+
+
+
+
+	.il-workflow-step-label,
+	.il-workflow-step-description {
+		display: block;
+	}
+	.il-workflow-step-label{
+		font-weight: 600;
+	}
+
+
+	&.x-axis {
+
+		.il-workflow-step-label {
+ 			overflow-wrap: break-word;
+		}
+		.il-workflow-step-description {
+ 			overflow-wrap: break-word;
+		}
+
+		.il-workflow-step {
+			display:inline-block;
+
+
+
+
+
+			margin-bottom: 10px;
+		    width: 20%;
+
+		    .line {
+		    	height: 100px;
+		    	left: 0;
+		    	 position: relative;
+		    	border-top: 1px dashed #c9d0da;
+		    	border-left: none;
+		    }
+			.status {
+				left: 0px;
+				margin: 0 auto;
+				float: none;
+			}
+
+			.text {
+			    padding-left: 0px;
+			    bottom: 0;
+			    text-align: center;
+
+			}
+
+
+			&.last,
+			&.first {
+				.status {
+					bottom: 16px;
+				}
+			}
+
+			&.active {
+				.status {
+					bottom: 22px;
+				}
+			}
+
 		}
 	}
 }
