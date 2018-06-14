@@ -10,7 +10,7 @@ interface Factory {
 	 * description:
 	 *   purpose: >
 	 *      A workflow step represents a single step in a sequence of steps.
-	 *      A step may be available or not and has a state that either is
+	 *      A step may be applicable or not and has a state that either is
 	 *      completed, in progress or not started.
 	 *   composition: >
 	 *     A workflow step consists of a label, a description and a marker
@@ -32,7 +32,8 @@ interface Factory {
 	 *      A linear workflow is the basic form of a workflow: the user
 	 *      should tackle every step, one after the other.
 	 *   composition: >
-	 *     ...
+	 *     A linear workflow has a title and lists a sequence of steps.
+	 *     If the user is currently working on a step, the step is marked as active.
 	 *
 	 * ----
 	 *
