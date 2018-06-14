@@ -208,6 +208,7 @@ class ilPluginSlot
 	*/
 	function getPluginsInformation()
 	{
+		return [];
 		global $DIC;
 		$ilPluginAdmin = $DIC['ilPluginAdmin'];
 		
