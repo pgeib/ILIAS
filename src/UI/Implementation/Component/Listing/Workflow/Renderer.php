@@ -35,6 +35,12 @@ class Renderer extends AbstractComponentRenderer {
 
 		$tpl->setVariable("TITLE", $component->getTitle());
 
+		if($component->getOrientation() === $component::VERTICAL) {
+			$tpl->touchBlock('vertical');
+		} else {
+			$tpl->touchBlock('horizontal');
+		}
+
 		foreach ($component->getSteps() as $index=>$step) {
 			$tpl->setCurrentBlock("step");
 			$tpl->setVariable("LABEL", $step->getLabel());
