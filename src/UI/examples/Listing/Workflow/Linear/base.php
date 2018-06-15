@@ -10,7 +10,7 @@ function base() {
 	$step = $f->step('','');
 	$steps = [
 		$f->step('step1', 'completed')->withStatus($step::STATUS_COMPLETED),
-		$f->step('step2', 'completed')->withStatus($step::STATUS_COMPLETED),
+		$f->step('step2 has a longish title', 'is completed, but with a heavier description-length.')->withStatus($step::STATUS_COMPLETED),
 		$f->step('step3', 'in progress, active')->withStatus($step::STATUS_INPROGRESS),
 		$f->step('step4', 'not applicable')->withStatus($step::STATUS_NOTAPPLICABLE),
 		$f->step('step5', 'in progress')->withStatus($step::STATUS_INPROGRESS),
