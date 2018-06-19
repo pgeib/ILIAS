@@ -26,7 +26,17 @@ class Step implements C\Listing\Workflow\Step {
 	private  $description;
 
 	/**
-	 * @var	int
+	 * @var	mixed
+	 */
+	private  $action;
+
+	/**
+	 * @var	mixed
+	 */
+	private  $availability;
+
+	/**
+	 * @var	mixed
 	 */
 	private  $status;
 
@@ -34,12 +44,17 @@ class Step implements C\Listing\Workflow\Step {
 	 * @param string 	$label
 	 * @param string 	$description
 	 */
-	public function __construct($label, $description='') {
+	public function __construct($label, $description='', $action=null) {
 		$this->checkStringArg("string", $label);
 		$this->checkStringArg("string", $description);
+
+		//2DO: check action
+
 		$this->label = $label;
 		$this->description = $description;
-		$this->status = static::STATUS_NOTSTARTED;
+		$this->action = $action;
+		$this->availability = static::AVAILABLE;
+		$this->status = static::NOT_STARTED;
 	}
 
 	/**
@@ -60,6 +75,29 @@ class Step implements C\Listing\Workflow\Step {
 	/**
 	 * @inheritdoc
 	 */
+	public function getAvailability() {
+		return $this->availability;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withAvailability($status) {
+		$valid = [
+			static::AVAILABLE,
+			static::NOT_YET,
+			static::NOT_ANYMORE
+		];
+		$this->checkArgIsElement('status', $status, $valid ,'valid status for availability');
+
+		$clone = clone $this;
+		$clone->availability = $status;
+		return $clone;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getStatus() {
 		return $this->status;
 	}
@@ -69,10 +107,10 @@ class Step implements C\Listing\Workflow\Step {
 	 */
 	public function withStatus($status) {
 		$valid = [
-			static::STATUS_NOTAPPLICABLE,
-			static::STATUS_NOTSTARTED,
-			static::STATUS_INPROGRESS,
-			static::STATUS_COMPLETED
+			static::NOT_STARTED,
+			static::IN_PROGRESS,
+			static::SUCCESSFULLY,
+			static::UNSUCCESSFULLY
 		];
 		$this->checkArgIsElement('status', $status, $valid ,'valid status');
 

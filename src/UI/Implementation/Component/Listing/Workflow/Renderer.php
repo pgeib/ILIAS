@@ -32,20 +32,12 @@ class Renderer extends AbstractComponentRenderer {
 	protected function render_linear(Component\Listing\Workflow\Linear $component, RendererInterface $default_renderer)
 	{
 		$tpl = $this->getTemplate("tpl.linear.html", true, true);
-
 		$tpl->setVariable("TITLE", $component->getTitle());
-
-		if($component->getOrientation() === $component::VERTICAL) {
-			$tpl->touchBlock('vertical');
-		} else {
-			$tpl->touchBlock('horizontal');
-		}
 
 		foreach ($component->getSteps() as $index=>$step) {
 			$tpl->setCurrentBlock("step");
 			$tpl->setVariable("LABEL", $step->getLabel());
 			$tpl->setVariable("DESCRIPTION", $step->getDescription());
-
 
 			if($index === 0) {
 				$tpl->touchBlock('first');
@@ -55,33 +47,40 @@ class Renderer extends AbstractComponentRenderer {
 				$tpl->touchBlock('last');
 				$tpl->setCurrentBlock("step");
 			}
+
 			if($index === $component->getActive()) {
 				$tpl->touchBlock('active');
 			} else {
-				$tpl->touchBlock('inactive');
+
+				switch ($step->getAvailability()) {
+					case Component\Listing\Workflow\Step::AVAILABLE:
+						$tpl->touchBlock('available');
+						break;
+					case Component\Listing\Workflow\Step::NOT_YET:
+						$tpl->touchBlock('not_yet');
+						break;
+					case Component\Listing\Workflow\Step::NOT_ANYMORE:
+						$tpl->touchBlock('not_anymore');
+						break;
+				}
 			}
 			$tpl->setCurrentBlock("step");
 
 			switch ($step->getStatus()) {
-				case Component\Listing\Workflow\Step::STATUS_NOTAPPLICABLE:
-					$tpl->touchBlock('status_notapplicable');
+				case Component\Listing\Workflow\Step::NOT_STARTED:
+					$tpl->touchBlock('status_notstarted');
 					break;
-				case Component\Listing\Workflow\Step::STATUS_INPROGRESS:
+				case Component\Listing\Workflow\Step::IN_PROGRESS:
 					$tpl->touchBlock('status_inprogress');
 					break;
-				case Component\Listing\Workflow\Step::STATUS_COMPLETED:
-					$tpl->touchBlock('status_completed');
+				case Component\Listing\Workflow\Step::SUCCESSFULLY:
+					$tpl->touchBlock('status_completed_successfully');
 					break;
-
-				case Component\Listing\Workflow\Step::STATUS_NOTSTARTED:
-				default:
-					$tpl->touchBlock('status_notstarted');
-
+				case Component\Listing\Workflow\Step::UNSUCCESSFULLY:
+					$tpl->touchBlock('status_completed_unsuccessfully');
+					break;
 			}
 			$tpl->setCurrentBlock("step");
-
-
-
 			$tpl->parseCurrentBlock();
 		}
 		return $tpl->get();

@@ -1,35 +1,29 @@
-<div class="il-workflow linear
-	<!-- BEGIN horizontal --> x-axis <!-- END horizontal -->
-	<!-- BEGIN vertical --> y-axis <!-- END vertical -->
-	">
+<div class="il-workflow linear">
 	<div class="il-workflow-header">
 		<h3 class="il-workflow-title">{TITLE}</h3>
 	</div>
-	<div class="il-workflow-steps">
+	<ol class="il-workflow-steps">
 	<!-- BEGIN step -->
-		<div class="il-workflow-step
-			<!-- BEGIN inactive --> inactive<!-- END inactive -->
-			<!-- BEGIN active --> active<!-- END active -->
+		<li class="il-workflow-step
 			<!-- BEGIN first --> first<!-- END first -->
 			<!-- BEGIN last --> last<!-- END last -->
-			<!-- BEGIN status_notapplicable --> notapplicable<!-- END status_notapplicable -->
+
+			<!-- BEGIN active --> active<!-- END active -->
+			<!-- BEGIN available --> available<!-- END available -->
+			<!-- BEGIN not_yet --> not_yet_available<!-- END not_yet -->
+			<!-- BEGIN not_anymore --> no_longer_available<!-- END not_anymore -->
+
 			<!-- BEGIN status_notstarted --> notstarted<!-- END status_notstarted -->
 			<!-- BEGIN status_inprogress --> inprogress<!-- END status_inprogress -->
-			<!-- BEGIN status_completed --> completed<!-- END status_completed -->
+			<!-- BEGIN status_completed_successfully --> completed_successfully<!-- END status_completed_successfully -->
+			<!-- BEGIN status_completed_unsuccessfully --> completed_unsuccessfully<!-- END status_completed_unsuccessfully -->
 		">
 
-			<div class="il-workflow-step-status">
-				<div class="il-workflow-step-line">
-					<div class="pre"></div>
-					<div class="post"></div>
-				</div>
-				<div class="il-workflow-step-icon"></div>
-			</div>
-			<div class="il-workflow-step-text">
-				<span class="il-workflow-step-label">{LABEL}</span>
-				<span class="il-workflow-step-description">{DESCRIPTION}</span>
-			</div>
-		</div>
+
+			<span class="il-workflow-step-label">{LABEL}</span>
+			<span class="il-workflow-step-description">{DESCRIPTION}</span>
+
+		</li>
 	<!-- END step -->
-	</div>
+	</ol>
 </div>

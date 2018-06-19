@@ -9,20 +9,40 @@ function base() {
 	//setup steps
 	$step = $f->step('','');
 	$steps = [
-		$f->step('step1', 'completed')->withStatus($step::STATUS_COMPLETED),
-		$f->step('step2 has a longish title', 'is completed, but with a heavier description-length.')->withStatus($step::STATUS_COMPLETED),
-		$f->step('step3', 'in progress, active')->withStatus($step::STATUS_INPROGRESS),
-		$f->step('step4', 'not applicable')->withStatus($step::STATUS_NOTAPPLICABLE),
-		$f->step('step5', 'in progress')->withStatus($step::STATUS_INPROGRESS),
-		$f->step('step6', 'completed')->withStatus($step::STATUS_COMPLETED),
-		$f->step('step7', 'not started'),
-		$f->step('step8', 'not applicable')->withStatus($step::STATUS_NOTAPPLICABLE),
-		$f->step('step9', 'not started'),
+		$f->step('step 1', 'available, successfully completed')
+			->withAvailability($step::AVAILABLE)->withStatus($step::SUCCESSFULLY),
+		$f->step('step 2', 'available, unsuccessfully completed')
+			->withAvailability($step::AVAILABLE)->withStatus($step::UNSUCCESSFULLY),
+		$f->step('step 3', 'available, not started')
+			->withAvailability($step::AVAILABLE)->withStatus($step::NOT_STARTED),
+		$f->step('step 4', 'available, in progress')
+			->withAvailability($step::AVAILABLE)->withStatus($step::IN_PROGRESS),
+
+		$f->step('active step', 'available, in progress, active (by workflow)')
+			->withAvailability($step::AVAILABLE)->withStatus($step::IN_PROGRESS),
+
+		$f->step('step 6', 'not yet available, not started')
+			->withAvailability($step::NOT_YET)->withStatus($step::NOT_STARTED),
+		$f->step('step 7', 'not yet available, in progress')
+			->withAvailability($step::NOT_YET)->withStatus($step::IN_PROGRESS),
+		$f->step('step 8', 'not yet available, successfully completed')
+			->withAvailability($step::NOT_YET)->withStatus($step::SUCCESSFULLY),
+		$f->step('step 9', 'not yet available, unsuccessfully completed')
+			->withAvailability($step::NOT_YET)->withStatus($step::UNSUCCESSFULLY),
+
+		$f->step('step 10', 'not available anymore, not started')
+			->withAvailability($step::NOT_ANYMORE)->withStatus($step::NOT_STARTED),
+		$f->step('step 11', 'not available anymore, in progress')
+			->withAvailability($step::NOT_ANYMORE)->withStatus($step::IN_PROGRESS),
+		$f->step('step 12', 'not available anymore, successfully completed')
+			->withAvailability($step::NOT_ANYMORE)->withStatus($step::SUCCESSFULLY),
+		$f->step('step 13', 'not available anymore, unsuccessfully completed')
+			->withAvailability($step::NOT_ANYMORE)->withStatus($step::UNSUCCESSFULLY),
 	];
 
 	//setup linear workflow
 	$wf = $f->linear('Linear Workflow', $steps)
-		->withActive(2);
+		->withActive(4);
 
 	//render
 	return $renderer->render($wf);
