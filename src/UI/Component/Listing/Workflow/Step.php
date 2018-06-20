@@ -9,10 +9,15 @@ namespace ILIAS\UI\Component\Listing\Workflow;
  */
 interface Step extends \ILIAS\UI\Component\Component {
 
-	const STATUS_NOTAPPLICABLE	= 1;
-	const STATUS_NOTSTARTED		= 2;
-	const STATUS_INPROGRESS		= 3;
-	const STATUS_COMPLETED		= 4;
+	const AVAILABLE		= 1;
+	const NOT_YET		= 2;
+	const NOT_ANYMORE	= 3;
+	const ACTIVE		= 4;
+
+	const NOT_STARTED	= 1;
+	const IN_PROGRESS	= 2;
+	const SUCCESSFULLY	= 3;
+	const UNSUCCESSFULLY= 4;
 
 	/**
 	 * Get the label of this step.
@@ -28,17 +33,33 @@ interface Step extends \ILIAS\UI\Component\Component {
 	 */
 	public function getDescription();
 
+
+	/**
+	 * Get the availabilty status of this step.
+	 *
+	 * @return 	mixed
+	 */
+	public function getAvailability();
+
+	/**
+	 * Get a step like this with completion status according to parameter.
+	 *
+	 * @param 	mixed 	$status
+	 * @return 	Step
+	 */
+	public function withAvailability($status);
+
 	/**
 	 * Get the status of this step.
 	 *
-	 * @return 	int
+	 * @return 	mixed
 	 */
 	public function getStatus();
 
 	/**
 	 * Get a step like this with completion status according to parameter.
 	 *
-	 * @param 	int 	$status
+	 * @param 	mixed 	$status
 	 * @return 	Step
 	 */
 	public function withStatus($status);

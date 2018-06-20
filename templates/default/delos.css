@@ -8518,8 +8518,9 @@ ul.breadcrumb li:hover {
 .il-table-presentation-row .il-table-presentation-row-expanded .il-table-presentation-details .il-table-presentation-fields .il-item-property-name {
   color: #909090;
 }
-.il-workflow.linear .il-workflow-step.active .il-workflow-step-label {
-  color: red;
+.il-workflow-header {
+  margin-bottom: 8px;
+  height: 40px;
 }
 /*		Color scheme
 		Dark BLue: #0f2152;
