@@ -1,8 +1,116 @@
+<style type="text/css" href="workflow.css">
+
+	@font-face {
+	  font-family: 'Glyphicons Halflings';
+	  src: url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.eot');
+	  src: url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.woff2') format('woff2'),
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.woff') format('woff'),
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+	  url('../../libs/bower/bower_components/webui-popover/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+	}
+
+	ul.il-workflow-steps {
+		list-style: none;
+		padding: 0;
+	}
+
+	li.il-workflow-step:before {
+	    background-color: #fff;
+	    border: 1px solid #4c6586; /*@brand-primary*/
+	    border-radius: 20px;
+			color: #fff;
+	    content: "";
+			font-family: Glyphicons Halflings;
+			font-size: 12px;
+	    height: 20px;
+			line-height: 1.6em;
+			padding-left: 1px;
+	    position: absolute;
+	    text-align: center;
+			width: 20px;
+	}
+
+	li.il-workflow-step.completed_successfully:before,
+	li.il-workflow-step.not_yet_available.completed_successfully:before {
+    content: "\e013";
+		background-color: #ddd; /*border-gray*/
+		color: #fff;
+	}
+
+	li.il-workflow-step.completed_unsuccessfully:before,
+	li.il-workflow-step.not_yet_available.completed_unsuccessfully:before {
+    content: "\e014";
+		background-color: #ddd; /*border-gray*/
+		color: #fff;
+	}
+
+	li.il-workflow-step.not_yet_available:before,
+	li.il-workflow-step.no_longer_available:before {
+    content: "\e033";
+		color: #ddd; /*@border-gray*/
+		background-color: #f5f5f5;
+		border: none;
+	}
+
+	li.il-workflow-step.no_longer_available:before {
+    content: "\2212";
+	}
+
+	li.il-workflow-step.available.completed_successfully:before,
+	li.il-workflow-step.available.completed_unsuccessfully:before,
+	li.il-workflow-step.inprogress:before {
+			background-color: #4c6586; /*@brand-primary*/
+	}
+
+	li.il-workflow-step.inprogress:before {
+		color: #fff;
+	}
+
+	li.il-workflow-step .text {
+    border-left: 1px dashed #434343; /*@mid-gray*/
+		margin-left: 10px;
+    padding: 0 0 30px 20px;
+	}
+
+	li.il-workflow-step:last-child .text {
+    border-left: none;
+	}
+
+	li.il-workflow-step .text span {
+		display: block
+	}
+
+	li.il-workflow-step .text span.il-workflow-step-label {
+		font-weight: 600;
+	}
+
+	li.il-workflow-step.active .text {
+		padding-left: 40px;
+	}
+
+	li.il-workflow-step.active .text span.il-workflow-step-label {
+		color: #4c6586; /*@brand-primary*/
+	}
+
+	li.il-workflow-step.not_yet_available .text,
+	li.il-workflow-step.no_longer_available .text {
+		color: #ddd; /*@border-gray*/
+	}
+
+	li.il-workflow-step.inprogress.no_longer_available .text span,
+	li.il-workflow-step.inprogress.not_yet_available .text span {
+		color: #333; /*@border-gray*/
+		opacity: .5;
+	}
+
+</style>
+
 <div class="il-workflow linear">
 	<div class="il-workflow-header">
 		<h3 class="il-workflow-title">{TITLE}</h3>
 	</div>
-	<ol class="il-workflow-steps">
+	<ul class="il-workflow-steps">
 	<!-- BEGIN step -->
 		<li class="il-workflow-step
 			<!-- BEGIN first --> first<!-- END first -->
@@ -19,11 +127,13 @@
 			<!-- BEGIN status_completed_unsuccessfully --> completed_unsuccessfully<!-- END status_completed_unsuccessfully -->
 		">
 
+			<div class="text">
+				<span class="il-workflow-step-label">{LABEL}</span>
+				<span class="il-workflow-step-description">{DESCRIPTION}</span>
+			</div>
 
-			<span class="il-workflow-step-label">{LABEL}</span>
-			<span class="il-workflow-step-description">{DESCRIPTION}</span>
 
 		</li>
 	<!-- END step -->
-	</ol>
+</ul>
 </div>
