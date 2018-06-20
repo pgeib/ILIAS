@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+	<title>{WINDOW_TITLE} {PAGETITLE}</title>
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+
+	{JILL_DEFAULT_HEADER}
+
+	<base href="{BASE_URL}">
+
+	{CUSTOM_RESOURCES}
+
+	<script type="application/javascript">
+		{JSCONST}
+	</script>
+
+	<script type="application/javascript">
+		/* prevent navigation via browser's back-button
+		*/
+
+		var isIE = (window.ActiveXObject || "ActiveXObject" in window) ? true : false,
+			isIE11 = (!(window.ActiveXObject) && "ActiveXObject" in window) ? true : false;
+
+		function jillOnHashChange() {
+			location.hash = "noBack";
+		};
+		function jillOnPopState() {
+			history.pushState(null, null, window.location.href);
+		};
+
+		if(history.pushState && window.PopStateEvent && (isIE === false || isIE11 === true)) {
+			jillOnPopState();
+			if (window.addEventListener) {
+				window.addEventListener("popstate", jillOnPopState, false);
+			}
+			if (window.attachEvent) {
+			   window.attachEvent("onpopstate", jillOnPopState);
+			}
+		} else {
+			jillOnHashChange();
+			if (window.addEventListener) {
+				window.addEventListener("hashchange", jillOnHashChange, false);
+			}
+			if (window.attachEvent) {
+			   window.attachEvent("onhashchange", jillOnHashChange);
+			}
+		}
+
+
+		/* convenience exit-function, including referrer as backlink
+		*/
+		JILL.exitToRepo = function () {
+			window.location.href = JILL.getCfg('cmdurl').replace('cmd=jill','');
+		}
+		JILL.exitToReferrer = function () {
+			var referrer = JILL.getCfg('referrer').replace(/&amp;/g, '&'),
+				loc = window.location.href,
+				jbase = JILL.getCfg('ilbaseurl'),
+				base = loc.substr(0, loc.indexOf(jbase)),
+				pre = loc.substr(0, loc.indexOf(jbase) + jbase.length).replace('ilias.php','');
+
+			if (referrer.indexOf('http://') === 0 || referrer.indexOf('https://') === 0) {
+				window.location.href = referrer;
+			}else {
+				window.location.href = pre + referrer;
+			}
+		}
+
+		JILL.exit = function () {
+			if(JILL.getCfg('referrer') === '') {
+				JILL.exitToRepo();
+			} else {
+				JILL.exitToReferrer();
+			}
+		}
+
+
+	</script>
+
+</head>
+
+<body>
+
+	<!-- BEGIN jillPackage -->
+	{CONTENT}
+	<!-- END jillPackage -->
+
+
+</body>
+
+</html>
