@@ -7,6 +7,7 @@ namespace ILIAS\UI\Implementation\Component\Listing\Workflow;
 use ILIAS\UI\Implementation\Render\AbstractComponentRenderer;
 use ILIAS\UI\Renderer as RendererInterface;
 use ILIAS\UI\Component;
+use ILIAS\UI\Component\Triggerer;
 
 /**
  * Class Renderer
@@ -36,7 +37,16 @@ class Renderer extends AbstractComponentRenderer {
 
 		foreach ($component->getSteps() as $index=>$step) {
 			$tpl->setCurrentBlock("step");
-			$tpl->setVariable("LABEL", $step->getLabel());
+
+			$action = $step->getAction();
+			if(!is_null($action) && $step->getAvailability() === Component\Listing\Workflow\Step::AVAILABLE) {
+				$f = $this->getUIFactory();
+				$shy = $f->button()->shy($step->getLabel(), $action);
+				$tpl->setVariable("LABEL", $default_renderer->render($shy));
+			} else {
+				$tpl->setVariable("LABEL", $step->getLabel());
+			}
+
 			$tpl->setVariable("DESCRIPTION", $step->getDescription());
 
 			if($index === 0) {
@@ -85,8 +95,6 @@ class Renderer extends AbstractComponentRenderer {
 		}
 		return $tpl->get();
 	}
-
-
 
 	/**
 	 * @inheritdocs

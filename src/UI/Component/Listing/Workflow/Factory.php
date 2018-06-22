@@ -20,6 +20,7 @@ interface Factory {
 	 *   composition: >
 	 *     A workflow step consists of a label, a description and a marker
 	 *     that indicates its availability and result.
+	 *     If a step is available and carries an action, the label is rendered as shy-button.
 	 *   effect: >
 	 *     A Step MAY have an action; when clicked, the action is triggered.
 	 *
@@ -43,6 +44,8 @@ interface Factory {
 	 *   composition: >
 	 *     A linear workflow has a title and lists a sequence of steps.
 	 *     If the user is currently working on a step, the step is marked as active.
+	 *   effect: >
+	 *     A Step MAY have an action; when clicked, the action is triggered.
 	 *
 	 * rules:
 	 *   usage:
