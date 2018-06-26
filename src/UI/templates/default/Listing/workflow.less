@@ -1,16 +1,15 @@
 @border-gray: #ddd;
 @icon-size: 20px;
 @White: #fff;
+@font-darkgray: #333;
 
 .il-workflow-header {
 	margin-bottom:  @padding-base-horizontal;
 	height: @il-top-bar-height;
 }
-
 .il-workflow-container {
 	list-style: none;
 	padding: 0;
-
 	.il-workflow-step {
 		&:before {
 			background-color: @White;
@@ -27,16 +26,12 @@
 			position: absolute;
 			text-align: center;
 			width: @icon-size;
-			color: red;
 		}
 		&:last-child .text {
 			border-left: none;
 		}
 	}
-
-
 	//available, not-yet, no-longer
-
 	.not-yet-available,
 	.no-longer-available {
 		&:before {
@@ -66,10 +61,7 @@
 			line-height: 1.5em;
 		}
 	}
-
-
 	//successfully,unsuccessfully
-
 	.completed-successfully,
 	.completed-unsuccessfully {
 		&:before {
@@ -94,10 +86,7 @@
 			background-color: @brand-primary;
 		}
 	}
-
-
 	//active
-
 	.active {
 		&:before {
 			margin: @icon-size/4 0 0 0;
@@ -106,25 +95,28 @@
 		}
 		.text {
 			padding-left: @icon-size*2;
-
-			.il-workflow-step-label {
+			.il-workflow-step-label,
+			.il-workflow-step-label .btn.btn-link {
 				color: @brand-primary;
-				font-size: 1.4em;
+				font-size: @icon-size*0.9;
+				font-weight: 600;
 			}
 		}
 	}
-
-
 	//text
-
 	.text {
 		border-left: 1px dashed @mid-gray;
+		font-size: @icon-size*0.7;
 		margin-left: @icon-size*0.75;
 		padding: 0 0 @icon-size*1.5 @icon-size;
-
 		.il-workflow-step-label {
-			font-weight: 600;
 			display: block;
 		}
+	}
+	.available .il-workflow-step-label,
+	.available .il-workflow-step-label .btn.btn-link {
+		color: @font-darkgray;
+		font-size: @icon-size*0.7;
+		font-weight: 600;
 	}
 }

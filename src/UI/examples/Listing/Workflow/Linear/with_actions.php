@@ -11,7 +11,7 @@ function with_actions() {
 	$steps = [
 		$f->step('step 1', 'available, successfully completed', '#')
 			->withAvailability($step::AVAILABLE)->withStatus($step::SUCCESSFULLY),
-		$f->step('step 2', 'available, unsuccessfully completed', '#')
+		$f->step('step 2', 'not available anymore, uccessfully completed', '#')
 			->withAvailability($step::NOT_ANYMORE)->withStatus($step::SUCCESSFULLY),
 		$f->step('active step', 'available, in progress, active (by workflow)', '#')
 			->withAvailability($step::AVAILABLE)->withStatus($step::IN_PROGRESS),
