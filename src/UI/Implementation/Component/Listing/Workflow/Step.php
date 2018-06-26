@@ -6,13 +6,11 @@ namespace ILIAS\UI\Implementation\Component\Listing\Workflow;
 
 use ILIAS\UI\Component as C;
 use ILIAS\UI\Implementation\Component\ComponentHelper;
-
 /**
  * Class Step
  * @package ILIAS\UI\Implementation\Component\Listing\Workflow
  */
 class Step implements C\Listing\Workflow\Step {
-
 	use ComponentHelper;
 
 	/**
@@ -47,8 +45,11 @@ class Step implements C\Listing\Workflow\Step {
 	public function __construct($label, $description='', $action=null) {
 		$this->checkStringArg("string", $label);
 		$this->checkStringArg("string", $description);
-
-		//2DO: check action
+		$this->checkArg(
+			"action",
+			is_null($action) || is_string($action) || $action instanceof Signal,
+			$this->wrongTypeMessage("string or Signal", gettype($action))
+		);
 
 		$this->label = $label;
 		$this->description = $description;
@@ -117,5 +118,12 @@ class Step implements C\Listing\Workflow\Step {
 		$clone = clone $this;
 		$clone->status = $status;
 		return $clone;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getAction() {
+		return $this->action;
 	}
 }

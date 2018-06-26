@@ -4,10 +4,12 @@
 
 namespace ILIAS\UI\Component\Listing\Workflow;
 
+use ILIAS\UI\Component\Component;
+
 /**
  * This describes a Workflow Step
  */
-interface Step extends \ILIAS\UI\Component\Component {
+interface Step extends Component {
 
 	const AVAILABLE		= 1;
 	const NOT_YET		= 2;
@@ -63,5 +65,12 @@ interface Step extends \ILIAS\UI\Component\Component {
 	 * @return 	Step
 	 */
 	public function withStatus($status);
+
+	/**
+	 * Get the action of this Step.
+	 *
+	 * @return	null | Signal | string
+	 */
+	public function getAction();
 
 }
