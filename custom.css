@@ -15941,10 +15941,4 @@ fixes width-issue when option-texts within select boxes are too long
 not display items
 *******************
 */
-.ilTopTitle,
-div.il_HeaderInner,
-.ilStartupSection .form-horizontal h3.ilHeader,
-#ilTopBarNav a[aria-label="Mail"] {
-  display: none;
-}
 /*# sourceMappingURL=custom.css.map */
