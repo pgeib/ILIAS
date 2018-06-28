@@ -15487,6 +15487,13 @@ table.mceToolbar td {
     content: "";
   }
 }
+@font-face {
+  font-family: 'cat icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/cat/cat-icons-v1_0_0.eot");
+  src: url("fonts/cat/cat-icons-v1_0_0.eot?#iefix") format("embedded-opentype"), url("fonts/cat/cat-icons-v1_0_0.woff") format("woff"), url("fonts/cat/cat-icons-v1_0_0.ttf") format("truetype"), url("fonts/cat/cat-icons-v1_0_0.svg#cat") format("svg");
+}
 /*
 *******************************
 Presentation Table Styling
