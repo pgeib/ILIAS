@@ -1,1 +1,497 @@
 // cat TMS specific styles
+// cat TMS specific styles
+
+// custom variables
+@login-form-bg: rgba(255,255,255,.7);
+@login-form-color: #000;
+@border-gray: #ddd;
+@text-color: #000;
+@text-color-bright: #fff;
+@brand-primary-light: fade(@brand-primary, 10%);
+
+/*
+*******************************
+Presentation Table Styling
+*******************************
+*/
+.il-table-presentation {
+    margin-top: 30px;
+}
+
+.il-table-presentation-row {
+    background: #fff;
+    border-bottom: 1px solid @body-bg;
+    border-top: 0px solid #fff;
+    padding: 15px 10px 10px 0;
+    margin: 0;
+    &.expanded {
+        background: #fff;
+        // box-shadow: 0 1px 3px #ccc;
+    }
+    .il-table-presentation-row-controls {
+        text-align: center;
+        width: 4%;
+    }
+}
+
+.il-table-presentation-row-header {
+    cursor: pointer;
+}
+
+// presentation table expander/collpser from custom icon-font
+.il-table-presentation-row-controls-expander .glyphicon:before,
+.il-table-presentation-row-controls-collapser .glyphicon:before {
+    color: @brand-primary;
+    font-family: "Sparkasse Icons";
+    font-size: .9em;
+	vertical-align: text-top;
+}
+.il-table-presentation-row-controls-expander .glyphicon:before {
+    content: "\f2c9";
+}
+
+.il-table-presentation-row-controls-collapser .glyphicon:before {
+    content: "\f35e";
+}
+
+.il-table-presentation-row .il-table-presentation-row-header h4 {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 5px;
+    small {
+        font-size: 16px;
+        font-weight: 200;
+    }
+}
+
+.il-table-presentation-row-header-fields {
+
+}
+
+.il-table-presentation-row dt {
+    font-weight: 400;
+    font-size: 15px;
+    margin-top: 15px;
+    font-weight: 400;
+}
+
+/* viewcontrols */
+.il-table-presentation-viewcontrols {
+    background-color: transparent;
+    border-top: 0px solid @border-gray;
+    padding: 15px 0 10px 0;
+    margin-bottom: 10px;
+    position: relative;
+    text-align: center;
+    .btn-default {
+        margin-bottom: 4px;
+    }
+    a.btn-default {
+        background-color: @brand-primary;
+        color: #fff;
+        border: 0 solid @brand-primary;
+        display: inline-block;
+        padding: 4px 20px;
+        text-align: center;
+    }
+    div {
+	    display: inline-block;
+	    margin: 0 1px 0 0;
+        button.btn-default {
+            background-color: #fff;
+            border: 1px solid @border-gray;
+            border-radius: 2px;
+            color: @brand-secondary;
+            padding-right: 30px; /* needed for dropdown glyph */
+            position: relative;
+        }
+	}
+    div.il-viewcontrol-pagination {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        .dropdown-menu {
+            min-width: auto;
+        }
+        .rocker .glyphicon-chevron-left:before {
+            content: "\e90a";
+            font-family: "cat icons";
+            font-size: 100%;
+            font-weight: 900;
+            opacity: 1;
+        }
+        .rocker .glyphicon-chevron-right:before {
+            content: "\e90b";
+            font-family: "cat icons";
+            font-size: 100%;
+            font-weight: 900;
+            opacity: 1;
+        }
+        .rocker .btn-link.disabled {
+            background-color: transparent;
+            border: 0;
+            color: #ccc;
+            opacity: 1;
+        }
+        .btn-link {
+            &.disabled {
+                background-color: @brand-secondary;
+                border: 0px solid fade(@brand-secondary,80%);
+                color: #fff;
+                opacity: 1;
+            }
+        }
+    }
+    .dropdown-menu {
+        background-color: #fff;
+        .btn {
+            text-align: left;
+        }
+    }
+    span.caret {
+        border: 0;
+        &:after {
+            content: "\f19e";
+            background: @brand-secondary;
+            font-family: "Sparkasse Icons";
+            font-size: 10px;
+            padding: 6px;
+            color: #fff;
+            position: absolute;
+            right: 0;
+            top: 0;
+            border-radius: 2px;
+        }
+    }
+    .open > .dropdown-toggle.btn-default {
+        background-color: #fff;
+        border-color: @border-gray;
+        color: @brand-secondary;
+    }
+}
+
+// expanded
+.il-table-presentation-desclist .inline dt {
+    margin: 10px 0 5px;
+}
+
+// spacing between cols
+.il-table-presentation-row .il-table-presentation-row-expanded .il-table-presentation-details {
+    width: 30%;
+    margin-left: 10%;
+}
+
+.il-table-presentation-row .il-table-presentation-row-expanded .il-table-presentation-details .il-table-presentation-fields {
+    padding-top: 5px;
+}
+
+// spacing between btns in expanded presentation table items
+.il-table-presentation-actions .btn {
+ 	margin-bottom: 10px;
+}
+
+// block-layout presentation details
+.il-item-property-name {
+    font-weight: 400;
+}
+.il-table-presentation-row-expanded .il-item-property-value {
+    display: block;
+}
+
+/*
+********************************
+Slick Slider Integration
+********************************
+*/
+// Slick Slider
+@slider-height: 340px;
+@slider-bar-height: 70px;
+@slider-border-bottom: 1px;
+
+.slider-outer {
+    background-color: transparent;
+    background-image: url(images/login-bg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right;
+    border-bottom: 1px solid @border-gray;
+    height: @slider-height;
+    position: relative;
+    top: @il-header-height;
+    &:before {
+        position: absolute;
+        height: @slider-bar-height;
+        width: 100%;
+        content: " ";
+        background-color: rgba(255,255,255,.9);
+        bottom: 0;
+    }
+}
+
+// responsive slider-positioning on small screens
+@media only screen and (max-width: 768px) {
+    .slider-outer {
+        top: @il-top-bar-height;
+    }
+}
+.slider-section {
+    margin: auto;
+    padding-top: ceil((@slider-height - @slider-bar-height - @slider-border-bottom));
+}
+.slick-slider {
+    padding: 0 40px;
+}
+.slick-list {
+    border-left: 1px solid @border-gray;
+    height: 100%;
+}
+// JIRA TMS 1329 no centering of slider items
+.slick-track {
+    margin-left: 0;
+}
+.slick-prev,
+.slick-next {
+    height: 100%;
+    width: 30px;
+}
+.slick-prev {
+    left: 0;
+}
+.slick-next {
+    right: 0;
+    border-left: 1px solid @border-gray;
+}
+.slick-slide {
+    border-right: 1px solid @border-gray;
+}
+.slider-wrapper {
+    align-items: center;
+    display: flex !important;
+    height: @slider-bar-height; // height of slider items
+    justify-content: center;
+    &.active {
+        background-color: #fff;
+        a {
+            color: @brand-primary;
+        }
+        &:after {
+            border-bottom: 8px solid;
+            border-right: 8px solid transparent;
+            border-left: 8px solid transparent;
+            content: " ";
+            position: absolute;
+            bottom: 0;
+            color: @brand-primary;
+        }
+    }
+    a {
+        color: #000;
+        display: block;
+        font-weight: 200;
+        outline: none;
+        /* padding: 18px 0 0 0; */
+        text-transform: none;
+    }
+}
+.slick-current {
+}
+.slider-item-icon img {
+    margin: 0 auto;
+    height: 37px;
+    width: 37px;
+    display: none;
+}
+.slider-item-label {
+    font-size: 14px;
+    line-height: 15px;
+    padding: 0 5px;
+    text-align: center;
+    &:hover {
+        color: @brand-primary;
+    }
+}
+// slick Controls
+.slick-prev:before,
+.slick-next:before {
+    color: @mid-gray;
+    font-family: "cat icons";
+    font-size: 30px;
+}
+.slick-prev:before {
+    content:"\e90a";
+}
+.slick-next:before {
+    content:"\e90b";
+}
+// end slick slider
+
+// no padding and margins in booking forms
+.form-group ul {
+ 	margin-top: 0;
+ 	padding-left: 17px;
+ }
+
+.form-horizontal .control-label {
+     padding-top: 0;
+ }
+
+ //forms color first col labels
+ label.col-sm-3.control-label {
+     font-weight: 400;
+     opacity: 1;
+ }
+
+ /* reports filter bug fix and spacing */
+ .ilFloatLeft.tms-filter-element {
+     display: inline-block;
+     float: none;
+     margin: 0 20px 5px 0;
+     vertical-align: top;
+     // height and style for input text fields equal to select-elements
+     .tms-filter-control > input {
+         border: 1px solid #aaa;
+         border-radius: 4px;
+         min-height: 32px;
+     }
+     //fixes IE label-spacing bug
+     @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+         .select2-container {
+             margin-top: -24px;
+         }
+     }
+ }
+ // submit button top spacing
+ .tms-filter-buttons {
+     margin-top: 10px;
+ }
+
+/*
+***************************************
+STERNEFEEDBACK
+***************************************
+*/
+
+.il-input-rating-topic {
+  float: left;
+  margin-right: 5px;
+}
+.il-input-rating {
+  display: inline-block;
+  width: 100%;
+}
+.il-input-rating input.il-input-rating-scaleoption {
+  float: right;
+  padding: 0;
+  margin: 0 0 0 -20px;
+  opacity: 0;
+}
+.il-input-rating .glyphicon-star:before {
+  content: "\2605" !important;
+}
+.il-input-rating .glyphicon-star-empty:before {
+  content: "\2606";
+}
+.il-input-rating .glyphicon-saltire:before {
+  content: "\2613";
+}
+.il-input-rating .il-input-rating-star {
+  float: right;
+  position: relative;
+  display: block;
+  margin-top: -3px;
+  margin-bottom: 0px;
+  font-size: 160%;
+  color: #bbb;
+
+}
+.il-input-rating .il-input-rating-reset {
+  font-size: 120%;
+  margin-top: -8px;
+  font-weight: 400;
+  color: #333333;
+}
+
+.il-input-rating .il-input-rating-scaleoption:checked ~ .il-input-rating-star {
+  color: @brand-primary;
+}
+
+.il-input-rating span.label {
+  font-size: 90%;
+  margin-left: 125px;
+  margin-top: 6px;
+  position: absolute;
+  display: none;
+  color: #333333;
+}
+
+.il-input-rating-scaleoption:checked + label + span {
+    display: block;
+}
+
+//mixin for IE and FF-queries
+.rating-hover-styles {
+    .il-input-rating .il-input-rating-reset:hover,
+    .il-input-rating .il-input-rating-star:hover,
+    .il-input-rating .il-input-rating-star:hover ~ .il-input-rating-star {
+        color: @brand-primary;
+        /* for disabled mode, use:
+           color: @il-glyph-highlighted-hover-color
+        */
+    }
+    .il-input-rating:hover span.label,
+    .il-input-rating .il-input-rating-star:hover + span.label .il-input-rating-reset {
+        display: none;
+    }
+    .il-input-rating .il-input-rating-star:hover + span.label,
+    .il-input-rating span.label:hover {
+        display: block;
+    }
+    .il-input-rating:not(:hover) .il-input-rating-scaleoption:checked + label + span {
+        display: block !important;
+    }
+}
+
+/* query targets hovering in IE10+ */
+@media all and (hover), (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .rating-hover-styles
+}
+
+/* query targets hovering in FF and can't be combined with the query above */
+@-moz-document url-prefix() {
+    .rating-hover-styles
+}
+
+/*
+Jira TMS-921
+fixes width-issue when option-texts within select boxes are too long
+*/
+.modal select.form-control {
+  max-width: 411px;
+}
+// replaces bootstrap chevron icon
+.glyphicon-chevron-left:before,
+.glyphicon-chevron-right:before {
+  font-family: "cat icons";
+  font-size: 130%;
+  font-weight: 900;
+  opacity: 1;
+}
+.glyphicon-chevron-left:before {
+  content: "\e90a";
+}
+.glyphicon-chevron-right:before {
+  content: "\e90b";
+}
+
+/*
+*******************
+not display items
+*******************
+*/
+// no top title
+.ilTopTitle, // no display headline icons
+div.il_HeaderInner, // no display internal mailtool-icon
+.ilStartupSection .form-horizontal h3.ilHeader, // no display login form header
+#ilTopBarNav a[aria-label="Mail"] { // no display internal mailtool-icon
+    display: none;
+}
