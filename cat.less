@@ -27,17 +27,34 @@
 @text-color-bright: #fff;
 @brand-primary-light: fade(@brand-primary, 10%);
 
-// generell stuff
+/*
+*******************************
+generell stuff
+*******************************
+*/
+
+// set font base
 html, body {
     font-family: 'Open Sans', Arial, Verdana, sans-serif;
     font-size: @font-base;
 }
+
+/*
+*******************************
+ilias overrides
+*******************************
+*/
+
 // brand auto width
 .ilMainHeader > header > .row > a.navbar-brand > img,
 div#il_startup_logo img {
     width: auto;
 }
-
+// magazine headline
+a#il_mhead_t_focus {
+    color: @gray-dark;
+    font-size: 1.857rem;
+}
 /*
 *******************************
 Presentation Table Styling

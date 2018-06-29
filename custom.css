@@ -15494,14 +15494,28 @@ table.mceToolbar td {
   src: url("fonts/cat/cat-icons-v1_0_0.eot");
   src: url("fonts/cat/cat-icons-v1_0_0.eot?#iefix") format("embedded-opentype"), url("fonts/cat/cat-icons-v1_0_0.woff") format("woff"), url("fonts/cat/cat-icons-v1_0_0.ttf") format("truetype"), url("fonts/cat/cat-icons-v1_0_0.svg#cat") format("svg");
 }
+/*
+*******************************
+generell stuff
+*******************************
+*/
 html,
 body {
   font-family: 'Open Sans', Arial, Verdana, sans-serif;
   font-size: 14px;
 }
+/*
+*******************************
+ilias overrides
+*******************************
+*/
 .ilMainHeader > header > .row > a.navbar-brand > img,
 div#il_startup_logo img {
   width: auto;
+}
+a#il_mhead_t_focus {
+  color: #515151;
+  font-size: 1.857rem;
 }
 /*
 *******************************
@@ -15597,14 +15611,14 @@ Presentation Table Styling
 .il-table-presentation-viewcontrols div.il-viewcontrol-pagination .rocker .glyphicon-chevron-left:before {
   content: "\e90a";
   font-family: "cat icons";
-  font-size: 100%;
+  font-size: 1rem;
   font-weight: 900;
   opacity: 1;
 }
 .il-table-presentation-viewcontrols div.il-viewcontrol-pagination .rocker .glyphicon-chevron-right:before {
   content: "\e90b";
   font-family: "cat icons";
-  font-size: 100%;
+  font-size: 1rem;
   font-weight: 900;
   opacity: 1;
 }
@@ -15612,7 +15626,6 @@ Presentation Table Styling
   background-color: transparent;
   border: 0;
   color: #ccc;
-  opacity: 1;
 }
 .il-table-presentation-viewcontrols div.il-viewcontrol-pagination .btn-link.disabled {
   background-color: #6ea03c;
@@ -15622,14 +15635,14 @@ Presentation Table Styling
 .il-table-presentation-viewcontrols .il-viewcontrol-sortation button::before {
   font-family: "cat icons";
   content: "\ea48";
-  font-size: .9em;
+  font-size: .9rem;
   padding-right: 5px;
   vertical-align: middle;
 }
 .il-table-presentation-viewcontrols .il-viewcontrol-quickfilter button::before {
   content: "\e920";
   font-family: "cat icons";
-  font-size: 1em;
+  font-size: 1rem;
   padding-right: 2px;
   vertical-align: middle;
 }
@@ -15752,7 +15765,7 @@ Slick Slider Integration
   display: none;
 }
 .slider-item-label {
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 15px;
   padding: 0 5px;
   text-align: center;
@@ -15764,7 +15777,7 @@ Slick Slider Integration
 .slick-next:before {
   color: #434343;
   font-family: "cat icons";
-  font-size: 30px;
+  font-size: 2.14rem;
 }
 .slick-prev:before {
   content: "\e90a";
@@ -15781,7 +15794,6 @@ Slick Slider Integration
 }
 label.col-sm-3.control-label {
   font-weight: 400;
-  opacity: 1;
 }
 /* reports filter bug fix and spacing */
 .ilFloatLeft.tms-filter-element {
