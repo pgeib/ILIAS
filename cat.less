@@ -327,18 +327,6 @@ Slick Slider Integration
 .slick-next:before {
     content:"\e90b";
 }
-
-// slider on small screens
-@media only screen and (max-width: 768px) {
-    .slider-outer {
-        height: @slider-height-sm;
-        top: @il-top-bar-height;
-    }
-    .slider-section {
-        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
-    }
-}
-
 // end slick slider
 
 // fomrs no padding and margins in booking forms
@@ -501,10 +489,33 @@ fixes width-issue when option-texts within select boxes are too long
 
 // responsiveness
 @media only screen and (max-width: @grid-float-breakpoint-max) {
+    //spacing before breadcrumbs
     .ilFixedTopSpacer {
         margin-top: ceil((@il-top-bar-height + 10px));
     }
+    // slick-slider on small screens
+    .slider-outer {
+        height: @slider-height-sm;
+        top: @il-top-bar-height;
+    }
+    .slider-section {
+        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
+    }
 }
+
+
+/* slider on small screens
+@media only screen and (max-width: 768px) {
+    .slider-outer {
+        height: @slider-height-sm;
+        top: @il-top-bar-height;
+    }
+    .slider-section {
+        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
+    }
+}
+*/
+
 
 /*
 *******************

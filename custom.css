@@ -15767,15 +15767,6 @@ Slick Slider Integration
 .slick-next:before {
   content: "\e90b";
 }
-@media only screen and (max-width: 768px) {
-  .slider-outer {
-    height: 180px;
-    top: 40px;
-  }
-  .slider-section {
-    padding-top: 109px;
-  }
-}
 .form-group ul {
   margin-top: 0;
   padding-left: 17px;
@@ -15951,7 +15942,25 @@ fixes width-issue when option-texts within select boxes are too long
   .ilFixedTopSpacer {
     margin-top: 50px;
   }
+  .slider-outer {
+    height: 180px;
+    top: 40px;
+  }
+  .slider-section {
+    padding-top: 109px;
+  }
 }
+/* slider on small screens
+@media only screen and (max-width: 768px) {
+    .slider-outer {
+        height: @slider-height-sm;
+        top: @il-top-bar-height;
+    }
+    .slider-section {
+        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
+    }
+}
+*/
 /*
 *******************
 no display items
