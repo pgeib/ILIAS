@@ -15531,15 +15531,15 @@ Presentation Table Styling
 .il-table-presentation-row-controls-expander .glyphicon:before,
 .il-table-presentation-row-controls-collapser .glyphicon:before {
   color: #4c6586;
-  font-family: "Sparkasse Icons";
+  font-family: "cat icons";
   font-size: .9em;
   vertical-align: text-top;
 }
 .il-table-presentation-row-controls-expander .glyphicon:before {
-  content: "\f2c9";
+  content: "\e900";
 }
 .il-table-presentation-row-controls-collapser .glyphicon:before {
-  content: "\f35e";
+  content: "\e901";
 }
 .il-table-presentation-row .il-table-presentation-row-header h4 {
   font-size: 16px;
@@ -15620,28 +15620,26 @@ Presentation Table Styling
   background-color: #6ea03c;
   border: 0px solid rgba(110, 160, 60, 0.8);
   color: #fff;
-  opacity: 1;
+}
+.il-table-presentation-viewcontrols .il-viewcontrol-sortation button::before {
+  font-family: "cat icons";
+  content: "\ea48";
+  font-size: .9em;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+.il-table-presentation-viewcontrols .il-viewcontrol-quickfilter button::before {
+  content: "\e920";
+  font-family: "cat icons";
+  font-size: 1em;
+  padding-right: 2px;
+  vertical-align: middle;
 }
 .il-table-presentation-viewcontrols .dropdown-menu {
   background-color: #fff;
 }
 .il-table-presentation-viewcontrols .dropdown-menu .btn {
   text-align: left;
-}
-.il-table-presentation-viewcontrols span.caret {
-  border: 0;
-}
-.il-table-presentation-viewcontrols span.caret:after {
-  content: "\f19e";
-  background: #6ea03c;
-  font-family: "Sparkasse Icons";
-  font-size: 10px;
-  padding: 6px;
-  color: #fff;
-  position: absolute;
-  right: 0;
-  top: 0;
-  border-radius: 2px;
 }
 .il-table-presentation-viewcontrols .open > .dropdown-toggle.btn-default {
   background-color: #fff;
