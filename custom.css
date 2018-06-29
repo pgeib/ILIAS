@@ -15955,6 +15955,9 @@ fixes width-issue when option-texts within select boxes are too long
   .slider-wrapper {
     height: 50px;
   }
+  .slider-item-label {
+    font-size: .95rem;
+  }
 }
 /*
 *******************
