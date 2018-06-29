@@ -15946,21 +15946,16 @@ fixes width-issue when option-texts within select boxes are too long
     height: 180px;
     top: 40px;
   }
+  .slider-outer:before {
+    height: 50px;
+  }
   .slider-section {
-    padding-top: 109px;
+    padding-top: 229px;
+  }
+  .slider-wrapper {
+    height: 50px;
   }
 }
-/* slider on small screens
-@media only screen and (max-width: 768px) {
-    .slider-outer {
-        height: @slider-height-sm;
-        top: @il-top-bar-height;
-    }
-    .slider-section {
-        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
-    }
-}
-*/
 /*
 *******************
 no display items

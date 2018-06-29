@@ -215,7 +215,11 @@ Slick Slider Integration
 @slider-height: 300px;
 @slider-bar-height: 70px;
 @slider-border-bottom: 1px;
+@slider-top-padding: ceil((@slider-height - @slider-bar-height - @slider-border-bottom));
+// slider on small screens
 @slider-height-sm: 180px;
+@slider-bar-height-sm: 50px;
+@slider-top-padding-sm: ceil((@slider-height-sm - @slider-bar-height-sm - @slider-border-bottom));
 
 
 .slider-outer {
@@ -240,7 +244,7 @@ Slick Slider Integration
 
 .slider-section {
     margin: auto;
-    padding-top: ceil((@slider-height - @slider-bar-height - @slider-border-bottom));
+    padding-top: @slider-top-padding;
 }
 .slick-slider {
     padding: 0 40px;
@@ -497,25 +501,17 @@ fixes width-issue when option-texts within select boxes are too long
     .slider-outer {
         height: @slider-height-sm;
         top: @il-top-bar-height;
+        &:before {
+            height: @slider-bar-height-sm;
+        }
     }
     .slider-section {
-        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
+        padding-top: @slider-top-padding;
+    }
+    .slider-wrapper {
+        height: @slider-bar-height-sm;
     }
 }
-
-
-/* slider on small screens
-@media only screen and (max-width: 768px) {
-    .slider-outer {
-        height: @slider-height-sm;
-        top: @il-top-bar-height;
-    }
-    .slider-section {
-        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
-    }
-}
-*/
-
 
 /*
 *******************
