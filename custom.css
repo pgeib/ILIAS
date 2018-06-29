@@ -15670,7 +15670,7 @@ Slick Slider Integration
   background-size: cover;
   background-position: right;
   border-bottom: 1px solid #ddd;
-  height: 340px;
+  height: 300px;
   position: relative;
   top: 117px;
 }
@@ -15689,7 +15689,7 @@ Slick Slider Integration
 }
 .slider-section {
   margin: auto;
-  padding-top: 269px;
+  padding-top: 229px;
 }
 .slick-slider {
   padding: 0 40px;
@@ -15945,7 +15945,7 @@ fixes width-issue when option-texts within select boxes are too long
 }
 /*
 *******************
-not display items
+no display items
 *******************
 */
 /*# sourceMappingURL=custom.css.map */
