@@ -15494,6 +15494,11 @@ table.mceToolbar td {
   src: url("fonts/cat/cat-icons-v1_0_0.eot");
   src: url("fonts/cat/cat-icons-v1_0_0.eot?#iefix") format("embedded-opentype"), url("fonts/cat/cat-icons-v1_0_0.woff") format("woff"), url("fonts/cat/cat-icons-v1_0_0.ttf") format("truetype"), url("fonts/cat/cat-icons-v1_0_0.svg#cat") format("svg");
 }
+html,
+body {
+  font-family: 'Open Sans', Arial, Verdana, sans-serif;
+  font-size: 14px;
+}
 /*
 *******************************
 Presentation Table Styling
