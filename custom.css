@@ -15949,7 +15949,7 @@ fixes width-issue when option-texts within select boxes are too long
 }
 @media only screen and (max-width: 767px) {
   .ilFixedTopSpacer {
-    padding-top: 50px;
+    margin-top: 50px;
   }
 }
 /*
