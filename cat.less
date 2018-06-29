@@ -1,6 +1,6 @@
 // cat TMS specific styles
 
-// cat iconfont
+// cat iconfont integration
 @font-face {
   font-family: 'cat icons';
   font-style: normal;
@@ -11,9 +11,18 @@
 
 // custom variables
 @font-base: 14px;
+
 @login-form-bg: rgba(255,255,255,.7);
 @login-form-color: #000;
+// colors
+@gray: #777;
+@gray-dark: darken(@gray, 15%);
+@gray-darker: darken(@gray, 25%);
+@gray-light: lighten(@gray, 15%);
+@gray-lighter: lighten(@gray, 25%);
+
 @border-gray: #ddd;
+
 @text-color: #000;
 @text-color-bright: #fff;
 @brand-primary-light: fade(@brand-primary, 10%);
@@ -122,7 +131,6 @@ Presentation Table Styling
             border: 1px solid @border-gray;
             border-radius: 2px;
             color: @brand-secondary;
-            padding-right: 30px; /* needed for dropdown glyph */
             position: relative;
         }
 	}
@@ -136,14 +144,14 @@ Presentation Table Styling
         .rocker .glyphicon-chevron-left:before {
             content: "\e90a";
             font-family: "cat icons";
-            font-size: 100%;
+            font-size: 1rem;
             font-weight: 900;
             opacity: 1;
         }
         .rocker .glyphicon-chevron-right:before {
             content: "\e90b";
             font-family: "cat icons";
-            font-size: 100%;
+            font-size: 1rem;
             font-weight: 900;
             opacity: 1;
         }
@@ -151,7 +159,6 @@ Presentation Table Styling
             background-color: transparent;
             border: 0;
             color: #ccc;
-            opacity: 1;
         }
         .btn-link {
             &.disabled {
@@ -164,14 +171,14 @@ Presentation Table Styling
     .il-viewcontrol-sortation button::before {
        font-family: "cat icons";
        content: "\ea48";
-       font-size: .9em;
+       font-size: .9rem;
        padding-right: 5px;
        vertical-align: middle;
     }
    .il-viewcontrol-quickfilter button::before {
        content: "\e920";
        font-family: "cat icons";
-       font-size: 1em;
+       font-size: 1rem;
        padding-right: 2px;
        vertical-align: middle;
     }
@@ -320,7 +327,7 @@ Slick Slider Integration
     display: none;
 }
 .slider-item-label {
-    font-size: 14px;
+    font-size: 1rem;
     line-height: 15px;
     padding: 0 5px;
     text-align: center;
@@ -333,7 +340,7 @@ Slick Slider Integration
 .slick-next:before {
     color: @mid-gray;
     font-family: "cat icons";
-    font-size: 30px;
+    font-size: 2.14rem;
 }
 .slick-prev:before {
     content:"\e90a";
@@ -356,7 +363,6 @@ Slick Slider Integration
  //forms color first col labels
  label.col-sm-3.control-label {
      font-weight: 400;
-     opacity: 1;
  }
 
  /* reports filter bug fix and spacing */
