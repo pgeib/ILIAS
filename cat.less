@@ -238,16 +238,6 @@ Slick Slider Integration
     }
 }
 
-// responsive slider-positioning on small screens
-@media only screen and (max-width: 768px) {
-    .slider-outer {
-        height: @slider-height-sm;
-        top: @il-top-bar-height;
-    }
-    .slider-section {
-        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
-    }
-}
 .slider-section {
     margin: auto;
     padding-top: ceil((@slider-height - @slider-bar-height - @slider-border-bottom));
@@ -337,6 +327,18 @@ Slick Slider Integration
 .slick-next:before {
     content:"\e90b";
 }
+
+// slider on small screens
+@media only screen and (max-width: 768px) {
+    .slider-outer {
+        height: @slider-height-sm;
+        top: @il-top-bar-height;
+    }
+    .slider-section {
+        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
+    }
+}
+
 // end slick slider
 
 // fomrs no padding and margins in booking forms
