@@ -15684,7 +15684,11 @@ Slick Slider Integration
 }
 @media only screen and (max-width: 768px) {
   .slider-outer {
+    height: 180px;
     top: 40px;
+  }
+  .slider-section {
+    padding-top: 109px;
   }
 }
 .slider-section {

@@ -215,6 +215,8 @@ Slick Slider Integration
 @slider-height: 300px;
 @slider-bar-height: 70px;
 @slider-border-bottom: 1px;
+@slider-height-sm: 180px;
+
 
 .slider-outer {
     background-color: transparent;
@@ -239,7 +241,11 @@ Slick Slider Integration
 // responsive slider-positioning on small screens
 @media only screen and (max-width: 768px) {
     .slider-outer {
+        height: @slider-height-sm;
         top: @il-top-bar-height;
+    }
+    .slider-section {
+        padding-top: ceil((@slider-height-sm - @slider-bar-height - @slider-border-bottom));
     }
 }
 .slider-section {
