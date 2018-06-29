@@ -499,6 +499,13 @@ fixes width-issue when option-texts within select boxes are too long
   content: "\e90b";
 }
 
+// responsiveness
+@media only screen and (max-width: @grid-float-breakpoint-max) {
+    .ilFixedTopSpacer {
+        padding-top: ceil((@il-top-bar-height + 10px));
+    }
+}
+
 /*
 *******************
 no display items

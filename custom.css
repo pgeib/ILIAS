@@ -15947,6 +15947,11 @@ fixes width-issue when option-texts within select boxes are too long
 .glyphicon-chevron-right:before {
   content: "\e90b";
 }
+@media only screen and (max-width: 767px) {
+  .ilFixedTopSpacer {
+    padding-top: 50px;
+  }
+}
 /*
 *******************
 no display items
