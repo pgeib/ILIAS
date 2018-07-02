@@ -15543,6 +15543,7 @@ Presentation Table Styling
 }
 .il-table-presentation-row.expanded {
   background: #fff;
+  box-shadow: inset 3px 0 0 #4c6586;
 }
 .il-table-presentation-row-header {
   cursor: pointer;
