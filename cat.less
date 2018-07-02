@@ -70,13 +70,18 @@ Presentation Table Styling
     border-top: 0px solid #fff;
     padding: 15px 10px 10px 0;
     margin: 0;
-    &.expanded {
-        background: #fff;
-        // box-shadow: 0 1px 3px #ccc;
-    }
     .il-table-presentation-row-controls {
         text-align: center;
         width: 4%;
+    }
+    .il-table-presentation-row-controls,
+    .il-table-presentation-row-contents {
+        display: inline-block;
+        vertical-align: top;
+    }
+    &.expanded {
+        background: #fff;
+        // box-shadow: 0 1px 3px #ccc;
     }
 }
 

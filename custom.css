@@ -15532,12 +15532,17 @@ Presentation Table Styling
   padding: 15px 10px 10px 0;
   margin: 0;
 }
-.il-table-presentation-row.expanded {
-  background: #fff;
-}
 .il-table-presentation-row .il-table-presentation-row-controls {
   text-align: center;
   width: 4%;
+}
+.il-table-presentation-row .il-table-presentation-row-controls,
+.il-table-presentation-row .il-table-presentation-row-contents {
+  display: inline-block;
+  vertical-align: top;
+}
+.il-table-presentation-row.expanded {
+  background: #fff;
 }
 .il-table-presentation-row-header {
   cursor: pointer;
