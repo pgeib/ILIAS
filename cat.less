@@ -12,7 +12,10 @@
   src: url("fonts/cat/cat-icons-v1_0_0.eot");
   src: url("fonts/cat/cat-icons-v1_0_0.eot?#iefix") format("embedded-opentype"), url("fonts/cat/cat-icons-v1_0_0.woff") format("woff"), url("fonts/cat/cat-icons-v1_0_0.ttf") format("truetype"), url("fonts/cat/cat-icons-v1_0_0.svg#cat") format("svg");
 }
-
+// responsive font-size foir sm-screens
+@media only screen and (max-width: @grid-float-breakpoint-max) {
+    @font-base: 12px;
+}
 // custom variables
 @font-base: 14px;
 
@@ -535,7 +538,6 @@ fixes width-issue when option-texts within select boxes are too long
 // responsiveness
 @media only screen and (max-width: @grid-float-breakpoint-max) {
 
-    @font-base: 12px;
     //spacing before breadcrumbs
     .ilFixedTopSpacer {
         margin-top: ceil((@il-top-bar-height + 10px));
