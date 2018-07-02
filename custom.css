@@ -15555,15 +15555,15 @@ Presentation Table Styling
   vertical-align: text-top;
 }
 .il-table-presentation-row-controls-expander .glyphicon:before {
-  content: "\e900";
+  content: "\e904";
 }
 .il-table-presentation-row-controls-collapser .glyphicon:before {
-  content: "\e901";
+  content: "\e905";
 }
 .il-table-presentation-row .il-table-presentation-row-header h4 {
   font-size: 1.142rem;
   font-weight: 400;
-  margin-bottom: 5px;
+  margin: 6px 0 5px 0;
 }
 .il-table-presentation-row .il-table-presentation-row-header h4 small {
   font-size: 1.142rem;
