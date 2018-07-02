@@ -15549,9 +15549,9 @@ Presentation Table Styling
 }
 .il-table-presentation-row-controls-expander .glyphicon:before,
 .il-table-presentation-row-controls-collapser .glyphicon:before {
-  color: #4c6586;
+  color: #777;
   font-family: "cat icons";
-  font-size: .9em;
+  font-size: 2rem;
   vertical-align: text-top;
 }
 .il-table-presentation-row-controls-expander .glyphicon:before {
