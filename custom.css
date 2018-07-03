@@ -15614,7 +15614,7 @@ Presentation Table Styling
 .il-table-presentation-row-controls-collapser .glyphicon:before {
   color: #777;
   font-family: "cat icons";
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   vertical-align: text-top;
 }
 .il-table-presentation-row-controls-expander .glyphicon:before {
@@ -15637,7 +15637,6 @@ Presentation Table Styling
   margin-top: 15px;
   font-weight: 400;
 }
-/* viewcontrols */
 .il-table-presentation-viewcontrols {
   background-color: transparent;
   border-top: 0px solid #ddd;
@@ -15665,7 +15664,7 @@ Presentation Table Styling
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 2px;
-  color: #6ea03c;
+  color: #777;
   position: relative;
 }
 .il-table-presentation-viewcontrols div.il-viewcontrol-pagination {
@@ -16012,6 +16011,7 @@ fixes width-issue when option-texts within select boxes are too long
 }
 .glyphicon-chevron-left:before,
 .glyphicon-chevron-right:before {
+  color: #777;
   font-family: "cat icons";
   font-size: 1.3rem;
   font-weight: 900;
