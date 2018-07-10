@@ -1,5 +1,9 @@
 // cat TMS specific styles
 
+
+// import additional less-files
+@import "UI/Table/table.less";
+
 // cat iconfont integration
 @font-face {
   font-family: 'cat icons';
@@ -10,7 +14,7 @@
 }
 
 // custom variables
-@font-base: 14px;
+@font-size-base: 14px;
 
 @login-form-bg: rgba(255,255,255,.7);
 @login-form-color: #000;
@@ -36,7 +40,7 @@ generell stuff
 // set font base
 html, body {
     font-family: 'Open Sans', Arial, Verdana, sans-serif;
-    font-size: @font-base;
+    font-size: @font-size-base;
 }
 
 /*
@@ -55,6 +59,7 @@ a#il_mhead_t_focus {
     color: @gray-lighter;
     font-size: 1.857rem;
 }
+
 /*
 *******************************
 Presentation Table Styling
@@ -84,6 +89,7 @@ Presentation Table Styling
         box-shadow: inset 3px 0 0 @brand-primary;
     }
 }
+
 .il-table-presentation-row-header {
     cursor: pointer;
 }
@@ -93,7 +99,7 @@ Presentation Table Styling
 .il-table-presentation-row-controls-collapser .glyphicon:before {
     color: @gray;
     font-family: "cat icons";
-    font-size: 1.7rem;
+    font-size: 1.6rem;
 	vertical-align: text-top;
 }
 .il-table-presentation-row-controls-expander .glyphicon:before {
@@ -125,7 +131,7 @@ Presentation Table Styling
     font-weight: 400;
 }
 
-/* viewcontrols */
+// viewcontrols
 .il-table-presentation-viewcontrols {
     background-color: transparent;
     border-top: 0px solid @border-gray;
@@ -151,7 +157,7 @@ Presentation Table Styling
             background-color: #fff;
             border: 1px solid @border-gray;
             border-radius: 2px;
-            color: @brand-secondary;
+            color: @gray;
             position: relative;
         }
 	}
@@ -405,6 +411,7 @@ Slick Slider Integration
          }
      }
  }
+
  // submit button top spacing
  .tms-filter-buttons {
      margin-top: 10px;
@@ -513,9 +520,11 @@ fixes width-issue when option-texts within select boxes are too long
 .modal select.form-control {
   max-width: 411px;
 }
+
 // replaces bootstrap chevron icon
 .glyphicon-chevron-left:before,
 .glyphicon-chevron-right:before {
+  color: @gray;
   font-family: "cat icons";
   font-size: 1.3rem;
   font-weight: 900;
@@ -530,6 +539,7 @@ fixes width-issue when option-texts within select boxes are too long
 
 // responsiveness
 @media only screen and (max-width: @grid-float-breakpoint-max) {
+
     //spacing before breadcrumbs
     .ilFixedTopSpacer {
         margin-top: ceil((@il-top-bar-height + 10px));
