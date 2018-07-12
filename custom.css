@@ -16009,6 +16009,9 @@ fixes width-issue when option-texts within select boxes are too long
 .modal select.form-control {
   max-width: 411px;
 }
+.modal .ilFormFooter {
+  background-color: transparent;
+}
 .glyphicon-chevron-left:before,
 .glyphicon-chevron-right:before {
   color: #777;
