@@ -15487,16 +15487,8 @@ table.mceToolbar td {
     content: "";
   }
 }
-/*fixes glyphicons*/
-.il-table-presentation-row-controls-expander .glyphicon:before {
-  content: "\e080";
-}
-.il-table-presentation-row-controls-collapser .glyphicon:before {
-  content: "\e114";
-}
-/*end of fix*/
 .il-table-presentation-viewcontrols {
-  margin-bottom: 10px;
+  height: 40px;
 }
 .il-table-presentation-viewcontrols div {
   display: table;
@@ -15505,7 +15497,7 @@ table.mceToolbar td {
 .il-table-presentation-row {
   white-space: nowrap;
   border-top: 1px solid #ddd;
-  padding-top: 5px;
+  padding-top: 6px;
 }
 .il-table-presentation-row .il-table-presentation-row-controls,
 .il-table-presentation-row .il-table-presentation-row-contents {
@@ -15514,6 +15506,14 @@ table.mceToolbar td {
 }
 .il-table-presentation-row .il-table-presentation-row-controls {
   width: 5%;
+}
+.il-table-presentation-row .il-table-presentation-row-controls .il-table-presentation-row-controls-collapser {
+  display: none;
+  /*initially hidden*/
+}
+.il-table-presentation-row .il-table-presentation-row-controls .il-table-presentation-row-controls-expander {
+  display: block;
+  /*initially visible*/
 }
 .il-table-presentation-row .il-table-presentation-row-contents {
   width: 95%;
@@ -15526,10 +15526,17 @@ table.mceToolbar td {
   font-weight: normal;
   padding: 0;
   margin: 0;
+  cursor: pointer;
+}
+.il-table-presentation-row .il-table-presentation-row-header .il-table-presentation-row-header-fields {
+  display: block;
+  /*initially visible*/
 }
 .il-table-presentation-row .il-table-presentation-row-expanded {
+  display: none;
+  /*initially hidden*/
   white-space: nowrap;
-  margin-top: 5px;
+  margin-top: 6px;
 }
 .il-table-presentation-row .il-table-presentation-row-expanded .il-table-presentation-desclist,
 .il-table-presentation-row .il-table-presentation-row-expanded .il-table-presentation-details {
@@ -15547,7 +15554,7 @@ table.mceToolbar td {
   font-size: 12px;
 }
 .il-table-presentation-row .il-table-presentation-row-expanded .il-table-presentation-details .il-table-presentation-fields .il-item-property-name {
-  color: #434343;
+  color: #909090;
 }
 @font-face {
   font-family: 'cat icons';
@@ -15633,9 +15640,9 @@ Presentation Table Styling
   font-weight: 200;
 }
 .il-table-presentation-row dt {
+  font-weight: 400;
   font-size: 1.071rem;
   margin-top: 15px;
-  font-weight: 400;
 }
 .il-table-presentation-viewcontrols {
   background-color: transparent;
