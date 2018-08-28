@@ -15647,6 +15647,7 @@ Presentation Table Styling
 .il-table-presentation-viewcontrols {
   background-color: transparent;
   border-top: 0px solid #ddd;
+  height: auto;
   padding: 15px 0 10px 0;
   margin-bottom: 10px;
   position: relative;
@@ -15777,6 +15778,7 @@ Slick Slider Integration
 .slider-section {
   margin: auto;
   padding-top: 229px;
+  position: relative;
 }
 .slick-slider {
   padding: 0 40px;
