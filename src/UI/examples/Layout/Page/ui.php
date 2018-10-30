@@ -20,7 +20,7 @@ if ($_GET['new_ui'] == '1') {
 		handleRPC($f, $renderer);
 	}
 
-	$content = array(
+	$content = array (
 		$f->panel()->standard('Demo Content',
 			$f->legacy("some content<br>some content<br>some content<br>x.")),
 		$f->panel()->standard('Demo Content 2',
@@ -32,12 +32,21 @@ if ($_GET['new_ui'] == '1') {
 
 	);
 
+	$crumbs = array (
+		$f->link()->standard("entry1", '#'),
+		$f->link()->standard("entry2", '#'),
+		$f->link()->standard("entry3", '#'),
+		$f->link()->standard("entry4", '#')
+	);
+	$breadcrumbs = $f->breadcrumbs($crumbs);
+
 	$metabar = buildMetabar($f);
 	$sidebar = pagedemoSidebar($f);
 
 	$page = $f->layout()->page($content)
 		->withMetabar($metabar)
-		->withSidebar($sidebar);
+		->withSidebar($sidebar)
+		->withBreadCrumbs($breadcrumbs);
 
 	echo $renderer->render($page);
 }

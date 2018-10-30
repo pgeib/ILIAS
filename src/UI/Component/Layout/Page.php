@@ -18,13 +18,13 @@ interface Page extends C\Component {
 	 * @param 	mixed
 	 * @return 	Page
 	 */
-	public function withContent($content);
+	public function withContent($content): Page;
 
 	/**
 	 * @param 	ILIAS\UI\Component\Layout\Metabar $metabar
 	 * @return 	Page
 	 */
-	public function withMetabar(C\Layout\Metabar $metabar);
+	public function withMetabar(C\Layout\Metabar $metabar): Page;
 
 	/**
 	 * @return 	ILIAS\UI\Component\Layout\Metabar | null
@@ -35,10 +35,22 @@ interface Page extends C\Component {
 	 * @param 	ILIAS\UI\Component\Layout\Sidebar 	$sidebar
 	 * @return 	Page
 	 */
-	public function withSidebar(C\Layout\Sidebar $sidebar);
+	public function withSidebar(C\Layout\Sidebar $sidebar): Page;
 
 	/**
 	 * @return 	ILIAS\UI\Component\Layout\Sidebar | null
 	 */
 	public function getSidebar();
+
+	/**
+	 * @param 	ILIAS\UI\Component\Breadcrumbs 	$breadcrumbs
+	 * @return 	Page
+	 */
+	public function withBreadcrumbs(C\Breadcrumbs\Breadcrumbs $breadcrumbs): Page;
+
+	/**
+	 * @return 	ILIAS\UI\Component\Breadcrumbs | null
+	 */
+	public function getBreadcrumbs();
+
 }

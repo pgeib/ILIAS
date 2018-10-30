@@ -94,6 +94,9 @@ class Renderer extends AbstractComponentRenderer {
 		if($sidebar = $component->getSidebar()) {
 			$tpl->setVariable('SIDEBAR', $default_renderer->render($sidebar));
 		}
+		if($breadcrumbs = $component->getBreadcrumbs()) {
+			$tpl->setVariable('BREADCRUMBS', $default_renderer->render($breadcrumbs));
+		}
 
 		$tpl->setVariable('CONTENT', $default_renderer->render($component->getContent()));
 

@@ -28,26 +28,34 @@ class Page implements C\Layout\Page {
 	private $sidebar;
 
 	/**
+	 * @var 	ILIAS\UI\Component\Breadcrumbs
+	 */
+	private $breadcrumbs;
+
+	/**
 	 * @var 	bool
 	 */
 	private $with_headers = true;
 
 
-	public function __construct($content) {
+	public function __construct($content)
+	{
 		$this->content = $content;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getContent() {
+	public function getContent()
+	{
 		return $this->content;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function withContent($content) {
+	public function withContent($content): C\Layout\Page
+	{
 		$clone = clone $this;
 		$clone->content = $content;
 		return $clone;
@@ -56,7 +64,8 @@ class Page implements C\Layout\Page {
 	/**
 	 * @inheritdoc
 	 */
-	public function withMetabar(C\Layout\Metabar $metabar) {
+	public function withMetabar(C\Layout\Metabar $metabar): C\Layout\Page
+	{
 		$clone = clone $this;
 		$clone->metabar = $metabar;
 		return $clone;
@@ -65,14 +74,16 @@ class Page implements C\Layout\Page {
 	/**
 	 * @inheritdoc
 	 */
-	public function getMetabar() {
+	public function getMetabar()
+	{
 		return $this->metabar;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function withSidebar(C\Layout\Sidebar $sidebar) {
+	public function withSidebar(C\Layout\Sidebar $sidebar): C\Layout\Page
+	{
 		$clone = clone $this;
 		$clone->sidebar = $sidebar;
 		return $clone;
@@ -81,7 +92,8 @@ class Page implements C\Layout\Page {
 	/**
 	 * @inheritdoc
 	 */
-	public function getSidebar() {
+	public function getSidebar()
+	{
 		return $this->sidebar;
 	}
 
@@ -89,7 +101,8 @@ class Page implements C\Layout\Page {
 	 * @param 	bool 	$use_headers
 	 * @return 	Page
 	 */
-	public function withHeaders($use_headers) {
+	public function withHeaders($use_headers): C\Layout\Page
+	{
 		$clone = clone $this;
 		$clone->with_headers = $use_headers;
 		return $clone;
@@ -98,8 +111,27 @@ class Page implements C\Layout\Page {
 	/**
 	 * @return 	bool
 	 */
-	public function getWithHeaders() {
+	public function getWithHeaders()
+	{
 		return $this->with_headers;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withBreadcrumbs(C\Breadcrumbs\Breadcrumbs $breadcrumbs): C\Layout\Page
+	{
+		$clone = clone $this;
+		$clone->breadcrumbs = $breadcrumbs;
+		return $clone;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getBreadcrumbs()
+	{
+		return $this->breadcrumbs;
 	}
 
 }
