@@ -19,7 +19,7 @@ function getSomeEntries($f) {
         $icon = $f->icon()->standard('sidebar_trigger', '')->withSize('medium');
         $button = $f->button()->iconographic($icon->withAbbreviation('X'), "Button", '#');
 
-        $entries[] = $f->layout()->sidebarentry($button, $slate);
+        $entries[] = $f->layout()->sidebarentry($button, false, $slate);
     }
 
     $glyph = $f->glyph()->user();

@@ -130,13 +130,12 @@ interface Factory {
      * ----
      *
      * @param  \ILIAS\UI\Component\Layout\SidebarEntry[]    $entries
-     * @param  int|null  $active
      * @return  \ILIAS\UI\Component\Layout\Sidebar
      */
-    public function sidebar(array $entries, $active=null);
+    public function sidebar(array $entries);
 
 
-        /**
+    /**
      * ---
      * description:
      *   purpose: >
@@ -149,10 +148,15 @@ interface Factory {
      * ----
      *
      * @param  \ILIAS\UI\Component\Button\Iconographic   $button
+     * @param  bool    $active
      * @param  \ILIAS\UI\Component\MainControls\Menu\Slate | null   $slate
-     * @return      \ILIAS\UI\Component\Layout\SidebarEntry
+     * @return  \ILIAS\UI\Component\Layout\SidebarEntry
      */
-    public function sidebarEntry(\ILIAS\UI\Component\Button\Iconographic $button, MainControls\Menu\Slate $slate=null);
+    public function sidebarEntry(
+        \ILIAS\UI\Component\Button\Iconographic $button,
+        bool $active = false,
+        MainControls\Menu\Slate $slate=null
+    );
 
 
 	/**

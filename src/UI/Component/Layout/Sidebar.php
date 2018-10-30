@@ -13,7 +13,7 @@ interface Sidebar extends C\Component, JavaScriptBindable {
 	/**
 	 * @return 	\ILIAS\UI\Component\Layout\SidebarEntry[]
 	 */
-	public function getEntries();
+	public function getEntries(): array;
 
 	/**
 	 * @return 	Signal
@@ -23,19 +23,16 @@ interface Sidebar extends C\Component, JavaScriptBindable {
 	/**
 	 * @return 	Sidebar
 	 */
-	public function withResetSignals();
+	public function withResetSignals(): Sidebar;
 
 	/**
-	 * Th entry at this position is set to active.
-	 * @param 	int 	$active
-	 * @return 	Sidebar
+	 * @param \ILIAS\UI\Component\Layout\SidebarEntry[] $tool_entries
 	 */
-	public function withActive($active);
+	public function withTools(array $tool_entries): Sidebar;
 
 	/**
-	 * This is the index of the active entry.
-	 * @return 	int
+	 * @return \ILIAS\UI\Component\Layout\SidebarEntry[]
 	 */
-	public function getActive();
+	public function getTools(): array;
 
 }

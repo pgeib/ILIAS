@@ -31,22 +31,26 @@ class Sidebar implements C\Layout\Sidebar {
 	private $entries;
 
 	/**
+	 * @var 	\ILIAS\UI\Component\Layout\SidebarEntry[]
+	 */
+	private $tools;
+
+	/**
 	 * @var 	int | null
 	 */
 	private $active_entry;
 
 
-	public function __construct(
+	public function __construct (
 			SignalGeneratorInterface $signal_generator,
-			array $entries,	$active = null) {
+			array $entries,
+			$active = null
+	) {
 
 		$classes = array(\ILIAS\UI\Component\Layout\SidebarEntry::class);
 		$this->checkArgListElements('entries', $entries, $classes);
-		if(! is_null($active)) {
-			$this->checkIntArg("active", $active);
-		}
 		$this->entries = $entries;
-		$this->active_entry = $active;
+		$this->tools = [];
 
 		$this->signal_generator = $signal_generator;
 		$this->initSignals();
@@ -55,48 +59,54 @@ class Sidebar implements C\Layout\Sidebar {
 	/**
 	 * @inheritdoc
 	 */
-	public function getEntries() {
+	public function getEntries(): array
+	{
 		return $this->entries;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getEntryClickSignal() {
+	public function getEntryClickSignal()
+	{
 		return $this->entry_click_signal;
 	}
 
 	/**
 	 * Set the signals for this component
 	 */
-	protected function initSignals() {
+	protected function initSignals()
+	{
 		$this->entry_click_signal = $this->signal_generator->create();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function withResetSignals() {
+	public function withResetSignals(): C\Layout\Sidebar
+	{
 		$clone = clone $this;
 		$clone->initSignals();
 		return $clone;
 	}
 
+
 	/**
 	 * @inheritdoc
 	 */
-	public function withActive($active) {
-		$this->checkIntArg("active", $active);
-		$clone = clone $this;
-		$clone->active_entry =$active;
-		return $clone;
+	public function withTools(array $tool_entries): C\Layout\Sidebar
+	{
+		$classes = array(\ILIAS\UI\Component\Layout\SidebarEntry::class);
+		$this->checkArgListElements('entries', $tool_entries, $classes);
+		$this->tools =  $tool_entries;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getActive() {
-		return $this->active_entry;
+	public function getTools(): array
+	{
+		return $this->tools;
 	}
 
 }

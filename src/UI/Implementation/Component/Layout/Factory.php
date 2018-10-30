@@ -30,15 +30,19 @@ class Factory implements Layout\Factory {
 	/**
 	 * @inheritdoc
 	 */
-	public function sidebar(array $entries, $active=null){
+	public function sidebar(array $entries){
 		return new Sidebar($this->signal_generator, $entries, $active);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function sidebarEntry(\ILIAS\UI\Component\Button\Iconographic $button, MainControls\Menu\Slate $slate=null) {
-		return new SidebarEntry($button, $slate);
+	public function sidebarEntry(
+		\ILIAS\UI\Component\Button\Iconographic $button,
+		bool $active = false,
+		MainControls\Menu\Slate $slate=null
+	) {
+		return new SidebarEntry($button, $active, $slate);
 	}
 
 	/**

@@ -38,31 +38,31 @@ function pagedemoSidebar($f) {
 	$btn = $f->button()->iconographic($icon->withSize('large'), "Button 1", '#');
 	$slate = $f->maincontrols()->menu()->slate(array());
 	$slate = $slate->withPlanks(pagedemo_planks1($f, $slate->getReplaceContentSignal()));
-	$entries[] = $f->layout()->sidebarentry($btn, $slate);
+	$entries[] = $f->layout()->sidebarentry($btn, false, $slate);
 
 	$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-navigation.svg', '');
 	$btn = $f->button()->iconographic($icon->withSize('large'), "Button 2", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks2($f, $slate->getReplaceContentSignal()));
-	$entries[] = $f->layout()->sidebarentry($btn, $slate);
+	$entries[] = $f->layout()->sidebarentry($btn, false, $slate);
 
 	$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-search.svg', '');
 	$btn = $f->button()->iconographic($icon->withSize('large'), "Button 3", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks3($f, $slate->getReplaceContentSignal()));
-	$entries[] = $f->layout()->sidebarentry($btn, $slate);
+	$entries[] = $f->layout()->sidebarentry($btn, false, $slate);
 
 	$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-help.svg', '');
 	$btn = $f->button()->iconographic($icon->withSize('large'), "Button 4", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks4($f, $slate->getReplaceContentSignal()));
-	$entries[] = $f->layout()->sidebarentry($btn, $slate);
+	$entries[] = $f->layout()->sidebarentry($btn, false, $slate);
 
 	$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-more.svg', '');
 	$btn = $f->button()->iconographic($icon->withSize('large'), "More", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks5($f, $replace_signal));
-	$entries[] = $f->layout()->sidebarentry($btn, $slate);
+	$entries[] = $f->layout()->sidebarentry($btn, false, $slate);
 
 	return $f->layout()->sidebar($entries);
 }

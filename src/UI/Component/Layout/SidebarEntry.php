@@ -11,13 +11,18 @@ use \ILIAS\UI\Component as C;
 interface SidebarEntry extends C\Component {
 
 	/**
-	 * @return 	ILIAS\UI\Component\Button\Iconographic
+	 * @return 	 Button\Iconographic | Glyph\Glyph
 	 */
 	public function getButton();
 
+
 	/**
-	 * @return 	ILIAS\UI\Component\MainControls\Menu\Slate
+	 * @return C\MainControls\Menu\Slate | null
 	 */
 	public function getSlate();
+
+	public function getActive(): bool;
+
+	public function withActive(bool $active): SidebarEntry;
 
 }
