@@ -29,7 +29,6 @@ if ($_GET['new_ui'] == '1') {
 			$f->legacy("some content<br>some content<br>some content<br>x.")),
 		$f->panel()->standard('Demo Content 4',
 			$f->legacy("some content<br>some content<br>some content<br>x."))
-
 	);
 
 	$crumbs = array (
@@ -41,7 +40,8 @@ if ($_GET['new_ui'] == '1') {
 	$breadcrumbs = $f->breadcrumbs($crumbs);
 
 	$metabar = buildMetabar($f);
-	$sidebar = pagedemoSidebar($f);
+	$sidebar = pagedemoSidebar($f)
+		->withActive("2");
 
 	$page = $f->layout()->page($content)
 		->withMetabar($metabar)

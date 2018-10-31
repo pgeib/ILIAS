@@ -31,7 +31,7 @@ class Factory implements Layout\Factory {
 	 * @inheritdoc
 	 */
 	public function sidebar(array $entries){
-		return new Sidebar($this->signal_generator, $entries, $active);
+		return new Sidebar($this->signal_generator, $entries);
 	}
 
 	/**
@@ -39,10 +39,9 @@ class Factory implements Layout\Factory {
 	 */
 	public function sidebarEntry(
 		\ILIAS\UI\Component\Button\Iconographic $button,
-		bool $active = false,
 		MainControls\Menu\Slate $slate=null
 	) {
-		return new SidebarEntry($button, $active, $slate);
+		return new SidebarEntry($button, $slate);
 	}
 
 	/**

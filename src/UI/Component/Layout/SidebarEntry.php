@@ -15,14 +15,11 @@ interface SidebarEntry extends C\Component {
 	 */
 	public function getButton();
 
-
 	/**
 	 * @return C\MainControls\Menu\Slate | null
 	 */
 	public function getSlate();
 
-	public function getActive(): bool;
 
-	public function withActive(bool $active): SidebarEntry;
 
 }

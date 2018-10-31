@@ -21,11 +21,6 @@ class SidebarEntry implements C\Layout\SidebarEntry {
 	private $button;
 
 	/**
-	 * @var bool
-	 */
-	private $active;
-
-	/**
 	 * @var ILIAS\UI\Component\MainControls\Menu\Slate
 	 */
 	private $slate;
@@ -33,12 +28,10 @@ class SidebarEntry implements C\Layout\SidebarEntry {
 
 	public function __construct(
 		$button,
-		bool $active = false,
 		C\MainControls\Menu\Slate $slate=null
 	) {
 		$this->button = $button;
 		$this->slate = $slate;
-		$this->active = $active;
 	}
 
 	/**
@@ -55,21 +48,6 @@ class SidebarEntry implements C\Layout\SidebarEntry {
 	public function getSlate()
 	{
 		return $this->slate;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function getActive(): bool
-	{
-		return $this->active;
-	}
-
-	public function withActive(bool $active): C\Layout\SidebarEntry
-	{
-		$clone = clone $this;
-		$clone->active = $active;
-		return $clone;
 	}
 
 }

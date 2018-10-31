@@ -30,8 +30,10 @@ class Renderer extends AbstractComponentRenderer {
 		$tpl = $this->getTemplate("tpl.sidebar.html", true, true);
 		$entry_signal = $component->getEntryClickSignal();
 
-		foreach ($component->getEntries() as $entry) {
-			$engaged = $entry->getActive();
+		foreach ($component->getEntries() as $index=>$entry) {
+
+			$engaged = (string)$index === $component->getActive();
+
 			$slate = $entry->getSlate();
 			$button = $entry->getButton();
 			if($slate) {

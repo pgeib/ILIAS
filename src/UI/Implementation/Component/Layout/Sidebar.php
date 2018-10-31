@@ -36,15 +36,14 @@ class Sidebar implements C\Layout\Sidebar {
 	private $tools;
 
 	/**
-	 * @var 	int | null
+	 * @var 	string | null
 	 */
-	private $active_entry;
+	private $active;
 
 
 	public function __construct (
 			SignalGeneratorInterface $signal_generator,
-			array $entries,
-			$active = null
+			array $entries
 	) {
 
 		$classes = array(\ILIAS\UI\Component\Layout\SidebarEntry::class);
@@ -67,7 +66,7 @@ class Sidebar implements C\Layout\Sidebar {
 	/**
 	 * @inheritdoc
 	 */
-	public function getEntryClickSignal()
+	public function getEntryClickSignal(): C\Signal
 	{
 		return $this->entry_click_signal;
 	}
@@ -90,7 +89,6 @@ class Sidebar implements C\Layout\Sidebar {
 		return $clone;
 	}
 
-
 	/**
 	 * @inheritdoc
 	 */
@@ -98,7 +96,9 @@ class Sidebar implements C\Layout\Sidebar {
 	{
 		$classes = array(\ILIAS\UI\Component\Layout\SidebarEntry::class);
 		$this->checkArgListElements('entries', $tool_entries, $classes);
-		$this->tools =  $tool_entries;
+		$clone = clone $this;
+		$clone->tools =  $tool_entries;
+		return $clone;
 	}
 
 	/**
@@ -107,6 +107,24 @@ class Sidebar implements C\Layout\Sidebar {
 	public function getTools(): array
 	{
 		return $this->tools;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActive()
+	{
+		return $this->active;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withActive(string $active): C\Layout\Sidebar
+	{
+		$clone = clone $this;
+		$clone->active = $active;
+		return $clone;
 	}
 
 }
