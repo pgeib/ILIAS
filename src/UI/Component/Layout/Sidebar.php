@@ -31,6 +31,10 @@ interface Sidebar extends C\Component, JavaScriptBindable
 	 */
 	public function getTools(): array;
 
+	public function withToolsLabel(string $label): Sidebar;
+
+	public function getToolsLabel(): string;
+
 	/**
 	 * @param mixed $active depending on the configuration of entries, this can be be string or int; use string!
 	 * @throws InvalidArgumentException 	if $active is not an element-identifier in entries

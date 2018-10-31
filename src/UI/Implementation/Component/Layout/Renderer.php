@@ -7,6 +7,8 @@ namespace ILIAS\UI\Implementation\Component\Layout;
 use ILIAS\UI\Implementation\Render\AbstractComponentRenderer;
 use ILIAS\UI\Renderer as RendererInterface;
 use ILIAS\UI\Component;
+use ILIAS\UI\Implementation\Render\ilTemplateWrapper as UITemplateWrapper;
+use ILIAS\UI\Component\Signal;
 
 class Renderer extends AbstractComponentRenderer {
 	/**
@@ -29,33 +31,47 @@ class Renderer extends AbstractComponentRenderer {
 	protected function renderSidebar(Component\Layout\Sidebar $component, RendererInterface $default_renderer) {
 		$tpl = $this->getTemplate("tpl.sidebar.html", true, true);
 		$entry_signal = $component->getEntryClickSignal();
+		$tools = $component->getTools();
+		$active =  $component->getActive();
 
-		foreach ($component->getEntries() as $index=>$entry) {
+		if (count($tools) > 0) {
+			//add the tools button
+			$f = $this->getUIFactory();
+			$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-more.svg', '');
+			$button = $f->button()->iconographic($icon->withSize('large'), $component->getToolsLabel(), '#');
 
-			$engaged = (string)$index === $component->getActive();
-
-			$slate = $entry->getSlate();
-			$button = $entry->getButton();
-			if($slate) {
-				//if a buttons comes with a slate, its action is to open the slate.
-				$button = $button->withOnClick($slate->getToggleSignal());
+			//find active tool
+			if (array_key_exists($active, $tools)) {
+				$current_tool = $tools[$active];
+			} else { //otherwise use first
+				reset($tools);
+				$current_tool = current($tools);
 			}
-			$button = $button
-				->appendOnClick($entry_signal)
-				->withEngagedState($engaged);
 
-			$tpl->setCurrentBlock("trigger_item");
+			$slate = $current_tool->getSlate();
+			$button = $button->withOnClick($slate->getToggleSignal());
+
+			//this is the main button ("Tools ...")
+			$tpl->setCurrentBlock("tools_trigger");
 			$tpl->setVariable("BUTTON", $default_renderer->render($button));
 			$tpl->parseCurrentBlock();
 
-			if($slate) {
-				$slate = $slate->withActive($engaged) //show?
-					->withCloseSignal($entry_signal); //disengage button on close
-				$tpl->setCurrentBlock("slate_item");
-				$tpl->setVariable("SLATE", $default_renderer->render($slate));
-				$tpl->parseCurrentBlock();
-			}
+			//tool entries
+			$this->renderTriggerButtonsAndSlates(
+				$tpl, $default_renderer, $entry_signal,
+				'tools_trigger_item',
+				$tools,
+				$active
+			);
 		}
+
+		//"regular" entries
+		$this->renderTriggerButtonsAndSlates(
+			$tpl, $default_renderer, $entry_signal,
+			'trigger_item',
+			$component->getEntries(),
+			$active
+		);
 
 		$component = $component->withOnLoadCode(function($id) use ($entry_signal) {
 			return "$(document).on('{$entry_signal}', function(event, signalData) {
@@ -68,6 +84,42 @@ class Renderer extends AbstractComponentRenderer {
 		$tpl->setVariable('ID', $id);
 
 		return $tpl->get();
+	}
+
+	protected function renderTriggerButtonsAndSlates(
+		UITemplateWrapper $tpl,
+		RendererInterface $default_renderer,
+		Signal $entry_signal,
+		string $block,
+		array $entries,
+		string $active = null
+	) {
+		foreach ($entries as $index=>$entry) {
+			$engaged = (string)$index === $active;
+			$slate = $entry->getSlate();
+			$button = $entry->getButton();
+
+			if($slate) {
+				//if a buttons comes with a slate, its action is to open the slate.
+				$button = $button->withOnClick($slate->getToggleSignal());
+			}
+			$button = $button
+				->appendOnClick($entry_signal)
+				->withEngagedState($engaged);
+
+			//$tpl->setCurrentBlock("trigger_item");
+			$tpl->setCurrentBlock($block);
+			$tpl->setVariable("BUTTON", $default_renderer->render($button));
+			$tpl->parseCurrentBlock();
+
+			if($slate) {
+				$slate = $slate->withActive($engaged) //show?
+					->withCloseSignal($entry_signal); //disengage button on close
+				$tpl->setCurrentBlock("slate_item");
+				$tpl->setVariable("SLATE", $default_renderer->render($slate));
+				$tpl->parseCurrentBlock();
+			}
+		}
 	}
 
 

@@ -36,6 +36,11 @@ class Sidebar implements C\Layout\Sidebar {
 	private $tools;
 
 	/**
+	 * @var 	string
+	 */
+	private $tools_label;
+
+	/**
 	 * @var 	string | null
 	 */
 	private $active;
@@ -50,6 +55,7 @@ class Sidebar implements C\Layout\Sidebar {
 		$this->checkArgListElements('entries', $entries, $classes);
 		$this->entries = $entries;
 		$this->tools = [];
+		$this->tools_label = 'Tools';
 
 		$this->signal_generator = $signal_generator;
 		$this->initSignals();
@@ -96,6 +102,7 @@ class Sidebar implements C\Layout\Sidebar {
 	{
 		$classes = array(\ILIAS\UI\Component\Layout\SidebarEntry::class);
 		$this->checkArgListElements('entries', $tool_entries, $classes);
+		//TODO: check for attached slate...
 		$clone = clone $this;
 		$clone->tools =  $tool_entries;
 		return $clone;
@@ -108,6 +115,19 @@ class Sidebar implements C\Layout\Sidebar {
 	{
 		return $this->tools;
 	}
+
+	public function withToolsLabel(string $label): C\Layout\Sidebar
+	{
+		$clone = clone $this;
+		$clone->tools_label =  $label;
+		return $clone;
+	}
+
+	public function getToolsLabel(): string
+	{
+		return $this->tools_label;
+	}
+
 
 	/**
 	 * @inheritdoc

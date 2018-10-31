@@ -64,12 +64,18 @@ function pagedemoSidebar($f) {
 	$slate = $slate->withPlanks(pagedemo_planks5($f, $replace_signal));
 	$entries[] = $f->layout()->sidebarentry($btn, $slate);
 
-	return $f->layout()->sidebar($entries)
-		->withTools([
-			$entries[1],
-			$entries[2],
-			$entries[3]
-		]);
+	$tools = [];
+	$btn = $f->button()->iconographic($icon->withSize('large'), "Tool 1", '#');
+	$slate = $slate->withResetSignals();
+	$slate = $slate->withPlanks(pagedemo_planks2($f, $slate->getReplaceContentSignal()));
+	$tools[] = $f->layout()->sidebarentry($btn, $slate);
+
+	$btn = $f->button()->iconographic($icon->withSize('large'), "Tool 2", '#');
+	$slate = $slate->withResetSignals();
+	$slate = $slate->withPlanks(pagedemo_planks1($f, $slate->getReplaceContentSignal()));
+	$tools[] = $f->layout()->sidebarentry($btn, $slate);
+
+	return $f->layout()->sidebar($entries)->withTools($tools);
 }
 
 function pagedemo_planks1($f, $replacesignal){
