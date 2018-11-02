@@ -32,20 +32,33 @@ class Renderer extends AbstractComponentRenderer {
 		$tpl = $this->getTemplate("tpl.sidebar.html", true, true);
 		$entry_signal = $component->getEntryClickSignal();
 		$tools_signal = $component->getToolsClickSignal();
+		$tools_removal_signal = $component->getToolsRemovalSignal();
 		$tools = $component->getTools();
 		$active =  $component->getActive();
 
 		if (count($tools) > 0) {
 			//add the tools button
+			$tools_active = array_key_exists($active, $tools);
 			$f = $this->getUIFactory();
 			$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-more.svg', '');
 			$button = $f->button()
 				->iconographic($icon->withSize('large'), $component->getToolsLabel(), '#')
-				->withOnClick($tools_signal);
+				->withOnClick($tools_signal)
+				->withEngagedState($tools_active);
 
 			//this is the main button ("Tools ...")
 			$tpl->setCurrentBlock("tools_trigger");
 			$tpl->setVariable("BUTTON", $default_renderer->render($button));
+			$tpl->parseCurrentBlock();
+
+			//this is to remove a tool
+			$button = $f->button()
+				//->close() //TODO: use close-button
+				->standard('X','#')
+				->withOnClick($tools_removal_signal);
+
+			$tpl->setCurrentBlock("tool_removal");
+			$tpl->setVariable("REMOVE_TOOL", $default_renderer->render($button));
 			$tpl->parseCurrentBlock();
 
 			//tool entries
@@ -55,6 +68,11 @@ class Renderer extends AbstractComponentRenderer {
 				$tools,
 				$active
 			);
+
+			if($tools_active) {
+				$tpl->touchBlock('tools_trigger_initially_active');
+			}
+
 		}
 
 		//"regular" entries
@@ -65,18 +83,24 @@ class Renderer extends AbstractComponentRenderer {
 			$active
 		);
 
-		$component = $component->withOnLoadCode(function($id) use ($entry_signal, $tools_signal) {
-			return "
-				$(document).on('{$entry_signal}', function(event, signalData) {
-					il.UI.layout.sidebar.onClickEntry(event, signalData, '{$id}');
-					return false;
-				});
-				$(document).on('{$tools_signal}', function(event, signalData) {
-					il.UI.layout.sidebar.onClickToolsEntry(event, signalData, '{$id}');
-					return false;
-				});
-			";
-		});
+		$component = $component->withOnLoadCode(
+			function($id) use ($entry_signal, $tools_signal, $tools_removal_signal) {
+				return "
+					$(document).on('{$entry_signal}', function(event, signalData) {
+						il.UI.layout.sidebar.onClickEntry(event, signalData, '{$id}');
+						return false;
+					});
+					$(document).on('{$tools_signal}', function(event, signalData) {
+						il.UI.layout.sidebar.onClickToolsEntry(event, signalData, '{$id}');
+						return false;
+					});
+					$(document).on('{$tools_removal_signal}', function(event, signalData) {
+						il.UI.layout.sidebar.onClickToolsRemoval(event, signalData, '{$id}');
+						return false;
+					});
+				";
+			}
+		);
 
 		$id = $this->bindJavaScript($component);
 		$tpl->setVariable('ID', $id);

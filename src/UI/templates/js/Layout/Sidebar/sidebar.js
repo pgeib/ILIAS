@@ -65,6 +65,7 @@ il.UI.layout = il.UI.layout || {};
 				_last_tool_button = tool_trigger_buttons[0];
 				_last_tool_button.click();
 				_last_tool_slate = $('#' + id + ' .il-maincontrol-menu-slate.engaged');
+				//disable, will be toogled:
 				main_tool_button.removeClass(_cls_engaged);
 				_last_tool_button.removeClass(_cls_engaged);
 				_last_tool_slate.removeClass(_cls_engaged);
@@ -81,6 +82,44 @@ il.UI.layout = il.UI.layout || {};
 		}
 
 
+		var onClickToolsRemoval = function(event, signalData, id) {
+			//tools_removal_signal
+			console.log('REMOVE TOOL');
+
+			//get current active tool-trigger and slate
+			var current_tool_trigger = $('#' + id + ' .il-sidebar-tool-triggers .btn.' + _cls_engaged),
+				current_slate = $('#' + id + ' .il-maincontrol-menu-slate.' + _cls_engaged),
+				tool_trigger_buttons,
+				main_tool_button,
+				_next_trigger
+			;
+
+			//remove both
+			current_tool_trigger.remove();
+			current_slate.remove();
+
+			//any tools left?
+			tool_trigger_buttons = $('#' + id + ' .il-sidebar-tool-triggers').children('.btn');
+			console.log(tool_trigger_buttons.length);
+			console.log(tool_trigger_buttons);
+
+			if(tool_trigger_buttons.length < 1) {
+				//if not: remove the tool-triggers-sections
+				$('#' + id + ' .il-sidebar-tool-triggers').remove();
+				//and the main tool-button
+				main_tool_button = $('#' + id + ' .il-sidebar-tools-button .btn')
+				main_tool_button.remove();
+				//close all slates.
+				$('.il-layout-page').removeClass('with-engaged-slates');
+
+			} else {
+				//if yes: take the last one
+				_next_trigger = tool_trigger_buttons[tool_trigger_buttons.length - 1];
+				_next_trigger.click();
+			}
+
+		}
+
 		var _toggleButton = function(btn) {
 			if(btn.hasClass(_cls_engaged)) {
 				btn.removeClass(_cls_engaged);
@@ -93,7 +132,8 @@ il.UI.layout = il.UI.layout || {};
 
 		return {
 			onClickEntry: onClickEntry,
-			onClickToolsEntry: onClickToolsEntry
+			onClickToolsEntry: onClickToolsEntry,
+			onClickToolsRemoval: onClickToolsRemoval
 		}
 
 	})($);

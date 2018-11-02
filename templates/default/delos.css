@@ -8605,6 +8605,10 @@ nav {
   flex-flow: column wrap;
   align-items: center;
 }
+.il-sidebar-tool-removal {
+  height: 20px;
+  text-align: right;
+}
 .il-sidebar-triggers {
   box-shadow: 1px 0 1px #cccccc;
   background: #4a4a4a;
@@ -8613,12 +8617,11 @@ nav {
   z-index: 1;
 }
 .il-sidebar-triggers .btn-iconographic {
-  background: #4a4a4a;
+  width: 100%;
   border: 0;
+  background: #4a4a4a;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  display: flex;
-  width: 100%;
 }
 .il-sidebar-triggers .btn-iconographic.engaged {
   /*

@@ -19,11 +19,18 @@
 
 	<div class="il-sidebar-slates">
 
-		<div class="il-sidebar-tool-triggers">
+		<div class="il-sidebar-tool-triggers<!-- BEGIN tools_trigger_initially_active --> engaged<!-- END tools_trigger_initially_active -->">
 			<!-- BEGIN tools_trigger_item -->
 				{BUTTON}
 			<!-- END tools_trigger_item -->
+			<!-- BEGIN tool_removal -->
+			<div class="il-sidebar-tool-removal">
+				{REMOVE_TOOL}
+			</div>
+			<!-- END tool_removal -->
 		</div>
+
+
 
 		<!-- BEGIN slate_item -->
 		{SLATE}

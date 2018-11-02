@@ -31,6 +31,11 @@ class Sidebar implements C\Layout\Sidebar {
 	private $tools_click_signal;
 
 	/**
+	 * @var 	Signal
+	 */
+	private $tools_removal_signal;
+
+	/**
 	 * @var 	\ILIAS\UI\Component\Layout\SidebarEntry[]
 	 */
 	private $entries;
@@ -91,12 +96,21 @@ class Sidebar implements C\Layout\Sidebar {
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function getToolsRemovalSignal(): C\Signal
+	{
+		return $this->tools_removal_signal;
+	}
+
+	/**
 	 * Set the signals for this component
 	 */
 	protected function initSignals()
 	{
 		$this->entry_click_signal = $this->signal_generator->create();
 		$this->tools_click_signal = $this->signal_generator->create();
+		$this->tools_removal_signal = $this->signal_generator->create();
 	}
 
 	/**

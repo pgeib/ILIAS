@@ -41,7 +41,8 @@ if ($_GET['new_ui'] == '1') {
 
 	$metabar = buildMetabar($f);
 	$sidebar = pagedemoSidebar($f)
-		->withActive("2");
+		//->withActive("2");
+		->withActive("t2");
 
 	$page = $f->layout()->page($content)
 		->withMetabar($metabar)

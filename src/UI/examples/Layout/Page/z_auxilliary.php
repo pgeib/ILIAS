@@ -67,13 +67,13 @@ function pagedemoSidebar($f) {
 	$tools = [];
 	$btn = $f->button()->iconographic($icon->withSize('large'), "Tool 1", '#');
 	$slate = $slate->withResetSignals();
-	$slate = $slate->withPlanks(pagedemo_planks2($f, $slate->getReplaceContentSignal()));
-	$tools[] = $f->layout()->sidebarentry($btn, $slate);
+	$slate = $slate->withPlanks(pagedemo_planks_tool1($f, $slate->getReplaceContentSignal()));
+	$tools['t1'] = $f->layout()->sidebarentry($btn, $slate);
 
 	$btn = $f->button()->iconographic($icon->withSize('large'), "Tool 2", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks1($f, $slate->getReplaceContentSignal()));
-	$tools[] = $f->layout()->sidebarentry($btn, $slate);
+	$tools['t2'] = $f->layout()->sidebarentry($btn, $slate);
 
 	return $f->layout()->sidebar($entries)->withTools($tools);
 }
@@ -161,5 +161,14 @@ function pagedemo_planks5($f, $replacesignal){
 			$f->legacy('plankitem'),
 		]);
 	}
+	return $planks;
+}
+
+
+function pagedemo_planks_tool1($f, $replacesignal){
+	$planks = array();
+	$planks[] = $f->maincontrols()->menu()->plank()->withContents([
+		$f->legacy('This is content for a tool')
+	]);
 	return $planks;
 }
