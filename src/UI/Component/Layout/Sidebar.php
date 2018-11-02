@@ -19,6 +19,8 @@ interface Sidebar extends C\Component, JavaScriptBindable
 
 	public function getEntryClickSignal(): C\Signal;
 
+	public function getToolsClickSignal(): C\Signal;
+
 	public function withResetSignals(): Sidebar;
 
 	/**

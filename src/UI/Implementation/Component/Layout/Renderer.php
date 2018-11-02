@@ -31,6 +31,7 @@ class Renderer extends AbstractComponentRenderer {
 	protected function renderSidebar(Component\Layout\Sidebar $component, RendererInterface $default_renderer) {
 		$tpl = $this->getTemplate("tpl.sidebar.html", true, true);
 		$entry_signal = $component->getEntryClickSignal();
+		$tools_signal = $component->getToolsClickSignal();
 		$tools = $component->getTools();
 		$active =  $component->getActive();
 
@@ -38,18 +39,9 @@ class Renderer extends AbstractComponentRenderer {
 			//add the tools button
 			$f = $this->getUIFactory();
 			$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-more.svg', '');
-			$button = $f->button()->iconographic($icon->withSize('large'), $component->getToolsLabel(), '#');
-
-			//find active tool
-			if (array_key_exists($active, $tools)) {
-				$current_tool = $tools[$active];
-			} else { //otherwise use first
-				reset($tools);
-				$current_tool = current($tools);
-			}
-
-			$slate = $current_tool->getSlate();
-			$button = $button->withOnClick($slate->getToggleSignal());
+			$button = $f->button()
+				->iconographic($icon->withSize('large'), $component->getToolsLabel(), '#')
+				->withOnClick($tools_signal);
 
 			//this is the main button ("Tools ...")
 			$tpl->setCurrentBlock("tools_trigger");
@@ -73,11 +65,17 @@ class Renderer extends AbstractComponentRenderer {
 			$active
 		);
 
-		$component = $component->withOnLoadCode(function($id) use ($entry_signal) {
-			return "$(document).on('{$entry_signal}', function(event, signalData) {
-				il.UI.layout.sidebar.onClickEntry(event, signalData, '{$id}');
-				return false;
-			});";
+		$component = $component->withOnLoadCode(function($id) use ($entry_signal, $tools_signal) {
+			return "
+				$(document).on('{$entry_signal}', function(event, signalData) {
+					il.UI.layout.sidebar.onClickEntry(event, signalData, '{$id}');
+					return false;
+				});
+				$(document).on('{$tools_signal}', function(event, signalData) {
+					il.UI.layout.sidebar.onClickToolsEntry(event, signalData, '{$id}');
+					return false;
+				});
+			";
 		});
 
 		$id = $this->bindJavaScript($component);

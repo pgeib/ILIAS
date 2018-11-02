@@ -16,10 +16,6 @@ il.UI.maincontrols.menu = il.UI.maincontrols.menu || {};
 				is_tool_triggerer = signalData.triggerer.parent()
 					.hasClass(_cls_tools_container);
 
-			slate.siblings().each(function(c,s){
-				_disengage($(s));
-			});
-
 			//do not disengae for tools
 			if(is_tool_triggerer) {
 				_engage(slate);
@@ -44,6 +40,10 @@ il.UI.maincontrols.menu = il.UI.maincontrols.menu || {};
 		var _engage = function(slate) {
 			slate.removeClass(_cls_disengaged);
 			slate.addClass(_cls_engaged);
+
+			slate.siblings('.il-maincontrol-menu-slate').each(function(c,s){
+				_disengage($(s));
+			});
 
 			var pagediv = $('.il-layout-page');
 			pagediv.addClass('with-engaged-slates');

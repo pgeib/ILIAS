@@ -26,6 +26,11 @@ class Sidebar implements C\Layout\Sidebar {
 	private $entry_click_signal;
 
 	/**
+	 * @var 	Signal
+	 */
+	private $tools_click_signal;
+
+	/**
 	 * @var 	\ILIAS\UI\Component\Layout\SidebarEntry[]
 	 */
 	private $entries;
@@ -78,11 +83,20 @@ class Sidebar implements C\Layout\Sidebar {
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function getToolsClickSignal(): C\Signal
+	{
+		return $this->tools_click_signal;
+	}
+
+	/**
 	 * Set the signals for this component
 	 */
 	protected function initSignals()
 	{
 		$this->entry_click_signal = $this->signal_generator->create();
+		$this->tools_click_signal = $this->signal_generator->create();
 	}
 
 	/**
