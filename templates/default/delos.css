@@ -8588,6 +8588,23 @@ nav {
   height: 100%;
   width: 80px;
 }
+.il-sidebar-tool-triggers {
+  display: none;
+}
+.il-sidebar-tool-triggers.engaged {
+  display: block;
+}
+.il-sidebar-triggers .btn-iconographic,
+.il-sidebar-tool-triggers .btn-iconographic {
+  height: 80px;
+  width: 80px;
+  justify-content: center;
+  font-size: 70%;
+  padding: 0;
+  display: inline-flex;
+  flex-flow: column wrap;
+  align-items: center;
+}
 .il-sidebar-triggers {
   box-shadow: 1px 0 1px #cccccc;
   background: #4a4a4a;
@@ -8596,17 +8613,11 @@ nav {
   z-index: 1;
 }
 .il-sidebar-triggers .btn-iconographic {
-  align-items: center;
   background: #4a4a4a;
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
   display: flex;
-  flex-flow: column wrap;
-  font-size: 70%;
-  height: 80px;
-  justify-content: center;
-  padding: 0;
   width: 100%;
 }
 .il-sidebar-triggers .btn-iconographic.engaged {

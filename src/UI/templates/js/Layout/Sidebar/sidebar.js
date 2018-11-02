@@ -36,6 +36,7 @@ il.UI.layout = il.UI.layout || {};
 			if(! is_tool_triggerer) {
 				_toggleButton(triggerer);
 				main_tool_button.removeClass(_cls_engaged);
+				$('#' + id + ' .il-sidebar-tool-triggers').removeClass(_cls_engaged);
 
 			} else {
 				triggerer.addClass(_cls_engaged);
@@ -44,16 +45,18 @@ il.UI.layout = il.UI.layout || {};
 				_last_tool_slate = $('#' + id + ' .il-maincontrol-menu-slate.engaged');
 
 				main_tool_button.addClass(_cls_engaged);
+				$('#' + id + ' .il-sidebar-tool-triggers').addClass(_cls_engaged);
+
 			}
 		};
 
 
 		var onClickToolsEntry = function(event, signalData, id) {
-			var tools_button = signalData.triggerer
+			var main_tool_button = signalData.triggerer
 				trigger_buttons = $('#' + id + ' .il-sidebar-triggers .btn');
 
 			//if engaged: disengage all others
-			if(! tools_button.hasClass(_cls_engaged)) {
+			if(! main_tool_button.hasClass(_cls_engaged)) {
 				trigger_buttons.removeClass(_cls_engaged);
 			}
 
@@ -62,14 +65,19 @@ il.UI.layout = il.UI.layout || {};
 				_last_tool_button = tool_trigger_buttons[0];
 				_last_tool_button.click();
 				_last_tool_slate = $('#' + id + ' .il-maincontrol-menu-slate.engaged');
-				tools_button.removeClass(_cls_engaged);
+				main_tool_button.removeClass(_cls_engaged);
 				_last_tool_button.removeClass(_cls_engaged);
 				_last_tool_slate.removeClass(_cls_engaged);
 			}
 
 			il.UI.maincontrols.menu.slate.toggle(_last_tool_slate);
 			_toggleButton(_last_tool_button);
-			_toggleButton(tools_button);
+			_toggleButton(main_tool_button);
+			if(main_tool_button.hasClass(_cls_engaged)) {
+				$('#' + id + ' .il-sidebar-tool-triggers').addClass(_cls_engaged);
+			} else {
+				$('#' + id + ' .il-sidebar-tool-triggers').removeClass(_cls_engaged);
+			}
 		}
 
 

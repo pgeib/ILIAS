@@ -160,7 +160,28 @@ nav {
 	width: @trigger-width;
 }
 
-// sidebar trigger
+// sidebar triggers
+
+.il-sidebar-tool-triggers {
+	display: none;
+	&.engaged {
+		display: block;
+	}
+}
+.il-sidebar-triggers,
+.il-sidebar-tool-triggers {
+	.btn-iconographic {
+		height: @trigger-height;
+		width: @trigger-height;
+		justify-content: center;
+		font-size: 70%;
+		padding: 0;
+		display: inline-flex;
+		flex-flow: column wrap;
+		align-items: center;
+	}
+}
+
 .il-sidebar-triggers {
 	.shadow-right;
 	background: @bg-sidebar;
@@ -168,18 +189,11 @@ nav {
 	width: @trigger-width;
 	z-index: 1;
 	.btn-iconographic {
-		align-items: center;
-		background: @bg-sidebar;
+		width: 100%;
 		border: 0;
+		background: @bg-sidebar;
 		border-bottom: @trigger-border;
 		color: @bg-sidebar-engaged;
-		display: flex;
-		flex-flow: column wrap;
-		font-size: 70%;
-		height: @trigger-height;
-		justify-content: center;
-		padding: 0;
-		width: 100%;
 		&.engaged {
 			/*
 			background-color: @bg-sidebar-engaged;
