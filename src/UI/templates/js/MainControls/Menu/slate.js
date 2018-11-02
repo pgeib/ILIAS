@@ -7,14 +7,26 @@ il.UI.maincontrols.menu = il.UI.maincontrols.menu || {};
 	menu.slate = (function($) {
 		var _cls_engaged = 'engaged';
 		var _cls_disengaged = 'disengaged';
+		var _cls_tools_container = 'il-sidebar-tool-triggers';
+
 		var _history = [];
 
 		var onToggle = function(event, signalData, id) {
-			var slate = $('#' + id);
+			var slate = $('#' + id),
+				is_tool_triggerer = signalData.triggerer.parent()
+					.hasClass(_cls_tools_container);
+
 			slate.siblings().each(function(c,s){
 				_disengage($(s));
 			});
-			toggle(slate);
+
+			//do not disengae for tools
+			if(is_tool_triggerer) {
+				_engage(slate);
+			} else {
+				toggle(slate);
+			}
+
 		};
 
 		var toggle = function(slate) {
