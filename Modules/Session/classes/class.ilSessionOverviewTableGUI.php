@@ -72,14 +72,17 @@ class ilSessionOverviewTableGUI extends ilTable2GUI
 	
 	protected function gatherEvents($a_crs_ref_id)
 	{
-		global $tree, $ilAccess;
+		global $DIC;
+
+		$tree = $DIC['tree'];
+		$ilAccess = $DIC['ilAccess'];
 				
 		$events = array();
 		foreach($tree->getSubtree($tree->getNodeData($a_crs_ref_id),false,'sess') as $event_id)
 		{
 			$tmp_event = ilObjectFactory::getInstanceByRefId($event_id,false);
 			if(!is_object($tmp_event) ||
-				!$ilAccess->checkAccess('write','',$event_id)) 
+				!$ilAccess->checkAccess('manage_members','',$event_id))
 			{
 				continue;
 			}

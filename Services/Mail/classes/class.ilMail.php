@@ -5,61 +5,6 @@ require_once 'Services/User/classes/class.ilObjUser.php';
 require_once 'Services/Mail/exceptions/class.ilMailException.php';
 
 /**
- * This class handles base functions for mail handling.
- *
- * RFC 822 compliant email addresses
- * ----------------------------------
- * ILIAS is enabled to use standards compliant email addresses. The
- * class supports RFC 822 compliant address lists as specified in
- * http://www.ietf.org/rfc/rfc0822.txt
- *
- * Examples:
- *   The following mailbox addresses work for sending an email to the user with the
- *   login john.doe and email address jd@mail.com. The user is member of the course
- *   "French Course". The member role of the course object has the name "il_crs_member_998"
- *   and the object ID "1000".
- *
- *      john.doe
- *      John Doe <john.doe>
- *      john.doe@ilias
- *      #member@[French Course]
- *      #il_crs_member_998
- *      #il_role_1000
- *      jd@mail.com
- *      John Doe <jd@mail.com>
- *
- * Syntax Rules:
- *   The following excerpt from chapter 6.1 "Syntax" of RFC 822 is relevant for
- *   the semantics described below:
- *
- *     addr-spec = local-part [ "@", domain ]
- *
- * Semantics:
- *   User account mailbox address:
- *   - The local-part denotes the login of an ILIAS user account.
- *   - The domain denotes the current ILIAS client.
- *   - The local-part must not start with a "#" character
- *   - The domain must be omitted or must have the value "ilias"
- *
- *   Role object mailbox address:
- *   - The local part denotes the title of an ILIAS role.
- *   - The domain denotes the title of an ILIAS object.
- *   - The local-part must start with a "#" character.
- *   - If the domain is omitted, the title "ilias" is assumed.
- *   - If the local-part starts with "#il_role_" its remaining characters
- *     directly specify the object id of the role.
- *     For example "#il_role_1234 identifies the role with object id "1234".
- *   - If the object title identifies an object that is an ILIAS role, then
- *     the local-part is ignored.
- *   - If the object title identifies an object that is not an ILIAS role, then
- *     the local-part is used to identify a local role for that object.
- *   - The local-part can be a substring of the role name.
- *     For example, "#member" can be used instead of "#il_crs_member_1234".
- *
- *   External Email address:
- *   - The local-part must not start with a "#" character
- *   - The domain must be specified and it must not have the value "ilias"
- *
  * @author Stefan Meyer <meyer@leifos.com>
  * @version $Id$
  */
@@ -99,7 +44,6 @@ class ilMail
 	protected $save_in_sentbox;
 
 	protected $soap_enabled = true;
-	protected $mail_to_global_roles = 0;
 	protected $appendInstallationSignature = false;
 
 	/**
@@ -116,6 +60,16 @@ class ilMail
 
 	/** @var ilMailRfc822AddressParserFactory */
 	private $mailAddressParserFactory;
+
+	/**
+	 * @var mixed|null
+	 */
+	protected $contextId = null;
+
+	/**
+	 * @var array
+	 */
+	protected $contextParameters = [];
 
 	/**
 	 * @param integer $a_user_id
@@ -161,6 +115,32 @@ class ilMail
 	}
 
 	/**
+	 * @param string $contextId
+	 * @return ilMail
+	 */
+	public function withContextId(string $contextId): self
+	{
+		$clone = clone $this;
+
+		$clone->contextId = $contextId;
+
+		return $clone;
+	}
+
+	/**
+	 * @param array $parameters
+	 * @return ilMail
+	 */
+	public function withContextParameters(array $parameters): self
+	{
+		$clone = clone $this;
+
+		$clone->contextParameters = $parameters;
+
+		return $clone;
+	}
+
+	/**
 	 * @return bool
 	 */
 	protected function isSystemMail()
@@ -195,39 +175,20 @@ class ilMail
 	}
 
 	/**
-	 * @param string $a_recipient
-	 * @param string $a_existing_recipients
+	 * @param string $newRecipient
+	 * @param string $existingRecipients
 	 * @return bool
 	 */
-	public function existsRecipient($a_recipient, $a_existing_recipients)
+	public function existsRecipient(string $newRecipient, string $existingRecipients): bool
 	{
-		$recipients = $this->parseAddresses($a_existing_recipients);
-		foreach($recipients as $rcp)
-		{
-			if(substr($rcp->getMailbox(), 0, 1) != '#')
-			{
-				if(trim($rcp->getMailbox()) == trim($a_recipient) || trim($rcp->getMailbox() . '@' . $rcp->getHost()) == trim($a_recipient))
-				{
-					return true;
-				}
-			}
-			else if(substr($rcp->getMailbox(), 0, 7) == '#il_ml_')
-			{
-				if(trim($rcp->getMailbox() . '@' . $rcp->getHost()) == trim($a_recipient))
-				{
-					return true;
-				}
-			}
-			else
-			{
-				if(trim($rcp->getMailbox() . '@' . $rcp->getHost()) == trim($a_recipient))
-				{
-					return true;
-				}
-			}
-		}
+		$newAddresses = new \ilMailAddressListImpl($this->parseAddresses($newRecipient));
+		$addresses = new \ilMailAddressListImpl($this->parseAddresses($existingRecipients));
 
-		return false;
+		$list = new \ilMailDiffAddressList($newAddresses, $addresses);
+
+		$diffedAddresses = $list->value();
+
+		return count($diffedAddresses) === 0;
 	}
 
 	/**
@@ -742,30 +703,18 @@ class ilMail
 	 */
 	protected function replacePlaceholders($a_message, $a_user_id = 0, $replace_empty = true)
 	{
-		try
-		{
-			include_once 'Services/Mail/classes/class.ilMailFormCall.php';
-
-			if(ilMailFormCall::getContextId())
-			{
-				require_once 'Services/Mail/classes/class.ilMailTemplateService.php';
-				$context = ilMailTemplateService::getTemplateContextById(ilMailFormCall::getContextId());
-			}
-			else
-			{
-				require_once 'Services/Mail/classes/class.ilMailTemplateGenericContext.php';
+		try {
+			if ($this->contextId) {
+				$context = ilMailTemplateContextService::getTemplateContextById($this->contextId);
+			} else {
 				$context = new ilMailTemplateGenericContext();
 			}
 
 			$user = $a_user_id > 0 ? self::getCachedUserInstance($a_user_id) : null;
 
-			require_once 'Services/Mail/classes/class.ilMailTemplatePlaceholderResolver.php';
 			$processor = new ilMailTemplatePlaceholderResolver($context, $a_message);
-			$a_message = $processor->resolve($user, ilMailFormCall::getContextParameters(), $replace_empty);
-		}
-		catch(Exception $e)
-		{
-			require_once './Services/Logging/classes/public/class.ilLoggerFactory.php';
+			$a_message = $processor->resolve($user, $this->contextParameters, $replace_empty);
+		} catch (Exception $e) {
 			ilLoggerFactory::getLogger('mail')->error(__METHOD__ . ' has been called with invalid context.');
 		}
 
@@ -1000,23 +949,22 @@ class ilMail
 	}
 
 	/**
-	 * @param  string[] $a_recipients
+	 * @param  string[] $recipients
 	 * @return int[]
 	 */
-	protected function getUserIds(array $a_recipients)
+	protected function getUserIds(array $recipients)
 	{
-		$usr_ids = array();
+		$usrIds = array();
 
-		$a_recipients = implode(',', array_filter(array_map('trim', $a_recipients)));
+		$joinedRecipients = implode(',', array_filter(array_map('trim', $recipients)));
 
-		$recipients = $this->parseAddresses($a_recipients);
-		foreach($recipients as $recipient)
-		{
-			$address_type = $this->mailAddressTypeFactory->getByPrefix($recipient);
-			$usr_ids = array_merge($usr_ids, $address_type->resolve());
+		$addresses = $this->parseAddresses($joinedRecipients);
+		foreach ($addresses as $address) {
+			$addressType = $this->mailAddressTypeFactory->getByPrefix($address);
+			$usrIds = array_merge($usrIds, $addressType->resolve());
 		}
 
-		return array_unique($usr_ids);
+		return array_unique($usrIds);
 	}
 
 	/**
@@ -1046,30 +994,26 @@ class ilMail
 	/**
 	 * Check if recipients are valid
 	 * @param  string $a_recipients string with login names or group names (start with #)
-	 * @param  string $a_type
 	 * @return array Returns an empty array, if all recipients are okay. Returns an array with invalid recipients, if some are not okay.
-	 * @throws ilMailException
+	 * @throws \ilMailException
 	 */
 	protected function checkRecipients($a_recipients)
 	{
-		$errors = array();
+		$errors = [];
 
-		try
-		{
+		try {
 			$recipients = $this->parseAddresses($a_recipients);
-			foreach($recipients as $recipient)
-			{
-				$address_type = $this->mailAddressTypeFactory->getByPrefix($recipient);
-				if(!$address_type->validate($this->user_id))
-				{
-					$errors = array_merge($errors, $address_type->getErrors());
+			foreach ($recipients as $recipient) {
+				$addressType = $this->mailAddressTypeFactory->getByPrefix($recipient);
+				if (!$addressType->validate($this->user_id)) {
+					$errors = array_merge($errors, $addressType->getErrors());
 				}
 			}
-		}
-		catch(ilException $e)
-		{
+		} catch (\ilException $e) {
 			$colon_pos = strpos($e->getMessage(), ':');
-			throw new ilMailException(($colon_pos === false) ? $e->getMessage() : substr($e->getMessage(), $colon_pos + 2));
+			throw new \ilMailException(
+				($colon_pos === false) ? $e->getMessage() : substr($e->getMessage(), $colon_pos + 2)
+			);
 		}
 
 		return $errors;
@@ -1172,12 +1116,6 @@ class ilMail
 			" | Subject: " . $a_m_subject
 		);
 
-		$this->mail_to_global_roles = true;
-		if(!$this->isSystemMail())
-		{
-			$this->mail_to_global_roles = $DIC->rbac()->system()->checkAccessOfUser($this->user_id, 'mail_to_global_roles', $this->mail_obj_ref_id);
-		}
-
 		if(in_array('system', $a_type))
 		{
 			$a_type = array('system');
@@ -1204,10 +1142,11 @@ class ilMail
 		$rcp_cc = $a_rcp_cc;
 		$rcp_bc = $a_rcp_bc;
 
-		$c_emails = $this->getCountRecipients($rcp_to, $rcp_cc, $rcp_bc, true);
+		$numberOfExternalAddresses = $this->getCountRecipients($rcp_to, $rcp_cc, $rcp_bc, true);
 
 		if(
-			$c_emails && !$this->isSystemMail() &&
+			$numberOfExternalAddresses > 0 &&
+			!$this->isSystemMail() &&
 			!$DIC->rbac()->system()->checkAccessOfUser($this->user_id, 'smtp_mail', $this->mail_obj_ref_id)
 		)
 		{
@@ -1227,8 +1166,7 @@ class ilMail
 			$this->mfile->saveFiles($sent_id, $a_attachment);
 		}
 
-		if($c_emails)
-		{
+		if($numberOfExternalAddresses > 0) {
 			$externalMailRecipientsTo  = $this->getEmailRecipients($rcp_to);
 			$externalMailRecipientsCc  = $this->getEmailRecipients($rcp_cc);
 			$externalMailRecipientsBcc = $this->getEmailRecipients($rcp_bc);
@@ -1250,10 +1188,8 @@ class ilMail
 				$a_attachment,
 				0
 			);
-		}
-		else
-		{
-			ilLoggerFactory::getLogger('mail')->debug("No external email addresses given in recipient string");
+		} else {
+			ilLoggerFactory::getLogger('mail')->debug('No external email addresses given in recipient string');
 		}
 
 		if(in_array('system', $a_type) && !$this->distributeMail($rcp_to, $rcp_cc, $rcp_bc, $a_m_subject, $a_m_message, $a_attachment, $sent_id, $a_type, 'system', $a_use_placeholders))
@@ -1358,7 +1294,7 @@ class ilMail
 			$a_attachments = $a_attachments ? $a_attachments : array();
 			foreach($a_attachments as $attachment)
 			{
-				$attachments[] = $this->mfile->getAbsolutePath($attachment);
+				$attachments[] = $this->mfile->getAbsoluteAttachmentPoolPathByFilename($attachment);
 			}
 
 			// mjansen: switched separator from "," to "#:#" because of mantis bug #6039
@@ -1405,7 +1341,7 @@ class ilMail
 			{
 				foreach($a_attachments as $attachment)
 				{
-					$mmail->Attach($this->mfile->getAbsolutePath($attachment), '', 'inline', $attachment);
+					$mmail->Attach($this->mfile->getAbsoluteAttachmentPoolPathByFilename($attachment), '', 'inline', $attachment);
 				}
 			}
 
@@ -1439,21 +1375,19 @@ class ilMail
 	 */
 	protected function parseAddresses($addresses)
 	{
-		if(strlen($addresses) > 0)
-		{
+		if (strlen($addresses) > 0) {
 			ilLoggerFactory::getLogger('mail')->debug(sprintf(
 				"Started parsing of recipient string: %s", $addresses
 			));
 		}
 
-		$parser = $this->mailAddressParserFactory->getParser($addresses);
+		$parser = $this->mailAddressParserFactory->getParser((string)$addresses);
 		$parsedAddresses = $parser->parse();
 
-		if(strlen($addresses) > 0)
-		{
+		if (strlen($addresses) > 0) {
 			ilLoggerFactory::getLogger('mail')->debug(sprintf(
-				"Parsed addresses: %s", implode(',', array_map(function(ilMailAddress $address) {
-					return $address->getMailbox() . '@' . $address->getHost();
+				"Parsed addresses: %s", implode(',', array_map(function (ilMailAddress $address) {
+					return (string)$address;
 				}, $parsedAddresses))
 			));
 		}
@@ -1462,81 +1396,56 @@ class ilMail
 	}
 
 	/**
-	 * @param string $a_recipients
-	 * @param bool   $a_only_email
+	 * @param string $recipients
+	 * @param bool $onlyExternalAddresses
 	 * @return int
 	 */
-	protected function getCountRecipient($a_recipients, $a_only_email = true)
+	protected function getCountRecipient(string $recipients, $onlyExternalAddresses = true): int
 	{
-		$counter = 0;
-
-		$recipients = $this->parseAddresses($a_recipients);
-		foreach($recipients as $recipient)
-		{
-			if($a_only_email)
-			{
-				// Fixed mantis bug #5875
-				if(ilObjUser::_lookupId($recipient->getMailbox() . '@' . $recipient->getHost()))
-				{
-					continue;
-				}
-
-				// Addresses which aren't on the self::ILIAS_HOST host, and
-				// which have a mailbox which does not start with '#',
-				// are external e-mail addresses
-				if($recipient->getHost() != self::ILIAS_HOST && substr($recipient->getMailbox(), 0, 1) != '#')
-				{
-					++$counter;
-				}
-			}
-			else
-			{
-				++$counter;
-			}
+		$addresses = new \ilMailAddressListImpl($this->parseAddresses($recipients));
+		if ($onlyExternalAddresses) {
+			$addresses = new \ilMailOnlyExternalAddressList($addresses, self::ILIAS_HOST);
 		}
 
-		return $counter;
+		return count($addresses->value());
 	}
 
 	/**
-	 * @param string $a_to
-	 * @param string $a_cc
-	 * @param string $a_bcc
-	 * @param bool $a_only_email
+	 * @param string $toRecipients
+	 * @param string $ccRecipients
+	 * @param $bccRecipients
+	 * @param bool $onlyExternalAddresses
 	 * @return int
 	 */
-	protected function getCountRecipients($a_to, $a_cc, $a_bcc, $a_only_email = true)
-	{
-		return
-			$this->getCountRecipient($a_to, $a_only_email) +
-			$this->getCountRecipient($a_cc, $a_only_email) +
-			$this->getCountRecipient($a_bcc, $a_only_email);
+	protected function getCountRecipients(
+		string $toRecipients,
+		string $ccRecipients,
+		string $bccRecipients,
+		$onlyExternalAddresses = true
+	): int {
+		return (
+			$this->getCountRecipient($toRecipients, $onlyExternalAddresses) +
+			$this->getCountRecipient($ccRecipients, $onlyExternalAddresses) +
+			$this->getCountRecipient($bccRecipients, $onlyExternalAddresses)
+		);
 	}
 
 	/**
-	 * @param string $a_recipients
+	 * @param string $recipients
 	 * @return string
 	 */
-	protected function getEmailRecipients($a_recipients)
+	protected function getEmailRecipients(string $recipients): string 
 	{
-		$rcp = array();
+		$addresses = new \ilMailOnlyExternalAddressList(
+			new \ilMailAddressListImpl($this->parseAddresses($recipients)),
+			self::ILIAS_HOST
+		);
 
-		$recipients = $this->parseAddresses($a_recipients);
-		foreach($recipients as $recipient)
-		{
-			if(substr($recipient->getMailbox(), 0, 1) != '#' && $recipient->getHost() != self::ILIAS_HOST)
-			{
-				// Fixed mantis bug #5875
-				if(ilObjUser::_lookupId($recipient->getMailbox() . '@' . $recipient->getHost()))
-				{
-					continue;
-				}
+		$emailRecipients = array_map(function(\ilMailAddress $address) {
+			return (string)$address;
+		}, $addresses->value());
 
-				$rcp[] = $recipient->getMailbox() . '@' . $recipient->getHost();
-			}
-		}
-
-		return implode(',', $rcp);
+		return implode(',', $emailRecipients);
 	}
 
 	/**

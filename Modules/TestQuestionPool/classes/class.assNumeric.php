@@ -94,7 +94,8 @@ class assNumeric extends assQuestion implements ilObjQuestionScoringAdjustable, 
 	public function loadFromDb($question_id)
 	{
 		/** @var $ilDB ilDBInterface */
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		
 		$result = $ilDB->queryF("SELECT qpl_questions.*, " . $this->getAdditionalTableName() . ".* FROM qpl_questions LEFT JOIN " . $this->getAdditionalTableName() . " ON " . $this->getAdditionalTableName() . ".question_fi = qpl_questions.question_id WHERE qpl_questions.question_id = %s",
 			array("integer"),
@@ -347,7 +348,8 @@ class assNumeric extends assQuestion implements ilObjQuestionScoringAdjustable, 
 		}
 
 		/** @var $ilDB ilDBInterface */
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 
 		$found_values = array();
 		if (is_null($pass))
@@ -396,6 +398,32 @@ class assNumeric extends assQuestion implements ilObjQuestionScoringAdjustable, 
 		return FALSE;
 	}
 	
+	protected function isValidNumericSubmitValue($submittedValue)
+	{
+		if( is_numeric($submittedValue) )
+		{
+			return true;
+		}
+		
+		if( preg_match('/^[-+]{0,1}\d+\/\d+$/', $submittedValue) )
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public function validateSolutionSubmit()
+	{
+		if( !$this->isValidNumericSubmitValue($this->getSolutionSubmit()) )
+		{
+			ilUtil::sendFailure($this->lng->txt("err_no_numeric_value"), true);
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public function getSolutionSubmit()
 	{
 		return trim(str_replace(",",".",$_POST["numeric_result"]));
@@ -424,7 +452,8 @@ class assNumeric extends assQuestion implements ilObjQuestionScoringAdjustable, 
 	public function saveWorkingData($active_id, $pass = NULL, $authorized = true)
 	{
 		/** @var $ilDB ilDBInterface */
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 
 		if (is_null($pass))
 		{
@@ -437,12 +466,6 @@ class assNumeric extends assQuestion implements ilObjQuestionScoringAdjustable, 
 		$returnvalue = true;
 
 		$numeric_result = $this->getSolutionSubmit();
-
-		if( !$this->isValidSolutionSubmit($numeric_result) )
-		{
-			ilUtil::sendInfo($this->lng->txt("err_no_numeric_value"), true);
-			$returnvalue = false;
-		}
 
 		$this->getProcessLocker()->executeUserSolutionUpdateLockOperation(function() use (&$entered_values, $numeric_result, $ilDB, $active_id, $pass, $authorized) {
 
@@ -510,19 +533,14 @@ class assNumeric extends assQuestion implements ilObjQuestionScoringAdjustable, 
 	protected function savePreviewData(ilAssQuestionPreviewSession $previewSession)
 	{
 		$numericSolution = $this->getSolutionSubmit();
-
-		if( !$this->isValidSolutionSubmit($numericSolution) )
-		{
-			ilUtil::sendInfo($this->lng->txt("err_no_numeric_value"), true);
-		}
-		
 		$previewSession->setParticipantsSolution($numericSolution);
 	}
 
 	public function saveAdditionalQuestionDataToDb()
 	{
 		/** @var $ilDB ilDBInterface */
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 
 		// save additional data
 		$ilDB->manipulateF( "DELETE FROM " . $this->getAdditionalTableName() . " WHERE question_fi = %s",
@@ -543,7 +561,8 @@ class assNumeric extends assQuestion implements ilObjQuestionScoringAdjustable, 
 	public function saveAnswerSpecificDataToDb()
 	{
 		/** @var $ilDB ilDBInterface */
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 
 		// Write range to the database
 		$ilDB->manipulateF( "DELETE FROM qpl_num_range WHERE question_fi = %s",
@@ -678,7 +697,8 @@ class assNumeric extends assQuestion implements ilObjQuestionScoringAdjustable, 
 	public function getUserQuestionResult($active_id, $pass)
 	{
 		/** @var ilDBInterface $ilDB */
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		$result = new ilUserQuestionResult($this, $active_id, $pass);
 
 		$maxStep = $this->lookupMaxStep($active_id, $pass);

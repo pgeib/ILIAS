@@ -14,7 +14,9 @@ class ilTimingOverviewTableGUI extends ilTable2GUI
 	 */
 	public function __construct($a_parent_obj, $a_parent_cmd)
 	{
-		global $lng, $ilCtrl;
+		global $DIC;
+		$lng = $DIC['lng'];
+		$ilCtrl = $DIC['ilCtrl'];
 		
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 
@@ -29,8 +31,6 @@ class ilTimingOverviewTableGUI extends ilTable2GUI
 		$this->addColumn($this->lng->txt("name"),'name', '');
 		$this->addColumn($this->lng->txt("tst_started"),'started', '');
 		$this->addColumn($this->lng->txt("timing"),'extratime', '');
-		
-		$this->addCommandButton('showTimingForm', $this->lng->txt('timing'));
 	}
 
 	/**

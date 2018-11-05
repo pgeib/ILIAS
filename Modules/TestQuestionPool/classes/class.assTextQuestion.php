@@ -121,7 +121,8 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
 	*/
 	function loadFromDb($question_id)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 
 		$result = $ilDB->queryF("SELECT qpl_questions.*, " . $this->getAdditionalTableName() . ".* FROM qpl_questions LEFT JOIN " . $this->getAdditionalTableName() . " ON " . $this->getAdditionalTableName() . ".question_fi = qpl_questions.question_id WHERE qpl_questions.question_id = %s",
 			array("integer"),
@@ -391,7 +392,8 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
 	*/
 	function setReachedPoints($active_id, $points, $pass = NULL)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		
 		if (($points > 0) && ($points <= $this->getPoints()))
 		{
@@ -579,7 +581,8 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
 			throw new ilTestException('return details not implemented for '.__METHOD__);
 		}
 		
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 
 		$points = 0;
 		if (is_null($pass))
@@ -615,8 +618,9 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
 	 */
 	public function saveWorkingData($active_id, $pass = NULL, $authorized = true)
 	{
-		global $ilDB;
-		global $ilUser;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
+		$ilUser = $DIC['ilUser'];
 
 		include_once "./Services/Utilities/classes/class.ilStr.php";
 		if (is_null($pass))
@@ -626,12 +630,11 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
 		}
 
 		$entered_values = 0;
+		$text = $this->getSolutionSubmit();
 
-		$this->getProcessLocker()->executeUserSolutionUpdateLockOperation(function() use (&$entered_values, $active_id, $pass, $authorized) {
+		$this->getProcessLocker()->executeUserSolutionUpdateLockOperation(function() use (&$entered_values, $active_id, $pass, $authorized, $text) {
 
 			$this->removeCurrentSolution($active_id, $pass, $authorized);
-
-			$text = $this->getSolutionSubmit();
 
 			if(strlen($text))
 			{
@@ -667,35 +670,20 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
 	public function getSolutionSubmit()
 	{
 		$text = ilUtil::stripSlashes($_POST["TEXT"], FALSE);
-		if($this->getMaxNumOfChars())
+		
+		if( ilUtil::isHTML($text) )
 		{
-			include_once "./Services/Utilities/classes/class.ilStr.php";
-			$text_without_tags = preg_replace("/<[^>*?]>/is", "", $text);
-			$len_with_tags = ilStr::strLen($text);
-			$len_without_tags = ilStr::strLen($text_without_tags);
-			if($this->getMaxNumOfChars() < $len_without_tags)
-			{
-				if(!$this->isHTML($text))
-				{
-					$text = ilStr::subStr($text, 0, $this->getMaxNumOfChars());
-				}
-			}
+			$text = $this->getHtmlUserSolutionPurifier()->purify($text);
 		}
-		if($this->isHTML($text))
-		{
-			$text = preg_replace("/<[^>]*$/ims", "", $text);
-			return $text;
-		} else
-		{
-			//$text = htmlentities($text, ENT_QUOTES, "UTF-8");
-		}
+		
 		return $text;
 	}
 
 	public function saveAdditionalQuestionDataToDb()
 	{
 		/** @var ilDBInterface $ilDB */
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		$ilDB->manipulateF( "DELETE FROM " . $this->getAdditionalTableName() . " WHERE question_fi = %s",
 							array( "integer" ),
 							array( $this->getId() 
@@ -719,7 +707,8 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
 	public function saveAnswerSpecificDataToDb()
 	{
 		/** @var ilDBInterface $ilDB */
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF( "DELETE FROM qpl_a_essay WHERE question_fi = %s",
 							array( "integer" ),
@@ -1000,7 +989,8 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
 
 	public function duplicateAnswers($original_id)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 
 		$result = $ilDB->queryF("SELECT * FROM qpl_a_essay WHERE question_fi = %s",
 								array('integer'),
@@ -1082,37 +1072,19 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
 	{
 		return true;
 	}
-
-
-	/**
-	 * @return bool
-	 */
-	public function validateSolutionSubmit()
+	
+	public function countLetters($text)
 	{
-		$submit = $this->getSolutionSubmit();
-
-		$max_chars = $this->getMaxNumOfChars();
-		if($max_chars)
-		{
-			$stripped = trim(strip_tags($submit));
-			$stripped = str_replace(array("\n", "\r\n", "\r"), '', $stripped);
-			$stripped = str_replace("&lt;", '<', $stripped);
-			$stripped = str_replace("&gt;", '>', $stripped);
-			$stripped = str_replace("&amp;", '&', $stripped);
-
-			$char_count = ilStr::strLen(trim($stripped), "UTF-8");
-
-			if($char_count > $max_chars)
-			{
-				$failureMsg = sprintf($this->lng->txt('ass_txt_char_lim_exhausted_hint'),
-					$char_count, $max_chars
-				);
-
-				ilUtil::sendFailure($failureMsg, true);
-				return false;
-			}
-		}
-
-		return true;
+		$text = strip_tags($text);
+		
+		$text = str_replace('&gt;', '>', $text);
+		$text = str_replace('&lt;', '<', $text);
+		$text = str_replace('&nbsp;', ' ', $text);
+		$text = str_replace('&amp;', '&', $text);
+		
+		$text = str_replace("\r\n", "\n", $text);
+		$text = str_replace("\n", "", $text);
+		
+		return ilStr::strLen($text);
 	}
 }

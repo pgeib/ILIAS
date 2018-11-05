@@ -104,6 +104,7 @@ class ilSessionParticipants extends ilParticipants
 			$this->participants_status[$mem_uid]['blocked'] = FALSE;
 			$this->participants_status[$mem_uid]['notification'] = FALSE;
 			$this->participants_status[$mem_uid]['passed'] = FALSE;
+			$this->participants_status[$mem_uid]['contact'] = $this->getEventParticipants()->isContact($mem_uid);
 		}
 	}
 	
@@ -155,6 +156,32 @@ class ilSessionParticipants extends ilParticipants
 			return true;
 		}
 		return false;
+	}
+
+
+	/**
+	 * @param int $a_type
+	 * @param int $a_usr_id
+	 * @param bool $a_force_email
+	 */
+	public function sendNotification($a_type, $a_usr_id, $a_force_email = false)
+	{
+		$mail = new ilSessionMembershipMailNotification();
+
+		switch($a_type)
+		{
+			case ilSessionMembershipMailNotification::TYPE_ACCEPTED_SUBSCRIPTION_MEMBER:
+				$mail->setType(ilSessionMembershipMailNotification::TYPE_ACCEPTED_SUBSCRIPTION_MEMBER);
+				$mail->setRefId($this->ref_id);
+				$mail->setRecipients([$a_usr_id]);
+				$mail->send();
+				break;
+
+			default:
+				$this->logger->warning('Invalid notfication type given: ' . $a_type);
+				$this->logger->logStack(ilLogLevel::WARNING);
+				break;
+		}
 	}
 
 }

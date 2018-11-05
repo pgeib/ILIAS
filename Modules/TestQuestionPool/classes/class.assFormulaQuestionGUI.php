@@ -45,7 +45,9 @@ class assFormulaQuestionGUI extends assQuestionGUI
 	 */
 	function setQuestionTabs()
 	{
-		global $rbacsystem, $ilTabs;
+		global $DIC;
+		$rbacsystem = $DIC['rbacsystem'];
+		$ilTabs = $DIC['ilTabs'];
 
 		$ilTabs->clearTargets();
 
@@ -300,7 +302,8 @@ class assFormulaQuestionGUI extends assQuestionGUI
 
 	function resetSavedPreviewSession()
 	{
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC['ilUser'];
 		$user_id 			= $ilUser->getId();
 		$question_id 		= $this->object->getId();
 		require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionPreviewSession.php';
@@ -872,7 +875,8 @@ class assFormulaQuestionGUI extends assQuestionGUI
 	
 	public function saveReturnFQ()
 	{
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC['ilUser'];
 		$old_id = $_GET["q_id"];
 		$result = $this->writePostData();
 		if ($result == 0)
@@ -896,7 +900,10 @@ class assFormulaQuestionGUI extends assQuestionGUI
 				$q_id = $this->object->getId();
 				if(!assQuestion::_questionExistsInTest($this->object->getId(), $test->getTestId()))
 				{
-					global $tree, $ilDB, $ilPluginAdmin;
+					global $DIC;
+					$tree = $DIC['tree'];
+					$ilDB = $DIC['ilDB'];
+					$ilPluginAdmin = $DIC['ilPluginAdmin'];
 
 					include_once("./Modules/Test/classes/class.ilObjTest.php");
 					$_GET["ref_id"] = $_GET["calling_test"];
@@ -1012,7 +1019,7 @@ class assFormulaQuestionGUI extends assQuestionGUI
 	)
 	{
 		// get the solution of the user for the active pass or from the last pass if allowed
-		$user_solution = "";
+		$user_solution = array();
 		if(($active_id > 0) && (!$show_correct_solution))
 		{
 			$solutions = array();
@@ -1232,7 +1239,7 @@ class assFormulaQuestionGUI extends assQuestionGUI
 		return $pageoutput;
 	}
 
-	public function getSpecificFeedbackOutput($active_id, $pass)
+	public function getSpecificFeedbackOutput($userSolution)
 	{
 		return '';
 	}

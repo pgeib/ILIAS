@@ -180,27 +180,26 @@ class ilDBPdoPostgreSQL extends ilDBPdo implements ilDBInterface {
 	 * @return bool
 	 */
 	public function lockTables($a_tables) {
-		global $ilLog;
 
 		$locks = array();
 
 		$counter = 0;
 		foreach ($a_tables as $table) {
-			$lock = 'LOCK TABLE ';
+			if (!isset($table['sequence']) && $table['sequence']) {
+				$lock = 'LOCK TABLE ' . $table['name'];
 
-			$lock .= ($table['name'] . ' ');
+				switch ($table['type']) {
+					case ilDBConstants::LOCK_READ:
+						$lock .= ' IN SHARE MODE ';
+						break;
 
-			switch ($table['type']) {
-				case ilDBConstants::LOCK_READ:
-					$lock .= ' IN SHARE MODE ';
-					break;
+					case ilDBConstants::LOCK_WRITE:
+						$lock .= ' IN EXCLUSIVE MODE ';
+						break;
+				}
 
-				case ilDBConstants::LOCK_WRITE:
-					$lock .= ' IN EXCLUSIVE MODE ';
-					break;
+				$locks[] = $lock;
 			}
-
-			$locks[] = $lock;
 		}
 
 		// @TODO use and store a unique identifier to allow nested lock/unlocks
@@ -276,7 +275,7 @@ class ilDBPdoPostgreSQL extends ilDBPdo implements ilDBInterface {
 	 * @return mixed
 	 */
 	public function quoteIdentifier($identifier, $check_option = false) {
-		return $identifier;
+		return '"'.$identifier.'"';
 	}
 
 

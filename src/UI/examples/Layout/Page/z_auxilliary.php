@@ -17,7 +17,7 @@ function handleRPC($f, $renderer) {
 	$url = str_replace('&rpc=' .$counter, '&rpc=' .$nu_cnt, $_SERVER['REQUEST_URI']);
 
 	$sig_id = $_GET['replaceSignal'];
-	$replace_signal = new \ILIAS\UI\Implementation\Component\Popover\ReplaceContentSignal($sig_id);
+	$replace_signal = new \ILIAS\UI\Implementation\Component\ReplaceContentSignal($sig_id);
 	$replace_signal = $replace_signal->withAsyncRenderUrl($url);
 
 	$btn = $f->button()->standard('Replace Contents', '#')
@@ -35,42 +35,42 @@ function handleRPC($f, $renderer) {
 
 function pagedemoSidebar($f) {
 	$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-cockpit.svg', '');
-	$btn = $f->button()->iconographic($icon->withSize('large'), "Button 1", '#');
+	$btn = $f->button()->bulky($icon->withSize('large'), "Button 1", '#');
 	$slate = $f->maincontrols()->menu()->slate(array());
 	$slate = $slate->withPlanks(pagedemo_planks1($f, $slate->getReplaceContentSignal()));
 	$entries[] = $f->layout()->sidebarentry($btn, $slate);
 
 	$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-navigation.svg', '');
-	$btn = $f->button()->iconographic($icon->withSize('large'), "Button 2", '#');
+	$btn = $f->button()->bulky($icon->withSize('large'), "Button 2", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks2($f, $slate->getReplaceContentSignal()));
 	$entries[] = $f->layout()->sidebarentry($btn, $slate);
 
 	$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-search.svg', '');
-	$btn = $f->button()->iconographic($icon->withSize('large'), "Button 3", '#');
+	$btn = $f->button()->bulky($icon->withSize('large'), "Button 3", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks3($f, $slate->getReplaceContentSignal()));
 	$entries[] = $f->layout()->sidebarentry($btn, $slate);
 
 	$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-help.svg', '');
-	$btn = $f->button()->iconographic($icon->withSize('large'), "Button 4", '#');
+	$btn = $f->button()->bulky($icon->withSize('large'), "Button 4", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks4($f, $slate->getReplaceContentSignal()));
 	$entries[] = $f->layout()->sidebarentry($btn, $slate);
 
 	$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-more.svg', '');
-	$btn = $f->button()->iconographic($icon->withSize('large'), "More", '#');
+	$btn = $f->button()->bulky($icon->withSize('large'), "More", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks5($f, $replace_signal));
 	$entries[] = $f->layout()->sidebarentry($btn, $slate);
 
 	$tools = [];
-	$btn = $f->button()->iconographic($icon->withSize('large'), "Tool 1", '#');
+	$btn = $f->button()->bulky($icon->withSize('large'), "Tool 1", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks_tool1($f, $slate->getReplaceContentSignal()));
 	$tools['t1'] = $f->layout()->sidebarentry($btn, $slate);
 
-	$btn = $f->button()->iconographic($icon->withSize('large'), "Tool 2", '#');
+	$btn = $f->button()->bulky($icon->withSize('large'), "Tool 2", '#');
 	$slate = $slate->withResetSignals();
 	$slate = $slate->withPlanks(pagedemo_planks1($f, $slate->getReplaceContentSignal()));
 	$tools['t2'] = $f->layout()->sidebarentry($btn, $slate);

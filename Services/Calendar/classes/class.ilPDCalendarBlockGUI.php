@@ -40,7 +40,9 @@ class ilPDCalendarBlockGUI extends ilCalendarBlockGUI
 	/*
 	function executeCommand()
 	{
-		global $ilCtrl;
+		global $DIC;
+
+		$ilCtrl = $DIC['ilCtrl'];
 
 		$next_class = $ilCtrl->getNextClass();
 
@@ -53,13 +55,11 @@ class ilPDCalendarBlockGUI extends ilCalendarBlockGUI
 				break;
 		}
 	}*/
-	
+
 	/**
-	* Get block type
-	*
-	* @return	string	Block type.
-	*/
-	static function getBlockType()
+	 * @inheritdoc
+	 */
+	public function getBlockType(): string 
 	{
 		return self::$block_type;
 	}
@@ -95,7 +95,9 @@ class ilPDCalendarBlockGUI extends ilCalendarBlockGUI
 	*/
 	function returnToUpperContext()
 	{
-		global $ilCtrl;
+		global $DIC;
+
+		$ilCtrl = $DIC['ilCtrl'];
 		
 		$ilCtrl->redirectByClass("ilpersonaldesktopgui", "show");
 	}

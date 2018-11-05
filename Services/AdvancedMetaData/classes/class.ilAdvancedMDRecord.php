@@ -19,6 +19,12 @@ class ilAdvancedMDRecord
 	private static $instances = array();
 	
 	protected $record_id;
+
+	/**
+	 * @var int
+	 */
+	protected $global_position;
+
 	protected $import_id;
 	protected $active;
 	protected $title;
@@ -45,7 +51,9 @@ class ilAdvancedMDRecord
 	 */
 	public function __construct($a_record_id = 0)
 	{
-	 	global $ilDB;
+	 	global $DIC;
+
+	 	$ilDB = $DIC['ilDB'];
 	 	
 	 	$this->record_id = $a_record_id;
 	 	$this->db = $ilDB;
@@ -83,7 +91,9 @@ class ilAdvancedMDRecord
 	 */
 	public static function _getActiveSearchableRecords()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = "SELECT DISTINCT(amr.record_id) FROM adv_md_record amr ".
 			"JOIN adv_mdf_definition amfd ON amr.record_id = amfd.record_id ".
@@ -114,7 +124,9 @@ class ilAdvancedMDRecord
 			return $title_cache[$a_record_id];
 		}
 		
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = "SELECT title FROM adv_md_record ".
 			"WHERE record_id = ".$ilDB->quote($a_record_id ,'integer')." ";
@@ -134,7 +146,9 @@ class ilAdvancedMDRecord
 	 */
 	public static function _lookupRecordIdByImportId($a_ilias_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = "SELECT record_id FROM adv_md_record ".
 			"WHERE import_id = ".$ilDB->quote($a_ilias_id ,'text')." ";
@@ -154,7 +168,10 @@ class ilAdvancedMDRecord
 	 */
 	public static function _getAssignableObjectTypes($a_include_text = false)
 	{
-		global $objDefinition, $lng;
+		global $DIC;
+
+		$objDefinition = $DIC['objDefinition'];
+		$lng = $DIC['lng'];
 		
 		$types = array();
 		$amet_types = $objDefinition->getAdvancedMetaDataTypes();
@@ -193,7 +210,9 @@ class ilAdvancedMDRecord
 	 */
 	public static function _getActivatedObjTypes()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = "SELECT DISTINCT(obj_type) FROM adv_md_record_objs amo ".
 			"JOIN adv_md_record amr ON amo.record_id = amr.record_id ".
@@ -217,9 +236,11 @@ class ilAdvancedMDRecord
 	 */
 	public static function _getRecords()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
-		$query = "SELECT record_id FROM adv_md_record ";
+		$query = "SELECT record_id FROM adv_md_record ORDER BY gpos ";
 		$res = $ilDB->query($query);
 		while($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT))
 		{
@@ -238,7 +259,9 @@ class ilAdvancedMDRecord
 	 */
 	public static function _getAllRecordsByObjectType()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$records = array();
 		
@@ -262,7 +285,9 @@ class ilAdvancedMDRecord
 	 */
 	public static function _getActivatedRecordsByObjectType($a_obj_type, $a_sub_type = "", $a_only_optional = false)
 	{
-		global $ilDB;		
+		global $DIC;		
+
+		$ilDB = $DIC['ilDB'];
 
 		$records = array();
 		
@@ -304,7 +329,8 @@ class ilAdvancedMDRecord
 	public static function _getSelectedRecordsByObject($a_obj_type, $a_ref_id, $a_sub_type = "")
 	{		
 		$records = array();
-		
+//		ilUtil::printBacktrace(10);
+//		var_dump($a_obj_type."-".$a_ref_id."-".$a_sub_type); exit;
 		if ($a_sub_type == "")
 		{
 			$a_sub_type = "-";
@@ -375,6 +401,10 @@ class ilAdvancedMDRecord
 				}
 			}
 		}
+
+
+		$orderings = new ilAdvancedMDRecordObjectOrderings();
+		$records = $orderings->sortRecords($records, $a_obj_id);
 		
 		return $records;
 	}
@@ -424,7 +454,9 @@ class ilAdvancedMDRecord
 	 */
 	public static function _delete($a_record_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		// Delete fields
 		foreach(ilAdvancedMDFieldDefinition::getInstancesByRecordId($a_record_id) as $field)
@@ -512,7 +544,9 @@ class ilAdvancedMDRecord
 	 */
 	public function save()
 	{
-	 	global $ilDB;
+	 	global $DIC;
+
+	 	$ilDB = $DIC['ilDB'];
 	 	
 	 	// Save import id if given
 	 	$next_id = $ilDB->nextId('adv_md_record');
@@ -540,7 +574,9 @@ class ilAdvancedMDRecord
 
 	 	foreach($this->getAssignedObjectTypes() as $type)
 	 	{
-	 		global $ilDB;
+	 		global $DIC;
+
+	 		$ilDB = $DIC['ilDB'];
 
 	 		$query = "INSERT INTO adv_md_record_objs (record_id,obj_type,sub_type,optional) ".
 	 			"VALUES( ".
@@ -567,12 +603,15 @@ class ilAdvancedMDRecord
 	 */
 	public function update()
 	{
-	 	global $ilDB;
+	 	global $DIC;
+
+	 	$ilDB = $DIC['ilDB'];
 	 	
 	 	$query = "UPDATE adv_md_record ".
 	 		"SET active = ".$this->db->quote($this->isActive() ,'integer').", ".
 	 		"title = ".$this->db->quote($this->getTitle() ,'text').", ".
-	 		"description = ".$this->db->quote($this->getDescription() ,'text')." ".
+	 		"description = ".$this->db->quote($this->getDescription() ,'text').", ".
+			'gpos = '  . $this->db->quote($this->getGlobalPosition(),'integer').' '.
 	 		"WHERE record_id = ".$this->db->quote($this->getRecordId() ,'integer')." ";
 		$res = $ilDB->manipulate($query);
 				
@@ -615,6 +654,24 @@ class ilAdvancedMDRecord
 	 	}
 	 	return true;
 	}
+
+	/**
+	 * Set global position
+	 * @param int $position
+	 */
+	public function setGlobalPosition(int $position)
+	{
+		$this->global_position = $position;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getGlobalPosition() : int
+	{
+		return $this->global_position;
+	}
+
 	
 	/**
 	 * Get record id
@@ -849,7 +906,9 @@ class ilAdvancedMDRecord
 	 */
 	private function read()
 	{
-	 	global $ilDB;
+	 	global $DIC;
+
+	 	$ilDB = $DIC['ilDB'];
 	 	
 	 	$query = "SELECT * FROM adv_md_record ".
 	 		"WHERE record_id = ".$this->db->quote($this->getRecordId() ,'integer')." ";
@@ -861,6 +920,7 @@ class ilAdvancedMDRecord
 			$this->setTitle($row->title);
 			$this->setDescription($row->description);
 			$this->setParentObject($row->parent_obj);
+			$this->setGlobalPosition((int) $row->rpos);
 		}
 		$query = "SELECT * FROM adv_md_record_objs ".
 	 		"WHERE record_id = ".$this->db->quote($this->getRecordId() ,'integer')." ";
@@ -911,12 +971,17 @@ class ilAdvancedMDRecord
 	/**
 	 * Save repository object record selection
 	 *
-	 * @param integer $a_obj_id object id if repository object
-	 * @param array $a_records array of record ids that are selected (in use) by the object
+	 * @param int $a_obj_id object id if repository object
+	 * @param string $a_sub_type subtype
+	 * @param int[] $a_records array of record ids that are selected (in use) by the object
+	 * @param bool $a_delete_before delete before update
+	 *
 	 */
-	static function saveObjRecSelection($a_obj_id, $a_sub_type = "", array $a_records = null, $a_delete_before = true)
+	public static function saveObjRecSelection($a_obj_id, $a_sub_type = "", array $a_records = null, $a_delete_before = true)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		if ($a_sub_type == "")
 		{
@@ -955,7 +1020,9 @@ class ilAdvancedMDRecord
 	 */
 	static function getObjRecSelection($a_obj_id, $a_sub_type = "")
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		if ($a_sub_type == "")
 		{

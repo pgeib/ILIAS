@@ -48,23 +48,22 @@ class ilGroupImporter extends ilXmlImporter
 		}
 
 		include_once './Modules/Group/classes/class.ilGroupXMLParser.php';
-		#$GLOBALS['ilLog']->write($a_xml);
+		#$GLOBALS['DIC']['ilLog']->write($a_xml);
 
 		try 
 		{
-			$parser = new ilGroupXMLParser($a_xml,0);
-			$parser->setGroup($this->group);
+			$parser = new ilGroupXMLParser($this->group,$a_xml, 0);
 			$parser->setMode(ilGroupXMLParser::$UPDATE);
 			$parser->startParsing();
 			$a_mapping->addMapping('Modules/Group','grp',$a_id,$this->group->getId());
 		}
 		catch(ilSaxParserException $e)
 		{
-			$GLOBALS['ilLog']->write(__METHOD__.': Parsing failed with message, "'.$e->getMessage().'".');
+			$GLOBALS['DIC']->logger()->grp()->warning('Parsing failed with message, "'.$e->getMessage().'".');
 		}
 		catch(ilWebLinkXMLParserException $e)
 		{
-			$GLOBALS['ilLog']->write(__METHOD__.': Parsing failed with message, "'.$e->getMessage().'".');
+			$GLOBALS['DIC']->logger()->grp()->warning('Parsing failed with message, "'.$e->getMessage().'".');
 		}
 	}
 }

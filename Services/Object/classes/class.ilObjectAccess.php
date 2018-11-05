@@ -13,7 +13,7 @@
 * @version $Id$
 *
 */
-class ilObjectAccess
+class ilObjectAccess implements \ilWACCheckingClass
 {
 	/**
 	* Checks wether a user may invoke a command or not
@@ -97,7 +97,8 @@ class ilObjectAccess
 	}
 
 	/**
-	 * Type-specific implementation of general status, has to be overwritten
+	 * Type-specific implementation of general status, has to be overwritten if object type does
+	 * not support centralized offline handling
 	 *
 	 * Used in ListGUI and Learning Progress
 	 *
@@ -106,6 +107,13 @@ class ilObjectAccess
 	 */
 	static function _isOffline($a_obj_id)
 	{
+		global $DIC;
+
+		$objDefinition = $DIC['objDefinition'];
+		if($objDefinition->supportsOfflineHandling(ilObject::_lookupType($a_obj_id)))
+		{
+			return ilObject::lookupOfflineStatus($a_obj_id);
+		}
 		return null;
 	}
 
@@ -118,7 +126,22 @@ class ilObjectAccess
 	{
 		
 	}
-	
+
+	/**
+	 * @inheritdoc
+	 */
+	public function canBeDelivered(ilWACPath $ilWACPath) {
+		global $ilAccess;
+
+		preg_match("/\\/obj_([\\d]*)\\//uism", $ilWACPath->getPath(), $results);
+		foreach (ilObject2::_getAllReferences($results[1]) as $ref_id) {
+			if ($ilAccess->checkAccess('visible', '', $ref_id) || $ilAccess->checkAccess('read', '', $ref_id)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
 
 ?>

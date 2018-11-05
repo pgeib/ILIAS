@@ -124,6 +124,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		$ilTabs = $this->tabs;
 		$ilAccess = $this->access;
 		$ilUser = $this->user;
+		$ilCtrl = $this->ctrl;
 
 		// see bug #7452
 //		$ilTabs->setSubTabActive($this->getContainerObject()->getType().'_content');
@@ -133,17 +134,17 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 
 		$tpl = new ilTemplate("tpl.container_page.html", true, true,"Services/Container");
 
-		if($GLOBALS['ilAccess']->checkAccess('write','',$this->getContainerObject()->getRefId()))
+		if($ilAccess->checkAccess('write','',$this->getContainerObject()->getRefId()))
 		{
 			// check for results
 			include_once './Modules/Course/classes/Objectives/class.ilLOUserResults.php';
-			if(ilLOUserResults::hasResults($this->getContainerObject()->getId(),$GLOBALS['ilUser']->getId()))
+			if(ilLOUserResults::hasResults($this->getContainerObject()->getId(), $ilUser->getId()))
 			{
 				include_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 				$ilToolbar = new ilToolbarGUI();
 				$ilToolbar->addButton(
-						$lng->txt('crs_reset_results'), 
-						$GLOBALS['ilCtrl']->getLinkTargetByClass(get_class($this->getContainerGUI()),'reset')
+					$lng->txt('crs_reset_results'),
+					$ilCtrl->getLinkTargetByClass(get_class($this->getContainerGUI()),'reset')
 				);
 			}
 			
@@ -209,7 +210,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		include_once './Modules/Course/classes/Objectives/class.ilLOSettings.php';
 		if(
 			ilLOSettings::getInstanceByObjId($this->getContainerObject()->getId())->isResetResultsEnabled() or
-			$GLOBALS['ilAccess']->checkAccess('write','',$this->getContainerObject()->getRefId())
+			$ilAccess->checkAccess('write','',$this->getContainerObject()->getRefId())
 		)
 		{
 			if($has_results)
@@ -261,6 +262,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 	{
 		$lng = $this->lng;
 		$ilSetting = $this->settings;
+		$tpl = $this->tpl;
 		
 		$this->clearAdminCommandsDetermination();
 		
@@ -350,12 +352,12 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		{			
 			// add core co page css
 			include_once("./Services/Style/Content/classes/class.ilObjStyleSheet.php");
-			$GLOBALS["tpl"]->setVariable("LOCATION_CONTENT_STYLESHEET",
+			$tpl->setVariable("LOCATION_CONTENT_STYLESHEET",
 				ilObjStyleSheet::getContentStylePath(0));
-			$GLOBALS["tpl"]->setCurrentBlock("SyntaxStyle");
-			$GLOBALS["tpl"]->setVariable("LOCATION_SYNTAX_STYLESHEET",
-				ilObjStyleSheet::getSyntaxStylePath());			
-			$GLOBALS["tpl"]->parseCurrentBlock();			
+			$tpl->setCurrentBlock("SyntaxStyle");
+			$tpl->setVariable("LOCATION_SYNTAX_STYLESHEET",
+				ilObjStyleSheet::getSyntaxStylePath());
+			$tpl->parseCurrentBlock();
 		}			
 	
 		// order/block
@@ -404,10 +406,14 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 	
 	protected function renderTest($a_test_ref_id, $a_objective_id, $a_is_initial = false, $a_add_border = false, $a_lo_result = array())
 	{
+		global $DIC;
+
+		$tree = $DIC->repositoryTree();
+
 		$node_data = [];
 		if($a_test_ref_id)
 		{
-			$node_data = $GLOBALS['tree']->getNodeData($a_test_ref_id);
+			$node_data = $tree->getNodeData($a_test_ref_id);
 		}
 		if(!$node_data['child'])
 		{
@@ -643,6 +649,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 	{
 		$lng = $this->lng;
 		$ilCtrl = $this->ctrl;
+		$ilUser = $this->user;
 						
 		$item_ref_id = $a_item["ref_id"];
 		
@@ -750,7 +757,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			{
 				$a_item_list_gui->setConditionTarget($this->getContainerObject()->getRefId(), $a_item['objective_id'], 'lobj');
 				// check conditions of target
-				include_once './Services/AccessControl/classes/class.ilConditionHandler.php';
+				include_once './Services/Conditions/classes/class.ilConditionHandler.php';
 				$fullfilled = ilConditionHandler::_checkAllConditionsOfTarget($this->getContainerObject()->getRefId(),$a_item['objective_id'],'lobj');
 				if(!$fullfilled || $a_item['objective_status'])
 				{
@@ -759,12 +766,12 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			}
 			include_once './Modules/Course/classes/Objectives/class.ilLOUserResults.php';
 			$res = ilLOUserResults::lookupResult(
-					$this->getContainerObject()->getId(),
-					$GLOBALS['ilUser']->getId(),
-					$a_item['objective_id'], 
-					ilLOUserResults::TYPE_QUALIFIED);
+				$this->getContainerObject()->getId(),
+				$ilUser->getId(),
+				$a_item['objective_id'],
+				ilLOUserResults::TYPE_QUALIFIED);
 			
-			$res = $this->updateResult($res,$a_item['ref_id'],$a_item['objective_id'],$GLOBALS['ilUser']->getId());
+			$res = $this->updateResult($res,$a_item['ref_id'],$a_item['objective_id'], $ilUser->getId());
 			
 			if($res['is_final'])
 			{
@@ -1067,7 +1074,6 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 	
 	/**
 	 * Parse learning objective results.
-	 * @global type $ilUser
 	 * @return type
 	 */
 	protected function parseLOUserResults()
@@ -1128,10 +1134,21 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 	 * @param int $a_sub_style
 	 * @return type
 	 */
-	public static function renderProgressBar($a_perc_result = null, $a_perc_limit = null, $a_css = null, $a_caption = null, $a_url = null, $a_tt_id = null, $a_tt_txt = null, $a_next_step = null, $a_sub = false, $a_sub_style = 30)
-	{		
-		$tpl = new ilTemplate("tpl.objective_progressbar.html", true, true, "Services/Container");		
-			
+	public static function renderProgressBar($a_perc_result = null,
+											 $a_perc_limit = null,
+											 $a_css = null,
+											 $a_caption = null,
+											 $a_url = null,
+											 $a_tt_id = null,
+											 $a_tt_txt = null,
+											 $a_next_step = null,
+											 $a_sub = false,
+											 $a_sub_style = 30)
+	{
+		global $DIC;
+
+		$tpl = new ilTemplate("tpl.objective_progressbar.html", true, true, "Services/Container");
+
 		if($a_perc_result !== null)
 		{						
 			$tpl->setCurrentBlock("statusbar_bl");
@@ -1195,7 +1212,110 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		
 		return $tpl->get();		
 	}
-	
+
+	/**
+	 * Render progress bar(s)
+	 *
+	 * @param int $a_perc_result
+	 * @param int $a_perc_limit
+	 * @param string $a_css
+	 * @param string $a_caption
+	 * @param string $a_url
+	 * @param string $a_tt_id
+	 * @param string $a_tt_txt
+	 * @param string $a_next_step
+	 * @param string $a_sub (html)
+	 * @param int $a_sub_style
+	 * @param string $a_main_text
+	 * @param string $a_required_text
+	 * @return type
+	 */
+	public static function renderProgressMeter($a_perc_result = null,
+											   $a_perc_limit = null,
+											   $a_css = null,
+											   $a_caption = null,
+											   $a_url = null,
+											   $a_tt_id = null,
+											   $a_tt_txt = null,
+											   $a_next_step = null,
+											   $a_sub = false,
+											   $a_sub_style = 30,
+											   $a_main_text = '',
+											   $a_required_text = '')
+
+	{
+		global $DIC;
+
+		$tpl = new ilTemplate("tpl.objective_progressmeter.html", true, true, "Services/Container");
+
+		$lng = $DIC->language();
+		$lng->loadLanguageModule('crs');
+
+
+		if($a_perc_result)
+		{
+			$uiFactory = $DIC->ui()->factory();
+			$uiRenderer = $DIC->ui()->renderer();
+
+			$pMeter = $uiFactory->chart()->progressMeter()->standard(
+				100,
+				(int) $a_perc_result,
+				(int) $a_perc_limit
+			);
+			if(strlen($a_main_text))
+			{
+				$pMeter = $pMeter->withMainText($a_main_text);
+			}
+			if(strlen($a_required_text))
+			{
+				$pMeter = $pMeter->withRequiredText($a_required_text);
+			}
+			$tpl->setVariable('PROGRESS_METER', $uiRenderer->render($pMeter));
+		}
+
+		if($a_caption)
+		{
+			if($a_url)
+			{
+				include_once "Services/UIComponent/Button/classes/class.ilLinkButton.php";
+				$button = ilLinkButton::getInstance();
+				$button->setCaption($a_caption, false);
+				$button->setUrl($a_url);
+
+				$tpl->setCurrentBlock("statustxt_bl");
+				$tpl->setVariable("TXT_PROGRESS_STATUS", $button->render());
+				$tpl->parseCurrentBlock();
+			}
+			else
+			{
+				$tpl->setCurrentBlock("statustxt_no_link_bl");
+				$tpl->setVariable("TXT_PROGRESS_STATUS_NO_LINK", $a_caption);
+				$tpl->parseCurrentBlock();
+			}
+		}
+
+		if($a_next_step)
+		{
+			$tpl->setCurrentBlock("nstep_bl");
+			$tpl->setVariable("TXT_NEXT_STEP", $a_next_step);
+			$tpl->parseCurrentBlock();
+		}
+
+		if($a_tt_id &&
+			$a_tt_txt)
+		{
+			include_once("./Services/UIComponent/Tooltip/classes/class.ilTooltipGUI.php");
+			ilTooltipGUI::addTooltip($a_tt_id, $a_tt_txt);
+		}
+
+		if($a_sub)
+		{
+			$tpl->setVariable("SUB_STYLE", ' style="padding-left: '.$a_sub_style.'px;"');
+			$tpl->setVariable("SUB_INIT", $a_sub);
+		}
+
+		return $tpl->get();
+	}
 	/**
 	 * Render progressbar(s) for given objective and result data
 	 * 
@@ -1212,6 +1332,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		global $DIC;
 
 		$lng = $DIC->language();
+		$lng->loadLanguageModule('crs');
 		
 		// tooltip (has to be unique!)
 		
@@ -1296,8 +1417,16 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		{
 			$test_url = ilLOUtils::getTestResultLinkForUser($relevant_test_id, $a_lo_result["user_id"]);					
 		}
-		
-		return self::renderProgressBar(
+
+		$main_text = $lng->txt('crs_loc_itest_info');
+		if($a_lo_result['type'] == ilLOSettings::TYPE_TEST_QUALIFIED)
+		{
+			$main_text = $lng->txt('crs_loc_qtest_info');
+		}
+
+
+
+		return self::renderProgressMeter(
 			$a_lo_result["result_perc"], 
 			$a_lo_result["limit_perc"], 
 			$bar_color, 
@@ -1311,8 +1440,10 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			$initial_sub, 
 			$a_list_mode 
 				? 30
-				: 10
-		);						
+				: 10,
+			$main_text,
+			$lng->txt('crs_lobj_pm_min_goal')
+		);
 	}
 	
 	protected function buildAccordionTitle(ilCourseObjective $a_objective, array $a_lo_result = null)

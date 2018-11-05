@@ -1,14 +1,6 @@
 <?php
 /* Copyright (c) 1998-2009 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-require_once("./Services/Database/classes/PDO/class.ilPDOStatement.php");
-require_once("./Services/Database/classes/QueryUtils/class.ilMySQLQueryUtils.php");
-require_once('./Services/Database/classes/PDO/Manager/class.ilDBPdoManager.php');
-require_once('./Services/Database/classes/PDO/Reverse/class.ilDBPdoReverse.php');
-require_once('./Services/Database/interfaces/interface.ilDBInterface.php');
-require_once('./Services/Database/classes/class.ilDBConstants.php');
-require_once('./Services/Database/interfaces/interface.ilDBLegacyInterface.php');
-
 /**
  * Class pdoDB
  *
@@ -165,7 +157,7 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	 * @param $a_name
 	 * @param string $a_charset
 	 * @param string $a_collation
-	 * @return \PDOStatement
+	 * @return ilPDOStatement|false
 	 * @throws \ilDatabaseException
 	 */
 	public function createDatabase($a_name, $a_charset = "utf8", $a_collation = "") {
@@ -196,11 +188,17 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	 * @param null $tmpClientIniFile
 	 */
 	public function initFromIniFile($tmpClientIniFile = null) {
-		global $ilClientIniFile;
+		global $DIC;
+
 		if ($tmpClientIniFile instanceof ilIniFile) {
 			$clientIniFile = $tmpClientIniFile;
 		} else {
-			$clientIniFile = $ilClientIniFile;
+			$ilClientIniFile = null;
+			if ($DIC->offsetExists('ilClientIniFile')) {
+				$clientIniFile = $DIC['ilClientIniFile'];
+			} else {
+				throw new InvalidArgumentException('$tmpClientIniFile is not an instance of ilIniFile');
+			}
 		}
 
 		$this->setUsername($clientIniFile->readVariable("db", "user"));
@@ -608,11 +606,11 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 		$fields = array();
 		foreach ($values as $key => $val) {
 			$real[] = $this->quote($val[1], $val[0]);
-			$fields[] = $key;
+			$fields[] = $this->quoteIdentifier($key);
 		}
 		$values = implode(",", $real);
-		$fields = implode("`,`", $fields);
-		$query = "INSERT INTO " . $table_name . " (`" . $fields . "`) VALUES (" . $values . ")";
+		$fields = implode(",", $fields);
+		$query = "INSERT INTO " . $table_name . " (" . $fields . ") VALUES (" . $values . ")";
 
 		$query = $this->sanitizeMB4StringIfNotSupported($query);
 
@@ -702,7 +700,7 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 			$q = "UPDATE " . $table_name . " SET ";
 			$lim = "";
 			foreach ($fields as $k => $field) {
-				$q .= $lim . '`' . $field . '`' . " = " . $placeholders[$k];
+				$q .= $lim . $this->quoteIdentifier($field) . " = " . $placeholders[$k];
 				$lim = ", ";
 			}
 			$q .= " WHERE ";
@@ -918,8 +916,7 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 
 	/**
 	 * Determine contraint name by table name and constraint name.
-	 * In MySQL these are "unique" per table, but they
-	 * must be "globally" unique in oracle. (so this one is overwritten there)
+	 * In MySQL these are "unique" per table
 	 */
 	public function constraintName($a_table, $a_constraint) {
 		return $a_constraint;
@@ -956,7 +953,8 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	 * @deprecated use
 	 */
 	public static function getReservedWords() {
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC->database();
 
 		/**
 		 * @var $ilDB ilDBPdo
@@ -973,9 +971,10 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 		assert(is_array($tables));
 
 		$lock = $this->manager->getQueryUtils()->lock($tables);
-		global $ilLog;
-		if ($ilLog instanceof ilLog) {
-			$ilLog->write('ilDB::lockTables(): ' . $lock);
+		global $DIC;
+		$ilLogger = $DIC->logger()->root();
+		if ($ilLogger instanceof ilLogger) {
+			$ilLogger->log('ilDB::lockTables(): ' . $lock);
 		}
 
 		$this->pdo->exec($lock);
@@ -1007,7 +1006,7 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	 * @param string $query
 	 * @param \string[] $types
 	 * @param \mixed[] $values
-	 * @return \PDOStatement
+	 * @return ilPDOStatement
 	 * @throws \ilDatabaseException
 	 */
 	public function queryF($query, $types, $values) {
@@ -1583,7 +1582,7 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	public static function isReservedWord($a_word) {
 		require_once('./Services/Database/classes/PDO/FieldDefinition/class.ilDBPdoMySQLFieldDefinition.php');
 		global $DIC;
-		$ilDBPdoMySQLFieldDefinition = new ilDBPdoMySQLFieldDefinition($DIC['ilDB']);
+		$ilDBPdoMySQLFieldDefinition = new ilDBPdoMySQLFieldDefinition($DIC->database());
 
 		return $ilDBPdoMySQLFieldDefinition->isReserved($a_word);
 	}
@@ -1925,18 +1924,18 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	 * @param string $tablename of the table
 	 * @param array $fields ($key=>$value) where $key is a field name and $value its value
 	 * @param int $mode of query to build
-	 *                          ilDBConstants::MDB2_AUTOQUERY_INSERT
-	 *                          ilDBConstants::MDB2_AUTOQUERY_UPDATE
-	 *                          ilDBConstants::MDB2_AUTOQUERY_DELETE
-	 *                          ilDBConstants::MDB2_AUTOQUERY_SELECT
+	 *                          ilDBConstants::AUTOQUERY_INSERT
+	 *                          ilDBConstants::AUTOQUERY_UPDATE
+	 *                          ilDBConstants::AUTOQUERY_DELETE
+	 *                          ilDBConstants::AUTOQUERY_SELECT
 	 * @param bool $where (in case of update and delete queries, this string will be put after the sql WHERE statement)
 	 *
 	 * @deprecated Will be removed in ILIAS 5.3
 	 * @return bool
 	 */
-	public function autoExecute($tablename, $fields, $mode = ilDBConstants::MDB2_AUTOQUERY_INSERT, $where = false) {
+	public function autoExecute($tablename, $fields, $mode = ilDBConstants::AUTOQUERY_INSERT, $where = false) {
 		$fields_values = (array)$fields;
-		if ($mode == ilDBConstants::MDB2_AUTOQUERY_INSERT) {
+		if ($mode == ilDBConstants::AUTOQUERY_INSERT) {
 			if (!empty($fields_values)) {
 				$keys = $fields_values;
 			} else {
@@ -1969,7 +1968,7 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	 * @param bool $result_types
 	 * @return string
 	 */
-	protected function autoPrepare($table, $table_fields, $mode = ilDBConstants::MDB2_AUTOQUERY_INSERT, $where = false, $types = null, $result_types = ilDBConstants::MDB2_PREPARE_MANIP) {
+	protected function autoPrepare($table, $table_fields, $mode = ilDBConstants::AUTOQUERY_INSERT, $where = false, $types = null, $result_types = ilDBConstants::PREPARE_MANIP) {
 		$query = $this->buildManipSQL($table, $table_fields, $mode, $where);
 
 		return $this->prepare($query, $types, $result_types);
@@ -2003,7 +2002,7 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 		}
 
 		switch ($mode) {
-			case ilDBConstants::MDB2_AUTOQUERY_INSERT:
+			case ilDBConstants::AUTOQUERY_INSERT:
 				if (empty($table_fields)) {
 					throw new ilDatabaseException('Insert requires table fields');
 				}
@@ -2012,7 +2011,7 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 
 				return 'INSERT INTO ' . $table . ' (' . $cols . ') VALUES (' . $values . ')';
 				break;
-			case ilDBConstants::MDB2_AUTOQUERY_UPDATE:
+			case ilDBConstants::AUTOQUERY_UPDATE:
 				if (empty($table_fields)) {
 					throw new ilDatabaseException('Update requires table fields');
 				}
@@ -2021,12 +2020,12 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 
 				return $sql;
 				break;
-			case ilDBConstants::MDB2_AUTOQUERY_DELETE:
+			case ilDBConstants::AUTOQUERY_DELETE:
 				$sql = 'DELETE FROM ' . $table . $where;
 
 				return $sql;
 				break;
-			case ilDBConstants::MDB2_AUTOQUERY_SELECT:
+			case ilDBConstants::AUTOQUERY_SELECT:
 				$cols = !empty($table_fields) ? implode(', ', $table_fields) : '*';
 				$sql = 'SELECT ' . $cols . ' FROM ' . $table . $where;
 
@@ -2055,9 +2054,12 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	public function sanitizeMB4StringIfNotSupported($query)
 	{
 		if (!$this->doesCollationSupportMB4Strings()) {
-			$query = preg_replace(
+			$query_replaced = preg_replace(
 				'/[\x{10000}-\x{10FFFF}]/u', ilDBConstants::MB4_REPLACEMENT, $query
 			);
+			if (!empty($query_replaced)) {
+				return $query_replaced;
+			}
 		}
 
 		return $query;
@@ -2069,5 +2071,20 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	public function doesCollationSupportMB4Strings()
 	{
 		return false;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function groupConcat($a_field_name, $a_seperator = ",", $a_order = NULL) {
+		return $this->manager->getQueryUtils()->groupConcat($a_field_name, $a_seperator, $a_order);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function cast($a_field_name, $a_dest_type) {
+		return $this->manager->getQueryUtils()->cast($a_field_name, $a_dest_type);
 	}
 }

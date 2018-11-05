@@ -114,6 +114,11 @@ class ilObjectGUI
 	 */
 	protected $ctrl;
 
+	/**
+	 * @var ilObjectService
+	 */
+	protected $object_service;
+
 	const CFORM_NEW = 1;
 	const CFORM_IMPORT = 2;
 	const CFORM_CLONE = 3;
@@ -135,6 +140,7 @@ class ilObjectGUI
 		$this->settings = $DIC->settings();
 		$this->rbacreview = $DIC->rbac()->review();
 		$this->toolbar = $DIC->toolbar();
+		$this->object_service = $DIC->object();
 		$objDefinition = $DIC["objDefinition"];
 		$tpl = $DIC["tpl"];
 		$tree = $DIC->repositoryTree();
@@ -209,9 +215,6 @@ class ilObjectGUI
 			}
 		}
 
-		// use global $lng instead, when creating new objects object is not available
-		//$this->lng =& $this->object->lng;
-
 		//prepare output
 		if ($a_prepare_output)
 		{
@@ -219,6 +222,15 @@ class ilObjectGUI
 		}
 	}
 	
+	/**
+	 * Get object service
+	 * 
+	 * @return ilObjectService
+	 */
+	protected function getObjectService()
+	{
+		return $this->object_service;
+	}
 	
 	/**
 	* execute command
@@ -472,6 +484,11 @@ class ilObjectGUI
 	 */
 	protected function insertHeaderAction($a_list_gui)
 	{
+		if (!is_object($this->object) || ilContainer::_lookupContainerSetting($this->object->getId(), "hide_top_actions"))
+		{
+			return;
+		}
+
 		if(is_object($a_list_gui))
 		{
 			$this->tpl->setHeaderActionMenu($a_list_gui->getHeaderAction());
@@ -655,19 +672,6 @@ class ilObjectGUI
 		if(!$this->creation_mode)
 		{
 			$this->addLocatorItems();
-		}
-		
-		// not so nice workaround: todo: handle $ilLocator as tabs in ilTemplate
-		if ($_GET["admin_mode"] == "" &&
-			strtolower($this->ctrl->getCmdClass()) == "ilobjrolegui")
-		{
-			$this->ctrl->setParameterByClass("ilobjrolegui",
-				"rolf_ref_id", $_GET["rolf_ref_id"]);
-			$this->ctrl->setParameterByClass("ilobjrolegui",
-				"obj_id", $_GET["obj_id"]);
-			$ilLocator->addItem($this->lng->txt("role"),
-				$this->ctrl->getLinkTargetByClass(array("ilpermissiongui",
-					"ilobjrolegui"), "perm"));
 		}
 
 		$tpl->setLocator();
@@ -2197,6 +2201,47 @@ class ilObjectGUI
 			$a_new_obj->setRating(true);
 			$a_new_obj->update();
 		}		
+	}
+
+	/**
+	 * show edit section of custom icons for container
+	 *
+	 */
+	protected function showCustomIconsEditing($a_input_colspan = 1, ilPropertyFormGUI $a_form = null, $a_as_section = true)
+	{
+		if ($this->settings->get("custom_icons")) {
+			if ($a_form) {
+				global $DIC;
+				/** @var \ilObjectCustomIconFactory  $customIconFactory */
+				$customIconFactory        = $DIC['object.customicons.factory'];
+
+				$customIcon = $customIconFactory->getByObjId($this->object->getId(), $this->object->getType());
+
+				if ($a_as_section) {
+					$title = new ilFormSectionHeaderGUI();
+					$title->setTitle($this->lng->txt("icon_settings"));
+				} else {
+					$title = new ilCustomInputGUI($this->lng->txt("icon_settings"), "");
+				}
+				$a_form->addItem($title);
+
+				$caption = $this->lng->txt("cont_custom_icon");
+				$icon    = new ilImageFileInputGUI($caption, "cont_icon");
+
+				$icon->setSuffixes($customIcon->getSupportedFileExtensions());
+				$icon->setUseCache(false);
+				if ($customIcon->exists()) {
+					$icon->setImage($customIcon->getFullPath());
+				} else {
+					$icon->setImage('');
+				}
+				if ($a_as_section) {
+					$a_form->addItem($icon);
+				} else {
+					$title->addSubItem($icon);
+				}
+			}
+		}
 	}
 } // END class.ilObjectGUI (3.10: 2896 loc)
 

@@ -8,6 +8,7 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjQuestionScori
 require_once './Modules/TestQuestionPool/interfaces/interface.ilObjAnswerScoringAdjustable.php';
 require_once './Modules/TestQuestionPool/interfaces/interface.iQuestionCondition.php';
 require_once './Modules/TestQuestionPool/classes/class.ilUserQuestionResult.php';
+require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssClozeTestFeedback.php';
 
 /**
  * Class for cloze tests
@@ -92,6 +93,13 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	var $fixedTextLength;
 
 	public $cloze_text;
+	
+	/**
+	 * @var ilAssClozeTestFeedback
+	 */
+	public $feedbackOBJ;
+	
+	protected $feedbackMode = ilAssClozeTestFeedback::FB_MODE_GAP_QUESTION;
 
 	/**
 	 * assClozeTest constructor
@@ -166,7 +174,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	 */
 	public function loadFromDb($question_id)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		$result = $ilDB->queryF("SELECT qpl_questions.*, " . $this->getAdditionalTableName() . ".* FROM qpl_questions LEFT JOIN " . $this->getAdditionalTableName() . " ON " . $this->getAdditionalTableName() . ".question_fi = qpl_questions.question_id WHERE qpl_questions.question_id = %s",
 			array("integer"),
 			array($question_id)
@@ -187,6 +196,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 			$this->setClozeText($data['cloze_text']);
 			$this->setFixedTextLength($data["fixed_textlen"]);
 			$this->setIdenticalScoring(($data['tstamp'] == 0) ? true : $data["identical_scoring"]);
+			$this->setFeedbackMode($data['feedback_mode'] === null ? ilAssClozeTestFeedback::FB_MODE_GAP_QUESTION : $data['feedback_mode']);
 			// replacement of old syntax with new syntax
 			include_once("./Services/RTE/classes/class.ilRTE.php");
 			$this->question = ilRTE::_replaceMediaObjectImageSrc($this->question, 1);
@@ -297,7 +307,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	 */
 	public function saveAnswerSpecificDataToDb()
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		
 		$ilDB->manipulateF( "DELETE FROM qpl_a_cloze WHERE question_fi = %s",
 							array( "integer" ),
@@ -317,30 +328,22 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	 */
 	public function saveAdditionalQuestionDataToDb()
 	{
-		global $ilDB;
-
-		$ilDB->manipulateF( "DELETE FROM " . $this->getAdditionalTableName() . " WHERE question_fi = %s",
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		
+		
+		$DIC->database()->manipulateF( "DELETE FROM " . $this->getAdditionalTableName() . " WHERE question_fi = %s",
 							array( "integer" ),
 							array( $this->getId() )
 		);
-
-		$ilDB->manipulateF( "INSERT INTO " . $this->getAdditionalTableName()
-								. " (question_fi, textgap_rating, identical_scoring, fixed_textlen, cloze_text) VALUES (%s, %s, %s, %s, %s)",
-							array(
-								"integer",
-								"text",
-								"text",
-								"integer",
-								"text"
-							),
-							array(
-								$this->getId(),
-								$this->getTextgapRating(),
-								$this->getIdenticalScoring(),
-								$this->getFixedTextLength() ? $this->getFixedTextLength() : NULL,
-								ilRTE::_replaceMediaObjectImageSrc($this->getClozeText(), 0)
-							)
-		);
+		
+		$DIC->database()->insert($this->getAdditionalTableName(), array(
+			'question_fi' => array('integer', $this->getId()),
+			'textgap_rating' => array('text', $this->getTextgapRating()),
+			'identical_scoring' => array('text', $this->getIdenticalScoring()),
+			'fixed_textlen' => array('integer', $this->getFixedTextLength() ? $this->getFixedTextLength() : NULL),
+			'cloze_text' => array('text', ilRTE::_replaceMediaObjectImageSrc($this->getClozeText(), 0)),
+			'feedback_mode' => array('text', $this->getFeedbackMode())
+		));
 	}
 
 	/**
@@ -351,7 +354,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	 */
 	protected function saveClozeGapItemsToDb($gap, $key)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		foreach ($gap->getItems($this->getShuffler()) as $item)
 		{
 			$query   = "";
@@ -381,7 +385,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	 */
 	protected function saveClozeTextGapRecordToDb($next_id, $key, $item, $gap)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		$ilDB->manipulateF( "INSERT INTO qpl_a_cloze (answer_id, question_fi, gap_id, answertext, points, aorder, cloze_type, gap_size) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
 							array(
 								"integer",
@@ -416,7 +421,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	 */
 	protected function saveClozeSelectGapRecordToDb($next_id, $key, $item, $gap)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		$ilDB->manipulateF( "INSERT INTO qpl_a_cloze (answer_id, question_fi, gap_id, answertext, points, aorder, cloze_type, shuffle) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
 							array(
 								"integer",
@@ -451,7 +457,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	 */
 	protected function saveClozeNumericGapRecordToDb($next_id, $key, $item, $gap)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		
 		include_once "./Services/Math/classes/class.EvalMath.php";
 		$eval = new EvalMath();
@@ -593,6 +600,22 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	function setEndTag($end_tag = "[/gap]") 
 	{
 		$this->end_tag = $end_tag;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFeedbackMode()
+	{
+		return $this->feedbackMode;
+	}
+	
+	/**
+	 * @param string $feedbackMode
+	 */
+	public function setFeedbackMode($feedbackMode)
+	{
+		$this->feedbackMode = $feedbackMode;
 	}
 
 	/**
@@ -1241,7 +1264,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	 */
 	public function calculateReachedPoints($active_id, $pass = NULL, $authorized = true, $returndetails = FALSE)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		
 		if (is_null($pass))
 		{
@@ -1273,6 +1297,42 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		return $this->calculateReachedPointsForSolution($user_result);
 	}
 	
+	protected function isValidNumericSubmitValue($submittedValue)
+	{
+		if( is_numeric($submittedValue) )
+		{
+			return true;
+		}
+		
+		if( preg_match('/^[-+]{0,1}\d+\/\d+$/', $submittedValue) )
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public function validateSolutionSubmit()
+	{
+		foreach($this->getSolutionSubmit() as $gapIndex => $value)
+		{
+			$gap = $this->getGap($gapIndex);
+			
+			if($gap->getType() != CLOZE_NUMERIC)
+			{
+				continue;
+			}
+			
+			if( !$this->isValidNumericSubmitValue($value) )
+			{
+				ilUtil::sendFailure($this->lng->txt("err_no_numeric_value"), true);
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	public function getSolutionSubmit()
 	{
 		$solutionSubmit = array();
@@ -1302,7 +1362,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		
 		return $solutionSubmit;
 	}
-
+	
 	/**
 	 * Saves the learners input of the question to the database.
 	 * 
@@ -1313,8 +1373,9 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	 */
 	public function saveWorkingData($active_id, $pass = NULL, $authorized = true) 
 	{
-		global $ilDB;
-		global $ilUser;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
+		$ilUser = $DIC['ilUser'];
 		if (is_null($pass))
 		{
 			include_once "./Modules/Test/classes/class.ilObjTest.php";
@@ -1564,15 +1625,23 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 			{
 				if ($gap_index == $solutionvalue["value1"])
 				{
-					switch ($gap->getType())
-					{
-						case CLOZE_SELECT:
-							$worksheet->setCell($startrow + $i, 1, $gap->getItem($solutionvalue["value2"])->getAnswertext());
-							break;
-						case CLOZE_NUMERIC:
-						case CLOZE_TEXT:
-							$worksheet->setCell($startrow + $i, 1, $solutionvalue["value2"]);
-							break;
+					$string_escaping_org_value = $worksheet->getStringEscaping();
+					try {
+						$worksheet->setStringEscaping(false);
+
+						switch ($gap->getType())
+						{
+							case CLOZE_SELECT:
+								$worksheet->setCell($startrow + $i, 1, $gap->getItem($solutionvalue["value2"])->getAnswertext());
+								break;
+							case CLOZE_NUMERIC:
+							case CLOZE_TEXT:
+								$worksheet->setCell($startrow + $i, 1, $solutionvalue["value2"]);
+								break;
+						}
+
+					} finally {
+						$worksheet->setStringEscaping($string_escaping_org_value);
 					}
 				}
 			}
@@ -1691,7 +1760,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	public function getUserQuestionResult($active_id, $pass)
 	{
 		/** @var ilDBInterface $ilDB */
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		$result = new ilUserQuestionResult($this, $active_id, $pass);
 
 		$maxStep = $this->lookupMaxStep($active_id, $pass);
@@ -1977,5 +2047,51 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		}
 		
 		return $this->calculateReachedPointsForSolution($userSolution);
+	}
+	
+	public function fetchAnswerValueForGap($userSolution, $gapIndex)
+	{	
+		$answerValue = '';
+		
+		foreach($userSolution as $value1 => $value2)
+		{
+			if ($value1 == $gapIndex)
+			{
+				$answerValue = $value2;
+				break;
+			}
+		}
+		
+		return $answerValue;
+	}
+	
+	public function isAddableAnswerOptionValue($qIndex, $answerOptionValue)
+	{
+		$gap = $this->getGap($qIndex);
+		
+		if( $gap->getType() != CLOZE_TEXT )
+		{
+			return false;
+		}
+		
+		foreach($gap->getItems(new ilArrayElementOrderKeeper()) as $item)
+		{
+			if($item->getAnswertext() == $answerOptionValue)
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public function addAnswerOptionValue($qIndex, $answerOptionValue, $points)
+	{
+		$gap = $this->getGap($qIndex); /* @var assClozeGap $gap */
+		
+		$item = new assAnswerCloze($answerOptionValue, $points);
+		$item->setOrder($gap->getItemCount());
+		
+		$gap->addItem($item);
 	}
 }

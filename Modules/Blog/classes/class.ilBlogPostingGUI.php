@@ -32,10 +32,36 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 	 */
 	protected $settings;
 
-	protected $node_id; // [int]
+	/**
+	 * @var int
+	 */
+	protected $node_id;
 	protected $access_handler; // [object]
-	protected $enable_public_notes; // [bool]
-	protected $may_contribute; // [bool]
+
+	/**
+	 * @var bool
+	 */
+	protected $enable_public_notes;
+
+	/**
+	 * @var bool
+	 */
+	protected $may_contribute;
+
+	/**
+	 * @var bool
+	 */
+	protected $fetchall;
+
+	/**
+	 * @var int
+	 */
+	protected $blpg;
+
+	/**
+	 * @var string
+	 */
+	protected $term;
 
 	/**
 	 * Constructor
@@ -46,7 +72,6 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 	 * @param int $a_old_nr
 	 * @param bool $a_enable_notes
 	 * @param bool $a_may_contribute
-	 * @return ilBlogPostingGUI
 	 */
 	function __construct($a_node_id, $a_access_handler = null, $a_id = 0, $a_old_nr = 0, $a_enable_public_notes = true, $a_may_contribute = true, $a_style_sheet_id = 0)
 	{
@@ -90,7 +115,11 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 		$tpl->parseCurrentBlock();		
 					
 		// needed for editor			
-		$this->setStyleId($a_style_sheet_id);		
+		$this->setStyleId($a_style_sheet_id);
+
+		$this->blpg = (int) $_GET["blpg"];
+		$this->fetchall = (bool) $_GET["fetchall"];
+		$this->term = ilUtil::stripSlashes($_GET["term"]);
 	}
 
 	/**
@@ -116,29 +145,14 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 				// $ilTabs->setTabActive("pg");
 				return $this->previewFullscreen();
 
-			/*
-			case "ilratinggui":
-				include_once("./Services/Rating/classes/class.ilRatingGUI.php");
-				$rating_gui = new ilRatingGUI();
-				$rating_gui->setObject($this->getBlogPosting()->getParentId(), "blog",
-					$this->getBlogPosting()->getId(), "blp");
-				$this->ctrl->forwardCommand($rating_gui);
-				$ilCtrl->redirect($this, "preview");
-				break;
-			*/
-				
-			case "ilpageobjectgui":
-		die("Deprecated. Blog Posting gui forwarding to ilpageobject");
-				return;
-				
 			default:
 				if($posting)
 				{
-					if($_REQUEST["cmd"] == "deactivatePageToList")
+					if($ilCtrl->getCmd() == "deactivatePageToList")
 					{
 						ilUtil::sendSuccess($this->lng->txt("blog_draft_info"), true);
 					}
-					else if($_REQUEST["cmd"] == "activatePageToList")
+					else if($ilCtrl->getCmd() == "activatePageToList")
 					{
 						ilUtil::sendSuccess($this->lng->txt("blog_new_posting_info"), true);
 					}
@@ -248,8 +262,8 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 		// permanent link
 		if($a_mode != "embedded")
 		{
-			$append = ($_GET["blpg"] != "")
-				? "_".$_GET["blpg"]
+			$append = ($this->blpg > 0)
+				? "_".$this->blpg
 				: "";
 			if($this->isInWorkspace())
 			{
@@ -645,9 +659,17 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 			$this->ctrl->redirectByClass("ilobjbloggui", "");
 		}
 	}
-	
+
+	/**
+	 * Diplay the form
+	 * @param ilPropertyFormGUI|null $a_form
+	 */
 	function editKeywords(ilPropertyFormGUI $a_form = null)
 	{
+		global $DIC;
+
+		$renderer = $DIC->ui()->renderer();
+
 		$ilTabs = $this->tabs;
 		$tpl = $this->tpl;
 		
@@ -662,48 +684,37 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 		{
 			$a_form = $this->initKeywordsForm();
 		}
-		
-		$tpl->setContent($a_form->getHTML());
+
+		$tpl->setContent($renderer->render($a_form));
 	}
 	
 	protected function initKeywordsForm()
 	{
-		$ilUser = $this->user;
-		
-		include_once("Services/Form/classes/class.ilPropertyFormGUI.php");
-		$form = new ilPropertyFormGUI();		
-		$form->setFormAction($this->ctrl->getFormAction($this, "saveKeywordsForm"));
-		$form->setTitle($this->lng->txt("blog_edit_keywords"));
-		
-		$txt = new ilTextInputGUI($this->lng->txt("blog_keywords"), "keywords");
-		// $txt->setRequired(true); #10504
-		$txt->setMulti(true);
-		$txt->setDataSource($this->ctrl->getLinkTarget($this, "keywordAutocomplete", "", true));
-		$txt->setMaxLength(200);
-		$txt->setSize(50);
-		$txt->setInfo($this->lng->txt("blog_keywords_info"));
-		$form->addItem($txt);
-				
+		global $DIC;
+
+		$ui_factory = $DIC->ui()->factory();
+		//$ilUser = $this->user;
+
 		$md_section = $this->getBlogPosting()->getMDSection();
-		
+
 		$keywords = array();
 		foreach($ids = $md_section->getKeywordIds() as $id)
 		{
 			$md_key = $md_section->getKeyword($id);
 			if (trim($md_key->getKeyword()) != "")
 			{
-				$keywords[$md_key->getKeywordLanguageCode()][]
-					= $md_key->getKeyword();
+				//$keywords[$md_key->getKeywordLanguageCode()][]
+				//	= $md_key->getKeyword();
+				$keywords[] = $md_key->getKeyword();
 			}
 		}
 										
 		// language is not "used" anywhere
-		$ulang = $ilUser->getLanguage();
+		/*$ulang = $ilUser->getLanguage();
 		if($keywords[$ulang])
 		{
 			asort($keywords[$ulang]);
-			$txt->setValue($keywords[$ulang]);
-		}
+		}*/
 		
 		// other keywords in blog
 		$other = array();
@@ -721,23 +732,22 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 		{			
 			$other = array_diff($other, $keywords[$ulang]);
 		}
-		if(sizeof($other))
-		{
-			$html = "";
-			foreach($other as $item)
-			{
-				$html .= '<span class="ilTag">'.$item.'</span>';
-			}
-			$info = new ilNonEditableValueGUI($this->lng->txt("blog_keywords_other"), "", true);
-			$info->setInfo($this->lng->txt("blog_keywords_other_info"));
-			$info->setValue($html);
-			$form->addItem($info);
-		}
-		
-		$form->addCommandButton("saveKeywordsForm", $this->lng->txt("save"));
-		$form->addCommandButton("preview", $this->lng->txt("cancel"));
 
-		return $form;				
+		$input_tag = $ui_factory->input()->field()->tag($this->lng->txt("blog_keywords"), $other, $this->lng->txt("blog_keyword_enter"));
+		$input_tag = $input_tag->withValue($keywords);
+
+		$DIC->ctrl()->setParameter(
+			$this,
+			'tags',
+			'tags_processing'
+		);
+
+		$section = $ui_factory->input()->field()->section([$input_tag], $this->lng->txt("blog_edit_keywords"), "");
+
+		$form_action = $DIC->ctrl()->getFormAction($this, "saveKeywordsForm");
+		$form = $ui_factory->input()->container()->form()->standard($form_action, ["tags" => $section]);
+
+		return $form;
 	}
 	
 	protected function getParentObjId()
@@ -756,57 +766,30 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 	}
 	
 	function saveKeywordsForm()
-	{		
+	{
+		global $DIC;
+
+		$request = $DIC->http()->request();
 		$form = $this->initKeywordsForm();
-		if($form->checkInput())
-		{			
-			$keywords = $form->getInput("keywords");
+
+		if($request->getMethod() == "POST"
+			&& $request->getQueryParams()['tags'] == 'tags_processing')
+		{
+			$form = $form->withRequest($request);
+			$result = $form->getData();
+
+			//TODO identify the input instead of use 0
+			$keywords = $result["tags"][0];
+
 			if(is_array($keywords))
 			{
 				$this->getBlogPosting()->updateKeywords($keywords);
 			}
-			
+
 			$this->ctrl->redirect($this, "preview");
 		}
-		
-		$form->setValuesByPost();
-		$this->editKeywords($form);
 	}
-	
-	function keywordAutocomplete()
-	{				
-		$force_all = (bool)$_GET["fetchall"];
-		
-		include_once("./Services/MetaData/classes/class.ilMDKeyword.php");
-		$res = ilMDKeyword::_getMatchingKeywords(ilUtil::stripSlashes($_GET["term"]),
-			"blp", $this->getParentObjId());
-		
-		include_once("./Services/Search/classes/class.ilSearchSettings.php");
-		$cut = (int)ilSearchSettings::getInstance()->getAutoCompleteLength();		
-		
-		$has_more = false;		
-		$result = array();		
-		foreach ($res as $r)
-		{
-			if(!$force_all &&
-				sizeof($result["items"]) >= $cut)
-			{
-				$has_more = true;
-				break;
-			}			
-			$entry = new stdClass();
-			$entry->value = $r;
-			$entry->label = $r;
-			$result["items"][] = $entry;
-		}
-		
-		$result["hasMoreResults"] = $has_more;
 
-		include_once './Services/JSON/classes/class.ilJsonUtil.php';
-		echo ilJsonUtil::encode($result);
-		exit;
-	}
-	
 	/**
 	 * Get first text paragraph of page
 	 * 

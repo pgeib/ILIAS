@@ -107,7 +107,18 @@ class ilTestServiceGUI
 	 */
 	public function __construct(ilObjTest $a_object)
 	{
-		global $lng, $tpl, $ilCtrl, $ilias, $tree, $ilDB, $ilPluginAdmin, $ilTabs, $ilObjDataCache;
+		global $DIC;
+		$lng = $DIC['lng'];
+		$tpl = $DIC['tpl'];
+		$ilCtrl = $DIC['ilCtrl'];
+		$ilias = $DIC['ilias'];
+		$tree = $DIC['tree'];
+		$ilDB = $DIC['ilDB'];
+		$ilPluginAdmin = $DIC['ilPluginAdmin'];
+		$ilTabs = $DIC['ilTabs'];
+		$ilObjDataCache = $DIC['ilObjDataCache'];
+
+		$lng->loadLanguageModule('cert');
 
 		$this->db = $ilDB;
 		$this->lng =& $lng;
@@ -740,7 +751,8 @@ class ilTestServiceGUI
 	 */
 	function getCorrectSolutionOutput($question_id, $active_id, $pass, ilTestQuestionRelatedObjectivesList $objectivesList = null)
 	{
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC['ilUser'];
 
 		$test_id = $this->object->getTestId();
 		$question_gui = $this->object->createQuestionGUI("", $question_id);
@@ -756,7 +768,11 @@ class ilTestServiceGUI
 		$best_output = $question_gui->getSolutionOutput($active_id, $pass, FALSE, FALSE, $show_question_only, FALSE, TRUE, FALSE, FALSE);
 		if( $this->object->getShowSolutionFeedback() && $_GET['cmd'] != 'outCorrectSolution' )
 		{
-			$specificAnswerFeedback = $question_gui->getSpecificFeedbackOutput($active_id, $pass);
+			$specificAnswerFeedback = $question_gui->getSpecificFeedbackOutput(
+				$question_gui->object->fetchIndexedValuesFromValuePairs(
+					$question_gui->object->getSolutionValues($active_id, $pass)
+				)
+			);
 			if( strlen($specificAnswerFeedback) )
 			{
 				$template->setCurrentBlock("outline_specific_feedback");
@@ -808,7 +824,8 @@ class ilTestServiceGUI
 	 */
 	function getResultsOfUserOutput($testSession, $active_id, $pass, $targetGUI, $show_pass_details = TRUE, $show_answers = TRUE, $show_question_only = FALSE, $show_reached_points = FALSE)
 	{
-		global $ilObjDataCache;
+		global $DIC;
+		$ilObjDataCache = $DIC['ilObjDataCache'];
 
 		include_once("./Services/UICore/classes/class.ilTemplate.php");
 		$template = new ilTemplate("tpl.il_as_tst_results_participant.html", TRUE, TRUE, "Modules/Test");
@@ -996,6 +1013,10 @@ class ilTestServiceGUI
 		// REQUIRED, since we call this object regardless of the loop
 		$question_gui = $this->object->createQuestionGUI("", $question_id);
 
+		$this->object->setAccessFilteredParticipantList(
+			$this->object->buildStatisticsAccessFilteredParticipantList()
+		);
+		
 		$foundusers = $this->object->getParticipantsForTestAndQuestion($test_id, $question_id);
 		$output     = '';
 		foreach($foundusers as $active_id => $passes)
@@ -1035,6 +1056,11 @@ class ilTestServiceGUI
 	 */
 	protected function buildPassDetailsOverviewTableGUI($targetGUI, $targetCMD)
 	{
+		if( !isset($targetGUI->object) && method_exists($targetGUI, 'getTestObj') )
+		{
+			$targetGUI->object = $targetGUI->getTestObj();
+		}
+		
 		require_once 'Modules/Test/classes/tables/class.ilTestPassDetailsOverviewTableGUI.php';
 		$tableGUI = new ilTestPassDetailsOverviewTableGUI($this->ctrl, $targetGUI, $targetCMD);
 		$tableGUI->setIsPdfGenerationRequest($this->isPdfDeliveryRequest());
@@ -1092,7 +1118,9 @@ class ilTestServiceGUI
 
 	protected function getFilteredTestResult($active_id, $pass, $considerHiddenQuestions, $considerOptionalQuestions)
 	{
-		global $ilDB, $ilPluginAdmin;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
+		$ilPluginAdmin = $DIC['ilPluginAdmin'];
 
 		$table_gui = $this->buildPassDetailsOverviewTableGUI($this, 'outUserPassDetails');
 		$table_gui->initFilter();
@@ -1174,8 +1202,6 @@ class ilTestServiceGUI
 		require_once 'Modules/Test/classes/toolbars/class.ilTestResultsToolbarGUI.php';
 		$toolbar = new ilTestResultsToolbarGUI($this->ctrl, $this->tpl, $this->lng);
 
-		$toolbar->setSkillResultButtonEnabled($this->object->isSkillServiceToBeConsidered());
-
 		return $toolbar;
 	}
 
@@ -1226,7 +1252,8 @@ class ilTestServiceGUI
 			$objectivesList = null;
 		}
 
-		global $ilTabs;
+		global $DIC;
+		$ilTabs = $DIC['ilTabs'];
 
 		if($this instanceof ilTestEvalObjectiveOrientedGUI)
 		{
@@ -1240,6 +1267,7 @@ class ilTestServiceGUI
 				$this->lng->txt("tst_back_to_pass_details"), $this->ctrl->getLinkTarget($this, 'outUserPassDetails')
 			);
 		}
+		$ilTabs->clearSubTabs();
 
 		include_once("./Services/Style/Content/classes/class.ilObjStyleSheet.php");
 		$this->tpl->setCurrentBlock("ContentStyle");

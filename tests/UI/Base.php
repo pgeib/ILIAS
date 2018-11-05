@@ -29,7 +29,7 @@ class NoUIFactory implements Factory {
 	public function counter() {}
 	public function glyph() {}
 	public function button() {}
-	public function card($title, \ILIAS\UI\Component\Image\Image $image = null) {}
+	public function card() {}
 	public function deck(array $cards) {}
 	public function listing() {}
 	public function image() {}
@@ -47,6 +47,8 @@ class NoUIFactory implements Factory {
 	public function breadcrumbs(array $crumbs) {}
 	public function chart() {}
 	public function input() {}
+	public function table() {}
+	public function messageBox() {}
 	public function layout() {}
 	public function mainControls() {}
 }
@@ -68,6 +70,8 @@ class ilLanguageMock extends \ilLanguage {
 	}
 	public function toJS($a_key, ilTemplate $a_tpl = NULL) {
 	}
+	public $lang_module = 'common';
+	public function loadLanguageModule($lang_module) {}
 }
 
 class LoggingJavaScriptBinding implements JavaScriptBinding {

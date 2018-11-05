@@ -21,6 +21,15 @@ class ilMediaObjectDataSet extends ilDataSet
 	protected $use_previous_import_ids = false;
 
 	/**
+	 * Constructor
+	 */
+	function __construct()
+	{
+		parent::__construct();
+		$this->mob_log = ilLoggerFactory::getLogger('mob');
+	}
+
+	/**
 	 * Set use previous import ids
 	 *
 	 * @param bool $a_val use previous import ids
@@ -260,13 +269,33 @@ class ilMediaObjectDataSet extends ilDataSet
 				case "4.1.0":
 				case "4.3.0":
 				case "5.1.0":
-					$this->getDirectDataFromQuery("SELECT item_id mi_id, nr".
+					foreach ($this->getDirectDataFromQuery("SELECT item_id mi_id, nr".
 						" ,shape, coords, link_type, title, href, target, type, target_frame, ".
 						" highlight_mode, highlight_class".
 						" FROM map_area ".
 						" WHERE ".
 						$ilDB->in("item_id", $a_ids, false, "integer").
-						" ORDER BY nr");
+						" ORDER BY nr", true, false) as $r)
+					{
+						$r["Target"] = ilUtil::insertInstIntoID($r["Target"]);
+
+						// see ilPageObject::insertInstIntoIDs
+						if ($r["Type"] == "RepositoryItem")
+						{
+							$id_arr = explode("_", $r["Target"]);
+							$ref_id = $id_arr[3];
+							$obj_id = ilObject::_lookupObjId($id_arr[3]);
+
+							$otype = ilObject::_lookupType($obj_id);
+							if ($obj_id > 0)
+							{
+								$id = $otype."_".$obj_id."_".$ref_id;
+								$r["Target"] = "il_".$id_arr[1]."_".$id;
+							}
+						}
+
+						$this->data[] = $r;
+					}
 					break;
 			}
 		}			
@@ -369,6 +398,7 @@ class ilMediaObjectDataSet extends ilDataSet
 				{
 					$source_dir = $this->getImportDirectory()."/".$dir;
 					$target_dir = $dir = ilObjMediaObject::_getDirectory($newObj->getId());
+					$this->mob_log->debug("s:-$source_dir-,t:-$target_dir-");
 					ilUtil::rCopy($source_dir, $target_dir);
 					ilObjMediaObject::renameExecutables($target_dir);
 					include_once("./Services/MediaObjects/classes/class.ilMediaSvgSanitizer.php");

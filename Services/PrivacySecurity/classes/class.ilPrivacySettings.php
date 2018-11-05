@@ -39,14 +39,17 @@ class ilPrivacySettings
 	
 		private $export_course;
 		private $export_group;
+		private $export_learning_sequence;
 		private $export_confirm_course;
 		private $export_confirm_group;
+		private $export_confirm_learning_sequence;
 		private $fora_statistics;
 		private $anonymous_fora;
 		private $rbac_log;
 		private $rbac_log_age;
 		private $show_grp_access_times;
 		private $show_crs_access_times;
+		private $show_lso_access_times;
 		private $ref_id;
 		private $sahs_protocol_data;
 		private $export_scorm;
@@ -60,7 +63,10 @@ class ilPrivacySettings
 	 */
 	private function __construct()
 	{
-		global $ilSetting,$ilDB;
+		global $DIC;
+
+		$ilSetting = $DIC['ilSetting'];
+		$ilDB = $DIC['ilDB'];
 
 		$this->db = $ilDB;
 		$this->settings = $ilSetting;
@@ -97,7 +103,12 @@ class ilPrivacySettings
 	{
 		return $this->export_group;
 	}
-	
+
+	public function enabledLearningSequenceExport()
+	{
+		return $this->export_learning_sequence;
+	}
+
 	/**
 	 * Check if a user has the permission to access approved user profile fields, course related user data and custom user data
 	 * @todo rename
@@ -106,7 +117,11 @@ class ilPrivacySettings
 	 */
 	public function checkExportAccess($a_ref_id,$a_user_id = 0)
 	{
-		global $ilUser,$ilAccess,$rbacsystem;
+		global $DIC;
+
+		$ilUser = $DIC['ilUser'];
+		$ilAccess = $DIC['ilAccess'];
+		$rbacsystem = $DIC['rbacsystem'];
 		
 		$user_id = $a_user_id ? $a_user_id : $ilUser->getId();
 		
@@ -114,10 +129,14 @@ class ilPrivacySettings
 		{
 			return $this->enabledCourseExport() and $ilAccess->checkAccessOfUser($user_id,'manage_members','',$a_ref_id) and $rbacsystem->checkAccessOfUser($user_id,'export_member_data',$this->getPrivacySettingsRefId());
 		}
-		else
+		else if(ilObject::_lookupType($a_ref_id, true) == 'grp')
 		{
 			return $this->enabledGroupExport() and $ilAccess->checkAccessOfUser($user_id,'manage_members','',$a_ref_id) and $rbacsystem->checkAccessOfUser($user_id,'export_member_data',$this->getPrivacySettingsRefId());
-		}		
+		}
+		else if(ilObject::_lookupType($a_ref_id, true) == 'lso')
+		{
+			return $this->enabledLearningSequenceExport() and $ilAccess->checkAccessOfUser($user_id,'manage_members','',$a_ref_id) and $rbacsystem->checkAccessOfUser($user_id,'export_member_data',$this->getPrivacySettingsRefId());
+		}
 	}
 
 	public function enableCourseExport($a_status)
@@ -128,6 +147,11 @@ class ilPrivacySettings
 	public function enableGroupExport($a_status)
 	{
 		$this->export_group = (bool) $a_status;
+	}
+
+	public function enableLearningSequenceExport($a_status)
+	{
+		$this->export_learning_sequence = (bool) $a_status;
 	}
 
 	/**
@@ -211,6 +235,9 @@ class ilPrivacySettings
 				
 			case 'grp':
 				return $this->groupConfirmationRequired();
+
+			case 'lso':
+				return $this->learningSequenceConfirmationRequired();
 		}
 		return false;
 	}
@@ -225,6 +252,11 @@ class ilPrivacySettings
 		return $this->export_confirm_group;
 	}
 
+	public function learningSequenceConfirmationRequired()
+	{
+		return $this->export_confirm_learning_sequence;
+	}
+
 	public function setCourseConfirmationRequired($a_status)
 	{
 		$this->export_confirm_course = (bool) $a_status;
@@ -233,6 +265,11 @@ class ilPrivacySettings
 	public function setGroupConfirmationRequired($a_status)
 	{
 		$this->export_confirm_group = (bool) $a_status;
+	}
+
+	public function setLearningSequenceConfirmationRequired($a_status)
+	{
+		$this->export_confirm_learning_sequence = (bool) $a_status;
 	}
 
 	/**
@@ -271,6 +308,29 @@ class ilPrivacySettings
 	}
 	
 	/**
+	 * check if access time are enabled in lso
+	 *
+	 * @access public
+	 * @return
+	 */
+	public function enabledLearningSequenceAccessTimes()
+	{
+		return (bool) $this->show_lso_access_times;
+	}
+
+	/**
+	 * show lso access times
+	 *
+	 * @access public
+	 * @param bool status
+	 * @return
+	 */
+	public function showLearningSequenceAccessTimes($a_status)
+	{
+		$this->show_lso_access_times = $a_status;
+	}
+	
+	/**
 	 * check if access time are enabled in courses
 	 *
 	 * @access public
@@ -306,16 +366,18 @@ class ilPrivacySettings
 	 */
 	public function save()
 	{
-	 	$this->settings->set('ps_export_confirm',(bool) $this->courseConfirmationRequired());
-	 	$this->settings->set('ps_export_confirm_group',(bool) $this->groupConfirmationRequired());
-	 	$this->settings->set('ps_export_course',(bool) $this->enabledCourseExport());
-	 	$this->settings->set('ps_export_group',(bool) $this->enabledGroupExport());
-	 	$this->settings->set('enable_fora_statistics',(bool) $this->enabledForaStatistics());
+		$this->settings->set('ps_export_confirm',(bool) $this->courseConfirmationRequired());
+		$this->settings->set('ps_export_confirm_group',(bool) $this->groupConfirmationRequired());
+		$this->settings->set('ps_export_confirm_learning_sequence',(bool) $this->learningSequenceConfirmationRequired());
+		$this->settings->set('ps_export_course',(bool) $this->enabledCourseExport());
+		$this->settings->set('ps_export_group',(bool) $this->enabledGroupExport());
+		$this->settings->set('ps_export_learning_sequence',(bool) $this->enabledLearningSequenceExport());
+		$this->settings->set('enable_fora_statistics',(bool) $this->enabledForaStatistics());
 		$this->settings->set('enable_anonymous_fora',(bool) $this->enabledAnonymousFora());
-	 	$this->settings->set('ps_access_times',(bool) $this->enabledGroupAccessTimes());
-	 	$this->settings->set('ps_crs_access_times',(bool) $this->enabledCourseAccessTimes());
-	 	$this->settings->set('rbac_log',(bool) $this->enabledRbacLog());
-	 	$this->settings->set('rbac_log_age',(int) $this->getRbacLogAge());
+		$this->settings->set('ps_access_times',(bool) $this->enabledGroupAccessTimes());
+		$this->settings->set('ps_crs_access_times',(bool) $this->enabledCourseAccessTimes());
+		$this->settings->set('rbac_log',(bool) $this->enabledRbacLog());
+		$this->settings->set('rbac_log_age',(int) $this->getRbacLogAge());
 		$this->settings->set('enable_sahs_pd',(int) $this->enabledSahsProtocolData());
 		$this->settings->set('ps_export_scorm',(bool) $this->enabledExportSCORM());
 	}
@@ -328,7 +390,9 @@ class ilPrivacySettings
 	 */
 	private function read()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 	    $query = "SELECT object_reference.ref_id FROM object_reference,tree,object_data ".
 				"WHERE tree.parent = ".$ilDB->quote(SYSTEM_FOLDER_ID,'integer')." ".

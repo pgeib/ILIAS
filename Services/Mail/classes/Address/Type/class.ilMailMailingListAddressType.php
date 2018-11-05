@@ -1,84 +1,71 @@
 <?php
 /* Copyright (c) 1998-2016 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-require_once 'Services/Mail/classes/Address/Type/class.ilBaseMailAddressType.php';
-
 /**
  * Class ilMailMailingListAddressType
  * @author Michael Jansen <mjansen@databay.de>
  */
-class ilMailMailingListAddressType extends ilBaseMailAddressType
+class ilMailMailingListAddressType extends \ilBaseMailAddressType
 {
-	/**
-	 * @var ilMailingLists|null
-	 */
-	protected static $maling_lists;
+	/** @var ilMailingLists */
+	private $lists;
 
 	/**
-	 *
+	 * ilMailMailingListAddressType constructor.
+	 * @param \ilMailAddressTypeHelper $typeHelper
+	 * @param \ilMailAddress           $address
+	 * @param \ilLogger                $logger
+	 * @param \ilMailingLists          $lists
 	 */
-	protected function init()
-	{
-		parent::init();
-		self::initMailingLists();
+	public function __construct(
+		\ilMailAddressTypeHelper $typeHelper,
+		\ilMailAddress $address,
+		\ilLogger $logger,
+		\ilMailingLists $lists
+	) {
+		parent::__construct($typeHelper, $address, $logger);
+
+		$this->lists = $lists;
 	}
 
 	/**
-	 * 
+	 * @inheritdoc
 	 */
-	protected static function initMailingLists()
+	protected function isValid(int $senderId): bool
 	{
-		global $DIC;
+		$valid = $this->lists->mailingListExists($this->address->getMailbox());
 
-		if(self::$maling_lists === null)
-		{
-			require_once 'Services/Contact/classes/class.ilMailingLists.php';
-			self::$maling_lists = new ilMailingLists($DIC->user());
-		}
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function isValid($a_sender_id)
-	{
-		$valid = self::$maling_lists->mailingListExists($this->address->getMailbox());
-
-		if(!$valid)
-		{
-			$this->errors = array(
-				array('mail_no_valid_mailing_list', $this->address->getMailbox())
-			);
+		if (!$valid) {
+			$this->errors = [
+				['mail_no_valid_mailing_list', $this->address->getMailbox()]
+			];
 		}
 
 		return $valid;
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @inheritdoc
 	 */
-	public function resolve()
+	public function resolve(): array
 	{
-		$usr_ids = array();
+		$usrIds = [];
 
-		if(self::$maling_lists->mailingListExists($this->address->getMailbox()))
-		{
-			foreach(self::$maling_lists->getCurrentMailingList()->getAssignedEntries() as $entry)
-			{
-				$usr_ids[] = $entry['usr_id'];
+		if ($this->lists->mailingListExists($this->address->getMailbox())) {
+			foreach ($this->lists->getCurrentMailingList()->getAssignedEntries() as $entry) {
+				$usrIds[] = $entry['usr_id'];
 			}
 
-			ilLoggerFactory::getLogger('mail')->debug(sprintf(
-				"Found the following user ids for address (mailing list title) '%s': %s", $this->address->getMailbox(), implode(', ', array_unique($usr_ids))
+			$this->logger->debug(sprintf(
+				"Found the following user ids for address (mailing list title) '%s': %s",
+				$this->address->getMailbox(), implode(', ', array_unique($usrIds))
 			));
-		}
-		else
-		{
-			ilLoggerFactory::getLogger('mail')->debug(sprintf(
+		} else {
+			$this->logger->debug(sprintf(
 				"Did not find any user ids for address (mailing list title) '%s'", $this->address->getMailbox()
 			));
 		}
 
-		return array_unique($usr_ids);
+		return array_unique($usrIds);
 	}
 }

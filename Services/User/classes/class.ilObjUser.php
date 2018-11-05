@@ -168,13 +168,26 @@ class ilObjUser extends ilObject
 	protected $interests_help_looking; // [array]
 
 	/**
+	 * @var string
+	 */
+	protected $last_profile_prompt;	// timestamp
+
+	/**
+	 * @var string
+	 */
+	protected $first_login;	// timestamp
+
+	/**
 	* Constructor
 	* @access	public
 	* @param	integer		user_id
 	*/
 	public function __construct($a_user_id = 0, $a_call_by_reference = false)
 	{
-		global $ilias,$ilDB;
+		global $DIC;
+
+		$ilias = $DIC['ilias'];
+		$ilDB = $DIC['ilDB'];
 
 		// init variables
 		$this->ilias =& $ilias;
@@ -187,6 +200,7 @@ class ilObjUser extends ilObject
 
 		// for gender selection. don't change this
 		/*$this->gender = array(
+							  'n'    => "salutation_n",
 							  'm'    => "salutation_m",
 							  'f'    => "salutation_f"
 							  );*/
@@ -220,7 +234,10 @@ class ilObjUser extends ilObject
 	*/
 	function read()
 	{
-		global $ilErr, $ilDB;
+		global $DIC;
+
+		$ilErr = $DIC['ilErr'];
+		$ilDB = $DIC['ilDB'];
 
 		// Alex: I have removed the JOIN to rbac_ua, since there seems to be no
 		// use (3.11.0 alpha)
@@ -330,7 +347,11 @@ class ilObjUser extends ilObject
 	*/
 	function assignData($a_data)
 	{
-		global $ilErr, $ilDB, $lng;
+		global $DIC;
+
+		$ilErr = $DIC['ilErr'];
+		$ilDB = $DIC['ilDB'];
+		$lng = $DIC['lng'];
 		
 		// basic personal data
 		$this->setLogin($a_data["login"]);
@@ -386,6 +407,8 @@ class ilObjUser extends ilObject
 
 		// system data
 		$this->setLastLogin($a_data["last_login"]);
+		$this->setFirstLogin($a_data["first_login"]);
+		$this->setLastProfilePrompt($a_data["last_profile_prompt"]);
 		$this->setLastUpdate($a_data["last_update"]);
 		$this->create_date	= $a_data["create_date"];
         $this->setComment($a_data["referral_comment"]);
@@ -420,13 +443,18 @@ class ilObjUser extends ilObject
 	*/
 	public function saveAsNew($a_from_formular = true)
 	{ 
-		global $ilAppEventHandler;
+		global $DIC;
+
+		$ilAppEventHandler = $DIC['ilAppEventHandler'];
 		
 		/**
 		 * @var $ilErr ilErrorHandling
 		 * @var $ilDB ilDB
 		 */
-		global $ilErr, $ilDB;
+		global $DIC;
+
+		$ilErr = $DIC['ilErr'];
+		$ilDB = $DIC['ilDB'];
 
 		switch ($this->passwd_type)
 		{
@@ -488,6 +516,8 @@ class ilObjUser extends ilObject
 			"fax" => array("text", $this->fax),
 			"birthday" => array('date', $this->getBirthday()),
 			"last_login" => array("timestamp", null),
+			"first_login" => array("timestamp", null),
+			"last_profile_prompt" => array("timestamp", null),
 			"last_update" => array("timestamp", ilUtil::now()),
 			"create_date" => array("timestamp", ilUtil::now()),
 			"referral_comment" => array("text", $this->referral_comment),
@@ -548,7 +578,11 @@ class ilObjUser extends ilObject
 		 * @var $ilDB ilDB
 		 * @var $ilAppEventHandler ilAppEventHandler
 		 */
-		global $ilErr, $ilDB, $ilAppEventHandler;
+		global $DIC;
+
+		$ilErr = $DIC['ilErr'];
+		$ilDB = $DIC['ilDB'];
+		$ilAppEventHandler = $DIC['ilAppEventHandler'];
 
         $this->syncActive();
 
@@ -658,7 +692,9 @@ class ilObjUser extends ilObject
 	*/
 	function writeAccepted()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF("UPDATE usr_data SET agree_date = ".$ilDB->now().
 			 " WHERE usr_id = %s", array("integer"), array($this->getId()));
@@ -669,7 +705,9 @@ class ilObjUser extends ilObject
 	*/
 	private static function _lookup($a_user_id, $a_field)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$res = $ilDB->queryF("SELECT ".$a_field." FROM usr_data WHERE usr_id = %s",
 			array("integer"), array($a_user_id));
@@ -686,7 +724,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _lookupFullname($a_user_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$set = $ilDB->queryF("SELECT title, firstname, lastname FROM usr_data WHERE usr_id = %s",
 			array("integer"), array($a_user_id));
@@ -754,7 +794,9 @@ class ilObjUser extends ilObject
 	*/
 	public static function _lookupName($a_user_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$res = $ilDB->queryF("SELECT firstname, lastname, title, login FROM usr_data WHERE usr_id = %s",
 			array("integer"), array($a_user_id));
@@ -771,7 +813,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _lookupFields($a_user_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$res = $ilDB->queryF("SELECT * FROM usr_data WHERE usr_id = %s",
 			array("integer"), array($a_user_id));
@@ -800,7 +844,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function _lookupId($a_user_str)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		if (!is_array($a_user_str))
 		{
@@ -831,6 +877,14 @@ class ilObjUser extends ilObject
 		return ilObjUser::_lookup($a_user_id, "last_login");
 	}
 
+	/**
+	* lookup first login
+	*/
+	static function _lookupFirstLogin($a_user_id)
+	{
+		return ilObjUser::_lookup($a_user_id, "first_login");
+	}
+
 
 	/**
 	* updates the login data of a "user"
@@ -839,12 +893,21 @@ class ilObjUser extends ilObject
 	*/
 	function refreshLogin()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF("UPDATE usr_data SET ".
 			 "last_login = ".$ilDB->now().
 			 " WHERE usr_id = %s",
 			 array("integer"), array($this->id));
+
+		if ($this->getFirstLogin() == "") {
+			$ilDB->manipulateF("UPDATE usr_data SET ".
+				"first_login = ".$ilDB->now().
+				" WHERE usr_id = %s",
+				array("integer"), array($this->id));
+		}
 	}
 
 
@@ -860,7 +923,9 @@ class ilObjUser extends ilObject
 		/**
 		 * @var $ilDB ilDB
 		 */
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		if(func_num_args() != 2)
 		{
@@ -903,7 +968,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function _doesLoginnameExistInHistory($a_login)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 			
 		$res = $ilDB->queryF('
 			SELECT * FROM loginname_history
@@ -927,7 +994,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function _getLastHistoryDataByUserId($a_usr_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 			
 		$ilDB->setLimit(1, 0);
 		$res = $ilDB->queryF('
@@ -951,7 +1020,10 @@ class ilObjUser extends ilObject
 	*/
 	function updateLogin($a_login)
 	{
-		global $ilDB, $ilSetting;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		$ilSetting = $DIC['ilSetting'];
 
 		if(func_num_args() != 1)
 		{
@@ -1055,7 +1127,9 @@ class ilObjUser extends ilObject
 		/**
  		 * @var $ilDB ilDB
 		 */
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF(
 			'DELETE FROM usr_pref WHERE usr_id = %s AND keyword = %s',
@@ -1071,7 +1145,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _deleteAllPref($a_user_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF("DELETE FROM usr_pref WHERE usr_id = %s",
 			array("integer"), array($a_user_id));
@@ -1085,7 +1161,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function _writePref($a_usr_id, $a_keyword, $a_value)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		$ilDB->replace("usr_pref",
 			array(
 				"usr_id" => array("integer", $a_usr_id),
@@ -1114,7 +1192,9 @@ class ilObjUser extends ilObject
 	*/
 	function writePrefs()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		ilObjUser::_deleteAllPref($this->id);
 		foreach ($this->prefs as $keyword => $value)
@@ -1216,7 +1296,9 @@ class ilObjUser extends ilObject
 
 	static function _lookupPref($a_usr_id,$a_keyword)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$query = "SELECT * FROM usr_pref WHERE usr_id = ".$ilDB->quote($a_usr_id, "integer")." ".
 			"AND keyword = ".$ilDB->quote($a_keyword, "text");
@@ -1235,7 +1317,9 @@ class ilObjUser extends ilObject
 	*/
 	function readPrefs()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		if (is_array($this->prefs))
 		{
@@ -1252,7 +1336,10 @@ class ilObjUser extends ilObject
 	*/
 	function delete()
 	{
-		global $rbacadmin, $ilDB;
+		global $DIC;
+
+		$rbacadmin = $DIC['rbacadmin'];
+		$ilDB = $DIC['ilDB'];
 
 		// deassign from ldap groups
 		include_once('Services/LDAP/classes/class.ilLDAPRoleGroupMapping.php');
@@ -1365,6 +1452,10 @@ class ilObjUser extends ilObject
 		// badges
 		include_once "Services/Badge/classes/class.ilBadgeAssignment.php";
 		ilBadgeAssignment::deleteByUserId($this->getId());
+
+		// remove org unit assignments
+		$ilOrgUnitUserAssignmentQueries = ilOrgUnitUserAssignmentQueries::getInstance();
+		$ilOrgUnitUserAssignmentQueries->deleteAllAssignmentsOfUser($this->getId());
 		
 		// Delete user defined field entries
 		$this->deleteUserDefinedFieldEntries();
@@ -1376,7 +1467,9 @@ class ilObjUser extends ilObject
 		$this->resetOwner();
 
 		// Trigger deleteUser Event
-		global $ilAppEventHandler;
+		global $DIC;
+
+		$ilAppEventHandler = $DIC['ilAppEventHandler'];
 		$ilAppEventHandler->raise(
 			'Services/User', 'deleteUser', array('usr_id' => $this->getId())
 		);
@@ -1467,28 +1560,6 @@ class ilObjUser extends ilObject
 		}
 
 		return ilUtil::stripSlashes(substr($this->lastname,0,$a_max_strlen));
-	}
-
-	/**
-	* check wether user has accepted user agreement
-	*/
-	function hasAcceptedUserAgreement()
-	{
-		/**
-		 * @var ilRbacReview
-		 */
-		global $rbacreview;
-
-		if(
-			null != $this->agree_date ||
-			'root' == $this->login ||
-			in_array($this->getId(), array(ANONYMOUS_USER_ID, SYSTEM_USER_ID)) ||
-			$rbacreview->isAssigned($this->getId(), SYSTEM_ROLE_ID)
-		)
-		{
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -1881,7 +1952,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function lookupMatriculation($a_usr_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = "SELECT matriculation FROM usr_data ".
 			"WHERE usr_id = ".$ilDB->quote($a_usr_id);
@@ -2033,7 +2106,9 @@ class ilObjUser extends ilObject
 
 	static function _writeExternalAccount($a_usr_id, $a_ext_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF("UPDATE usr_data ".
 			" SET ext_account = %s WHERE usr_id = %s",
@@ -2043,7 +2118,9 @@ class ilObjUser extends ilObject
 
 	static function _writeAuthMode($a_usr_id, $a_auth_mode)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF("UPDATE usr_data ".
 			" SET auth_mode = %s WHERE usr_id = %s",
@@ -2088,6 +2165,42 @@ class ilObjUser extends ilObject
 	function getLastLogin()
 	{
 		 return $this->last_login;
+	}
+
+	/**
+	 * set user's first login
+	 * @param	string	login date
+	 */
+	public function setFirstLogin($a_str)
+	{
+		$this->first_login = $a_str;
+	}
+
+	/**
+	 * returns first login date
+	 * @return	string	date
+	 */
+	public function getFirstLogin()
+	{
+		 return $this->first_login;
+	}
+
+	/**
+	 * set user's last profile prompt
+	 * @param	string	last profile prompt timestamp
+	 */
+	public function setLastProfilePrompt($a_str)
+	{
+		$this->last_profile_prompt = $a_str;
+	}
+
+	/**
+	 * returns user's last profile prompt
+	 * @return	string	ast profile prompt timestamp
+	 */
+	public function getLastProfilePrompt()
+	{
+		 return $this->last_profile_prompt;
 	}
 
 	/**
@@ -2203,7 +2316,9 @@ class ilObjUser extends ilObject
 	 */
 	static public function _lookupActive($a_usr_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$query = 'SELECT usr_id FROM usr_data '.
 			'WHERE active = '.$ilDB->quote(1,'integer').' '.
@@ -2223,8 +2338,6 @@ class ilObjUser extends ilObject
     */
     function syncActive()
     {
-        global $ilAuth;
-
         $storedActive   = 0;
         if ($this->getStoredActive($this->id))
         {
@@ -2355,8 +2468,13 @@ class ilObjUser extends ilObject
 
 		if ($this->id == SYSTEM_USER_ID) {
 			require_once './Services/User/classes/class.ilUserPasswordManager.php';
-			if (\ilUserPasswordManager::getInstance()->verifyPassword($this, base64_decode('aG9tZXI='))) {
+			if (
+				\ilUserPasswordManager::getInstance()->verifyPassword($this, base64_decode('aG9tZXI=')) &&
+				!ilAuthUtils::_needsExternalAccountByAuthMode($this->getAuthMode(true))
+			) {
 				return true;
+			} else {
+				return false;
 			}
 		}
 
@@ -2411,7 +2529,9 @@ class ilObjUser extends ilObject
 
     public function setLastPasswordChangeToNow()
     {
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
     	$this->setLastPasswordChangeTS( time() );
 
@@ -2426,7 +2546,9 @@ class ilObjUser extends ilObject
 
     public function resetLastPasswordChange()
     {
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = "UPDATE usr_data SET last_password_change = 0 " .
 				"WHERE usr_id = %s";
@@ -2504,7 +2626,9 @@ class ilObjUser extends ilObject
 	 */
 	static function hasActiveSession($a_user_id, $a_session_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 	
 		$set = $ilDB->queryf('
 			SELECT COUNT(*) session_count
@@ -2521,7 +2645,10 @@ class ilObjUser extends ilObject
      */
 	function checkUserId()
 	{
-		global $ilAuth, $ilSetting;
+		global $DIC;
+
+		$ilAuth = $DIC['ilAuth'];
+		$ilSetting = $DIC['ilSetting'];
 
 		$login = ilObjUser::getLoginFromAuth();
 		$id = ilObjUser::_lookupId($login);
@@ -2537,8 +2664,6 @@ class ilObjUser extends ilObject
 	 */
 	private static function getLoginFromAuth()
 	{
-		global $ilAuth;
-
 		$uid = $GLOBALS['DIC']['ilAuthSession']->getUserId();
 		$login = ilObjUser::_lookupLogin($uid);
 
@@ -2581,7 +2706,10 @@ class ilObjUser extends ilObject
      */
     function isCurrentUserActive()
     {
-		global $ilDB,$ilAuth;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		$ilAuth = $DIC['ilAuth'];
 
 		$login = ilObjUser::getLoginFromAuth();
 		$set = $ilDB->queryF("SELECT active FROM usr_data WHERE login= %s",
@@ -2622,7 +2750,10 @@ class ilObjUser extends ilObject
 	 */
 	static function _getUserIdsByEmail($a_email)
 	{
-		global $ilias, $ilDB;
+		global $DIC;
+
+		$ilias = $DIC['ilias'];
+		$ilDB = $DIC['ilDB'];
 
 		$res = $ilDB->queryF("SELECT login FROM usr_data ".
 			"WHERE email = %s and active = 1",
@@ -2649,7 +2780,9 @@ class ilObjUser extends ilObject
 	 */
 	function getUserIdByEmail($a_email)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$res = $ilDB->queryF("SELECT usr_id FROM usr_data ".
 			"WHERE email = %s", array("text"), array($a_email));
@@ -2684,7 +2817,11 @@ class ilObjUser extends ilObject
 	*/
 	static function searchUsers($a_search_str, $active = 1, $a_return_ids_only = false, $filter_settings = FALSE)
 	{
-		global $ilias, $ilDB, $ilLog;
+		global $DIC;
+
+		$ilias = $DIC['ilias'];
+		$ilDB = $DIC['ilDB'];
+		$ilLog = $DIC['ilLog'];
 
 		
 		$query = "SELECT usr_data.usr_id, usr_data.login, usr_data.firstname, usr_data.lastname, usr_data.email, usr_data.active FROM usr_data ";
@@ -2711,7 +2848,9 @@ class ilObjUser extends ilObject
 					}
 					break;
 				case 6:
-					global $rbacreview;
+					global $DIC;
+
+					$rbacreview = $DIC['rbacreview'];
 					$ref_id = $_SESSION["user_filter_data"];
 					if ($ref_id)
 					{
@@ -2724,7 +2863,9 @@ class ilObjUser extends ilObject
 					}
 					break;
 				case 7:
-					global $rbacreview;
+					global $DIC;
+
+					$rbacreview = $DIC['rbacreview'];
 					$rol_id = $_SESSION["user_filter_data"];
 					if ($rol_id)
 					{
@@ -2813,7 +2954,9 @@ class ilObjUser extends ilObject
 		/**
 		 * @var $ilDB ilDBInterface
 		 */
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$logins = array();
 
@@ -2838,7 +2981,9 @@ class ilObjUser extends ilObject
      */
 	public static function _readUsersProfileData($a_user_ids)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		$res = $ilDB->query("SELECT * FROM usr_data WHERE ".
 			$ilDB->in("usr_id", $a_user_ids, false, "integer"));
 		while ($row = $ilDB->fetchAssoc($res))
@@ -2858,7 +3003,9 @@ class ilObjUser extends ilObject
      */
 	static function _getAllUserData($a_fields = NULL, $active =-1)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$result_arr = array();
 		$types = array();
@@ -2933,7 +3080,9 @@ class ilObjUser extends ilObject
 					}
 					break;
 				case 6:
-					global $rbacreview;
+					global $DIC;
+
+					$rbacreview = $DIC['rbacreview'];
 					$ref_id = $_SESSION["user_filter_data"];
 					if ($ref_id)
 					{
@@ -2970,7 +3119,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _getNumberOfUsersForStyle($a_skin, $a_style)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$q = "SELECT count(*) as cnt FROM usr_pref up1, usr_pref up2 ".
 			" WHERE up1.keyword= ".$ilDB->quote("style", "text").
@@ -2991,7 +3142,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _getAllUserAssignedStyles()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$q = "SELECT DISTINCT up1.value style, up2.value skin FROM usr_pref up1, usr_pref up2 ".
 			" WHERE up1.keyword = ".$ilDB->quote("style", "text").
@@ -3014,7 +3167,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _moveUsersToStyle($a_from_skin, $a_from_style, $a_to_skin, $a_to_style)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$q = "SELECT up1.usr_id usr_id FROM usr_pref up1, usr_pref up2 ".
 			" WHERE up1.keyword= ".$ilDB->quote("style", "text").
@@ -3044,7 +3199,9 @@ class ilObjUser extends ilObject
 	*/
 	public static function _addDesktopItem($a_usr_id, $a_item_id, $a_type, $a_par = "")
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$item_set = $ilDB->queryF("SELECT * FROM desktop_item WHERE ".
 			"item_id = %s AND type = %s AND user_id = %s",
@@ -3085,7 +3242,9 @@ class ilObjUser extends ilObject
 	*/
 	function setDesktopItemParameters($a_item_id, $a_type, $a_par)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF("UPDATE desktop_item SET parameters = %s ".
 			" WHERE item_id = %s AND type = %s AND user_id = %s",
@@ -3105,7 +3264,9 @@ class ilObjUser extends ilObject
 	*/
 	public static function _dropDesktopItem($a_usr_id, $a_item_id, $a_type)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF("DELETE FROM desktop_item WHERE ".
 			" item_id = %s AND type = %s  AND user_id = %s",
@@ -3136,7 +3297,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _removeItemFromDesktops($a_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$r = $ilDB->queryF("SELECT user_id FROM desktop_item WHERE item_id = %s",
 			array("integer"), array($a_id));
@@ -3168,7 +3331,9 @@ class ilObjUser extends ilObject
 	*/
 	public static function _isDesktopItem($a_usr_id, $a_item_id, $a_type)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		if (self::$is_desktop_item_loaded[$a_usr_id.":".$a_item_id])
 		{
@@ -3197,7 +3362,9 @@ class ilObjUser extends ilObject
 	 */
 	static function preloadIsDesktopItem($a_usr_id, $a_item_ids)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		if (!is_array($a_item_ids))
 		{
@@ -3252,7 +3419,12 @@ class ilObjUser extends ilObject
 	*/
 	static function _lookupDesktopItems($user_id, $a_types = "")
 	{
-		global $ilUser, $rbacsystem, $tree, $ilDB;
+		global $DIC;
+
+		$ilUser = $DIC['ilUser'];
+		$rbacsystem = $DIC['rbacsystem'];
+		$tree = $DIC['tree'];
+		$ilDB = $DIC['ilDB'];
 
 		if ($a_types == "")
 		{
@@ -3362,7 +3534,9 @@ class ilObjUser extends ilObject
 	function addObjectToClipboard($a_item_id, $a_type, $a_title,
 		$a_parent = 0, $a_time = 0, $a_order_nr = 0)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		if ($a_time == 0)
 		{
@@ -3397,7 +3571,9 @@ class ilObjUser extends ilObject
 	*/
 	function addToPCClipboard($a_content, $a_time, $a_nr)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		if ($a_time == 0)
 		{
 			$a_time = date("Y-m-d H:i:s", time());
@@ -3415,7 +3591,9 @@ class ilObjUser extends ilObject
 	*/
 	function getPCClipboardContent()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$set = $ilDB->queryF("SELECT MAX(insert_time) mtime FROM personal_pc_clipboard ".
 			" WHERE user_id = %s", array("integer"), array($this->getId()));
@@ -3439,7 +3617,9 @@ class ilObjUser extends ilObject
 	*/
 	function clipboardHasObjectsOfType($a_type)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$set = $ilDB->queryF("SELECT * FROM personal_clipboard WHERE ".
 			"parent = %s AND type = %s AND user_id = %s",
@@ -3458,7 +3638,9 @@ class ilObjUser extends ilObject
 	*/
 	function clipboardDeleteObjectsOfType($a_type)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF("DELETE FROM personal_clipboard WHERE ".
 			"type = %s AND user_id = %s",
@@ -3471,7 +3653,9 @@ class ilObjUser extends ilObject
 	*/
 	function clipboardDeleteAll()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ilDB->manipulateF("DELETE FROM personal_clipboard WHERE ".
 			"user_id = %s", array("integer"), array($this->getId()));
@@ -3482,7 +3666,9 @@ class ilObjUser extends ilObject
 	*/
 	function getClipboardObjects($a_type = "", $a_top_nodes_only = false)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$par = "";
 		if ($a_top_nodes_only)
@@ -3522,7 +3708,10 @@ class ilObjUser extends ilObject
 	*/
 	function getClipboardChilds($a_parent, $a_insert_time)
 	{
-		global $ilDB, $ilUser;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		$ilUser = $DIC['ilUser'];
 
 		$objs = $ilDB->queryF("SELECT * FROM personal_clipboard WHERE ".
 			"user_id = %s AND parent = %s AND insert_time = %s ".
@@ -3552,7 +3741,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _getUsersForClipboadObject($a_type, $a_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$q = "SELECT DISTINCT user_id FROM personal_clipboard WHERE ".
 			"item_id = ".$ilDB->quote($a_id, "integer")." AND ".
@@ -3576,7 +3767,9 @@ class ilObjUser extends ilObject
 	*/
 	function removeObjectFromClipboard($a_item_id, $a_type)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$q = "DELETE FROM personal_clipboard WHERE ".
 			"item_id = ".$ilDB->quote($a_item_id, "integer").
@@ -3587,7 +3780,9 @@ class ilObjUser extends ilObject
 
 	static function _getImportedUserId($i2_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$query = "SELECT obj_id FROM object_data WHERE import_id = ".
 			$ilDB->quote($i2_id, "text");
@@ -3681,7 +3876,10 @@ class ilObjUser extends ilObject
 	 */
 	public static function _getExternalAccountsByAuthMode($a_auth_mode,$a_read_auth_default = false)
 	{
-	 	global $ilDB,$ilSetting;
+	 	global $DIC;
+
+	 	$ilDB = $DIC['ilDB'];
+	 	$ilSetting = $DIC['ilSetting'];
 
 	 	include_once('./Services/Authentication/classes/class.ilAuthUtils.php');
 	 	$q = "SELECT login,usr_id,ext_account,auth_mode FROM usr_data ".
@@ -3719,7 +3917,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function _toggleActiveStatusOfUsers($a_usr_ids,$a_status)
 	{
-	 	global $ilDB;
+	 	global $DIC;
+
+	 	$ilDB = $DIC['ilDB'];
 
 	 	if(!is_array($a_usr_ids))
 	 	{
@@ -3794,7 +3994,7 @@ class ilObjUser extends ilObject
 
 		// For compatibility, check for login (no ext_account entry given)
 		$res = $db->queryF("SELECT login FROM usr_data ".
-			"WHERE login = %s AND auth_mode = %s AND ext_account IS NULL ",
+			"WHERE login = %s AND auth_mode = %s AND (ext_account IS NULL OR ext_account = '') ",
 			array("text", "text"),
 			array($a_account, $a_auth));
 		if($usr = $db->fetchAssoc($res))
@@ -3831,7 +4031,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _getNumberOfUsersPerAuthMode()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$r = $ilDB->query("SELECT count(*) AS cnt, auth_mode FROM usr_data ".
 			"GROUP BY auth_mode");
@@ -3851,7 +4053,10 @@ class ilObjUser extends ilObject
 	*/
 	static function _getLocalAccountsForEmail($a_email)
 	{
-		global $ilDB, $ilSetting;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		$ilSetting = $DIC['ilSetting'];
 
 		// default set to local (1)?
 
@@ -4134,7 +4339,9 @@ class ilObjUser extends ilObject
 
 	function updateUserDefinedFields()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$fields = '';
 
@@ -4178,7 +4385,9 @@ class ilObjUser extends ilObject
 
 	function readUserDefinedFields()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		include_once("./Services/User/classes/class.ilUserDefinedData.php");
 		$udata = new ilUserDefinedData($this->getId());
@@ -4199,7 +4408,9 @@ class ilObjUser extends ilObject
 
 	function addUserDefinedFieldEntry()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 // not needed. no entry in udf_text/udf_clob means no value
 
@@ -4214,7 +4425,9 @@ class ilObjUser extends ilObject
 
 	function deleteUserDefinedFieldEntries()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		include_once("./Services/User/classes/class.ilUserDefinedData.php");
 		ilUserDefinedData::deleteEntriesOfUser($this->getId());
@@ -4236,7 +4449,10 @@ class ilObjUser extends ilObject
 	{
 		include_once './Services/AccessControl/classes/class.ilObjRole.php';
 
-		global $lng,$rbacreview;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$rbacreview = $DIC['rbacreview'];
 
 		$language =& $a_language;
 		$language->loadLanguageModule('registration');
@@ -4249,12 +4465,9 @@ class ilObjUser extends ilObject
 		{
 			$body .= ($language->txt("title").": ".$this->getUTitle()."\n");
 		}
-		if(strlen($this->getGender()))
+		if(1 === strlen($this->getGender()))
 		{
-			$gender = ($this->getGender() == 'm') ?
-				$language->txt('gender_m') :
-				$language->txt('gender_f');
-			$body .= ($language->txt("gender").": ".$gender."\n");
+			$body .= ($language->txt("gender").": ". $language->txt('gender_' . strtolower($this->getGender())) ."\n");
 		}
 		if(strlen($this->getFirstname()))
 		{
@@ -4400,7 +4613,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _lookupFeedHash($a_user_id, $a_create = false)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		if ($a_user_id > 0)
 		{
@@ -4434,7 +4649,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _getFeedPass($a_user_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		if ($a_user_id > 0)
 		{
@@ -4450,7 +4667,9 @@ class ilObjUser extends ilObject
 	*/
 	static function _setFeedPass($a_user_id, $a_password)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		self::_writePref($a_user_id, "priv_feed_pass",
 			($a_password=="") ? "" : md5($a_password));
@@ -4467,7 +4686,9 @@ class ilObjUser extends ilObject
 	*/
 	public static function _loginExists($a_login,$a_user_id = 0)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$q = "SELECT DISTINCT login, usr_id FROM usr_data ".
 			 "WHERE login = %s";
@@ -4502,7 +4723,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function _externalAccountExists($a_external_account,$a_auth_mode)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$res = $ilDB->queryF("SELECT * FROM usr_data ".
 			"WHERE ext_account = %s AND auth_mode = %s",
@@ -4519,7 +4742,10 @@ class ilObjUser extends ilObject
 	 */
 
 	public static function _getUsersForRole($role_id, $active = -1) {
-		global $ilDB, $rbacreview;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		$rbacreview = $DIC['rbacreview'];
 		$data = array();
 
 		$ids = $rbacreview->assignedUsers($role_id);
@@ -4562,7 +4788,9 @@ class ilObjUser extends ilObject
 	* @param 	$active		can be -1 (ignore), 1 = active, 0 = not active user
 	*/
 	public static function _getUsersForFolder ($ref_id, $active) {
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		$data = array();
 		$query = "SELECT usr_data.*, usr_pref.value AS language FROM usr_data LEFT JOIN usr_pref ON usr_pref.usr_id = usr_data.usr_id and usr_pref.keyword = %s WHERE 1 = 1 ";
 		$types[] = "text";
@@ -4617,7 +4845,11 @@ class ilObjUser extends ilObject
 	*/
 	public static function _getUsersForIds ($a_mem_ids, $active = -1, $timelimitowner = -1)
 	{
-		global $rbacadmin, $rbacreview, $ilDB;
+		global $DIC;
+
+		$rbacadmin = $DIC['rbacadmin'];
+		$rbacreview = $DIC['rbacreview'];
+		$ilDB = $DIC['ilDB'];
 
 		$query = "SELECT usr_data.*, usr_pref.value AS language
 		          FROM usr_data
@@ -4663,7 +4895,9 @@ class ilObjUser extends ilObject
 	 * @param array of internal ids or numerics $a_internalids
 	 */
 	public static function _getUserData ($a_internalids) {
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$ids = array();
 		if (is_array($a_internalids)) {
@@ -4712,7 +4946,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function _getPreferences ($user_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$prefs = array();
 
@@ -4738,7 +4974,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function getUserSubsetByPreferenceValue($a_user_ids, $a_keyword, $a_val)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$users = array();
 		$set = $ilDB->query("SELECT usr_id FROM usr_pref ".
@@ -4756,7 +4994,9 @@ class ilObjUser extends ilObject
 
 	public static function _resetLoginAttempts($a_usr_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$query = "UPDATE usr_data SET login_attempts = 0 WHERE usr_id = %s";
 		$affected = $ilDB->manipulateF( $query, array('integer'), array($a_usr_id) );
@@ -4767,7 +5007,9 @@ class ilObjUser extends ilObject
 
 	public static function _getLoginAttempts($a_usr_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$query = "SELECT login_attempts FROM usr_data WHERE usr_id = %s";
 		$result = $ilDB->queryF( $query, array('integer'), array($a_usr_id) );
@@ -4779,7 +5021,9 @@ class ilObjUser extends ilObject
 
 	public static function _incrementLoginAttempts($a_usr_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$query = "UPDATE usr_data SET login_attempts = (login_attempts + 1) WHERE usr_id = %s";
 		$affected = $ilDB->manipulateF( $query, array('integer'), array($a_usr_id) );
@@ -4790,7 +5034,9 @@ class ilObjUser extends ilObject
 
 	public static function _setUserInactive($a_usr_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$query = "UPDATE usr_data SET active = 0, inactivation_date = %s WHERE usr_id = %s";
 		$affected = $ilDB->manipulateF( $query, array('timestamp', 'integer'), array(ilUtil::now(), $a_usr_id) );
@@ -4824,7 +5070,9 @@ class ilObjUser extends ilObject
 	
 	public static function _writeHistory($a_usr_id, $a_login)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$timestamp = time();
 			
@@ -4930,13 +5178,12 @@ class ilObjUser extends ilObject
 
 		require_once 'Services/TermsOfService/classes/class.ilTermsOfServiceHelper.php';
 		if (ilTermsOfServiceHelper::isEnabled()) {
-			$adminRoleUserIds = array_flip($rbacreview->assignedUsers(SYSTEM_ROLE_ID));
-			$users = array_filter($users, function($user) use ($adminRoleUserIds) {
+			$users = array_filter($users, function($user) {
 				if ($user['agree_date'] || $user['user_id'] == SYSTEM_USER_ID || 'root' === $user['login']) {
 					return true;
 				}
 
-				return isset($adminRoleUserIds[$user['user_id']]);
+				return false;
 			});
 
 			$log->debug("TOS filtered to users: ".count($users));
@@ -4946,104 +5193,6 @@ class ilObjUser extends ilObject
 	}
 
 	/**
-	* reads all active sessions from db and returns users that are online
-	* and who have a local role in a group or a course for which the
-    * the current user has also a local role.
-	*
-	* @param	integer	user_id User ID of the current user.
-	* @return	array
-	* @deprecated This is dead code since ILIAS 5.3.x (ilUsersOnlineBlock ...) and could be removed in future releases.
-	*/
-	public static function _getAssociatedUsersOnline($a_user_id, $a_no_anonymous = false)
-	{
-		global $ilias, $ilDB;
-
-		$pd_set = new ilSetting("pd");
-		$atime = $pd_set->get("user_activity_time") * 60;
-		$ctime = time();
-		$no_anonym = ($a_no_anonymous)
-			? "AND user_id <> ".$ilDB->quote(ANONYMOUS_USER_ID, "integer")." "
-			: "";
-
-		// Get a list of object id's of all courses and groups for which
-		// the current user has local roles.
-		// Note: we have to use DISTINCT here, because a user may assume
-		// multiple roles in a group or a course.
-		$q = "SELECT DISTINCT dat.obj_id as obj_id ".
-			"FROM rbac_ua ua ".
-			"JOIN rbac_fa fa ON fa.rol_id = ua.rol_id ".
-			"JOIN object_reference r1 ON r1.ref_id = fa.parent ".
-			"JOIN tree ON tree.child = r1.ref_id ".
-			"JOIN object_reference r2 ON r2.ref_id = tree.child ". // #17674 - rolf is gone
-			"JOIN object_data dat ON dat.obj_id = r2.obj_id ".
-			"WHERE ua.usr_id = ".$ilDB->quote($a_user_id, "integer")." ".
-			"AND fa.assign = ".$ilDB->quote("y", "text")." ".
-			"AND dat.type IN (".$ilDB->quote("crs", "text").",".
-			$ilDB->quote("grp", "text").")";
-		$r = $ilDB->query($q);
-
-		while ($row = $ilDB->fetchAssoc($r))
-		{
-			$groups_and_courses_of_user[] = $row["obj_id"];
-		}
-
-		require_once 'Services/TermsOfService/classes/class.ilTermsOfServiceHelper.php';
-		$tos_condition = '';
-		if(ilTermsOfServiceHelper::isEnabled())
-		{
-			$tos_condition = " AND (agree_date IS NOT NULL OR ud.usr_id = " . $ilDB->quote(SYSTEM_USER_ID, 'integer') . ") ";
-		}
-
-		// If the user is not in a course or a group, he has no associated users.
-		if (count($groups_and_courses_of_user) == 0)
-		{
-			$q = "SELECT count(user_id) as num,ctime,user_id,firstname,lastname,title,login,last_login ".
-				"FROM usr_session ".
-				"JOIN usr_data ud ON user_id = ud.usr_id ".
-				"WHERE user_id = ".$ilDB->quote($a_user_id, "integer")." ".
-				$no_anonym.
-				$tos_condition.
-				"AND expires > ".$ilDB->quote(time(), "integer")." ".
-				"GROUP BY user_id,ctime,firstname,lastname,title,login,last_login";
-			$r = $ilDB->query($q);
-		}
-		else
-		{
-			$q = "SELECT count(user_id) as num,s.ctime,s.user_id,ud.firstname,ud.lastname,ud.title,ud.login,ud.last_login ".
-				"FROM usr_session s ".
-				"JOIN usr_data ud ON ud.usr_id = s.user_id ".
-				"JOIN rbac_ua ua ON ua.usr_id = s.user_id ".
-				"JOIN rbac_fa fa ON fa.rol_id = ua.rol_id ".
-				"JOIN tree ON tree.child = fa.parent ".
-				"JOIN object_reference or1 ON or1.ref_id = tree.child ". // #17674 - rolf is gone
-				"JOIN object_data od ON od.obj_id = or1.obj_id ".
-				"LEFT JOIN usr_pref p ON (p.usr_id = ud.usr_id AND p.keyword = ".
-					$ilDB->quote("hide_own_online_status", "text").") ".
-				"WHERE s.user_id != 0 ".
-				$no_anonym.
-				"AND (p.value IS NULL OR NOT p.value = ".$ilDB->quote("y", "text").") ".
-				"AND s.expires > ".$ilDB->quote(time(),"integer")." ".
-				"AND fa.assign = ".$ilDB->quote("y", "text")." ".
-				$tos_condition.
-				"AND ".$ilDB->in("od.obj_id", $groups_and_courses_of_user, false, "integer")." ".
-				"GROUP BY s.user_id,s.ctime,ud.firstname,ud.lastname,ud.title,ud.login,ud.last_login ".
-				"ORDER BY ud.lastname, ud.firstname";
-			$r = $ilDB->query($q);
-		}
-
-		while ($user = $ilDB->fetchAssoc($r))
-		{
-			if ($atime <= 0
-				|| $user["ctime"] + $atime > $ctime)
-			{
-				$users[$user["user_id"]] = $user;
-			}
-		}
-
-		return $users ? $users : array();
-	}
-	
-	/**
 	* Generates a unique hashcode for activating a user profile after registration
 	* 
 	* @param integer $a_usr_id user id of the current user
@@ -5051,7 +5200,9 @@ class ilObjUser extends ilObject
 	*/
 	public static function _generateRegistrationHash($a_usr_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		do
 		{
@@ -5097,7 +5248,9 @@ class ilObjUser extends ilObject
 	*/
 	public static function _verifyRegistrationHash($a_hash)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$res = $ilDB->queryf('
 			SELECT usr_id, create_date FROM usr_data 
@@ -5161,7 +5314,9 @@ class ilObjUser extends ilObject
 	{
 		if( !(int)$period ) throw new ilException('no valid period given');
 
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$date = date( 'Y-m-d H:i:s', (time() - ((int)$period * 24 * 60 * 60)) );
 
@@ -5194,7 +5349,9 @@ class ilObjUser extends ilObject
 		
 		if( !(int)$period ) throw new ilException('no valid period given');
 
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$date = date( 'Y-m-d H:i:s', (time() - ((int)$period * 24 * 60 * 60)) );
 
@@ -5225,10 +5382,16 @@ class ilObjUser extends ilObject
 		if($a_last_login !== null) $last_login = $a_last_login;
 		else $last_login = date('Y-m-d H:i:s');
 
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$query = "UPDATE usr_data SET last_login = %s WHERE usr_id = %s";
 		$affected = $ilDB->manipulateF( $query, array('timestamp', 'integer'), array($last_login, $a_usr_id) );
+
+		$query = "UPDATE usr_data SET first_login = %s WHERE usr_id = %s AND first_login IS NULL";
+		$ilDB->manipulateF( $query, array('timestamp', 'integer'), array($last_login, $a_usr_id) );
+		
 
 		if($affected) return $last_login;
 		else return false;
@@ -5236,7 +5399,9 @@ class ilObjUser extends ilObject
 	
 	public function resetOwner()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = "UPDATE object_data SET owner = 0 ".
 			"WHERE owner = ".$ilDB->quote($this->getId(),'integer');
@@ -5254,7 +5419,9 @@ class ilObjUser extends ilObject
 	 */
 	static function getFirstLettersOfLastnames()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$q = "SELECT DISTINCT ".$ilDB->upper($ilDB->substr("lastname", 1, 1))." let".
 			" FROM usr_data".
@@ -5273,7 +5440,9 @@ class ilObjUser extends ilObject
 	// begin-patch deleteProgress
 	public static function userExists($a_usr_ids = array())
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = 'SELECT count(*) num FROM object_data od '.
 				'JOIN usr_data ud ON obj_id = usr_id '.
@@ -5403,7 +5572,9 @@ class ilObjUser extends ilObject
 	 */
 	private static function initInactivationDate($usrIds)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$NOW = $ilDB->now();
 		
@@ -5426,7 +5597,9 @@ class ilObjUser extends ilObject
 	 */
 	private static function resetInactivationDate($usrIds)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$usrId_IN_usrIds = $ilDB->in('usr_id', $usrIds, false, 'integer');
 		
@@ -5464,19 +5637,13 @@ class ilObjUser extends ilObject
 	 */
 	public function hasToAcceptTermsOfService()
 	{
-		/**
-		 * @var ilRbacReview
-		 */
-		global $rbacreview;
-
 		require_once 'Services/TermsOfService/classes/class.ilTermsOfServiceHelper.php';
 
 		if(
 			ilTermsOfServiceHelper::isEnabled() && 
 			null == $this->agree_date &&
 			'root' != $this->login &&
-			!in_array($this->getId(), array(ANONYMOUS_USER_ID, SYSTEM_USER_ID)) &&
-			!$rbacreview->isAssigned($this->getId(), SYSTEM_ROLE_ID)
+			!in_array($this->getId(), array(ANONYMOUS_USER_ID, SYSTEM_USER_ID))
 		)
 		{
 			return true;
@@ -5494,7 +5661,9 @@ class ilObjUser extends ilObject
 		/**
  		 * @var $ilDB ilDB
 		 */
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		require_once 'Services/TermsOfService/classes/class.ilTermsOfServiceHelper.php';
 
@@ -5521,7 +5690,9 @@ class ilObjUser extends ilObject
 	 */
 	public static function getUsersAgreed($a_agreed = true, $a_users = null)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$date_is = ($a_agreed)
 			? "IS NOT NULL"
@@ -5721,7 +5892,9 @@ class ilObjUser extends ilObject
 	 */
 	protected function readMultiTextFields()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		if(!$this->getId())
 		{
@@ -5770,7 +5943,9 @@ class ilObjUser extends ilObject
 	 */
 	public function updateMultiTextFields($a_create = false)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		if(!$this->getId())
 		{
@@ -5817,7 +5992,9 @@ class ilObjUser extends ilObject
 	 */
 	protected function deleteMultiTextFields()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		if(!$this->getId())
 		{
@@ -5830,7 +6007,9 @@ class ilObjUser extends ilObject
 	
 	public static function findInterests($a_term, $a_user_id = null, $a_field_id = null)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$res = array();
 		

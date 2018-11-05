@@ -66,7 +66,7 @@ class Renderer extends AbstractComponentRenderer {
 		}
 
 		$f = $this->getUIFactory();
-		$closebtn = $f->button()->iconographic(
+		$closebtn = $f->button()->bulky(
 			$f->glyph()->back("#"),
 			"close",
 			"#"
@@ -78,7 +78,7 @@ class Renderer extends AbstractComponentRenderer {
 
 		$tpl->setVariable("CLOSE", $default_renderer->render($closebtn));
 
-		$backlinkbtn = $f->button()->iconographic(
+		$backlinkbtn = $f->button()->bulky(
 			$f->glyph()->back("#"),
 			"back",
 			"#"

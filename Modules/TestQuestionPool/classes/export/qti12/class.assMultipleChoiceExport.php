@@ -25,7 +25,8 @@ class assMultipleChoiceExport extends assQuestionExport
 	*/
 	function toXML($a_include_header = true, $a_include_binary = true, $a_shuffle = false, $test_output = false, $force_image_references = false)
 	{
-		global $ilias;
+		global $DIC;
+		$ilias = $DIC['ilias'];
 		
 		include_once("./Services/Xml/classes/class.ilXmlWriter.php");
 		$a_xml_writer = new ilXmlWriter;
@@ -329,7 +330,7 @@ class assMultipleChoiceExport extends assQuestionExport
 			// qti flow_mat
 			$a_xml_writer->xmlStartTag("flow_mat");
 			$fb = $this->object->feedbackOBJ->getSpecificAnswerFeedbackExportPresentation(
-				$this->object->getId(), $index
+				$this->object->getId(),0, $index
 			);
 			$this->object->addQTIMaterial($a_xml_writer, $fb);
 			$a_xml_writer->xmlEndTag("flow_mat");

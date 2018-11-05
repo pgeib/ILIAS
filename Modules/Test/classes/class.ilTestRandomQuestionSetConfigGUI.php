@@ -752,8 +752,9 @@ class ilTestRandomQuestionSetConfigGUI
 
 		if( isset($_GET['quest_pool_ref']) && (int)$_GET['quest_pool_ref'] )
 		{
+			global $DIC; /* @var ILIAS\DI\Container $DIC */
 			/* @var ilObjectDataCache $objCache */
-			$objCache = isset($GLOBALS['DIC']) ? $GLOBALS['DIC']['ilObjDataCache'] : $GLOBALS['ilObjDataCache'];
+			$objCache = $DIC['ilObjDataCache'];
 			
 			return $objCache->lookupObjId( (int)$_GET['quest_pool_ref'] );
 		}
@@ -888,9 +889,10 @@ class ilTestRandomQuestionSetConfigGUI
 				$lostPool = $this->sourcePoolDefinitionList->getLostPool($poolId);
 				
 				$deriver = new ilTestRandomQuestionSetPoolDeriver($this->db, $this->pluginAdmin, $this->testOBJ);
+				$deriver->setSourcePoolDefinitionList($this->sourcePoolDefinitionList);
 				$deriver->setTargetContainerRef($targetRef);
 				$deriver->setOwnerId($GLOBALS['DIC']['ilUser']->getId());
-				$newPoolId = $deriver->letTheDifferentlyThinkedShitRunning($lostPool);
+				$newPoolId = $deriver->derive($lostPool);
 				
 				$this->sourcePoolDefinitionList->updateSourceQuestionPoolId(
 					$lostPool->getId(), $newPoolId

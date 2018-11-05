@@ -56,7 +56,7 @@ interface Factory {
      *     or settings of the installation.
      *
      *   composition: >
-     *     The sidebar holds Iconographic Buttons. Usually, a button is associated
+     *     The sidebar holds Bulky Buttons. Usually, a button is associated
      *     with a Slate that provides further navigational options.
      *     In a desktop environment, a vertical bar is rendered on the left side
      *     of the screen covering the full height minus the header-area.
@@ -74,7 +74,7 @@ interface Factory {
      *
      *     When clicking a button, usually a Slate with further options is expanded.
      *     There is but one active slate in the bar.
-     *     Iconographic buttons in the sidebar are stateful, i.e. they have a
+     *     Bulky buttons in the sidebar are stateful, i.e. they have a
      *     pressed-status that can either be toggled by clicking the same button again
      *     or by clicking a different button.
      *
@@ -112,9 +112,9 @@ interface Factory {
      *     2: If there is a sidebar, it MUST be unique for the page.
      *
      *   composition:
-     *     1: The bar MUST NOT contain items other than iconographic buttons.
-     *     2: The bar MUST contain at least one iconographic button.
-     *     3: The bar SHOULD NOT contain more than five iconographic buttons.
+     *     1: The bar MUST NOT contain items other than bulky buttons.
+     *     2: The bar MUST contain at least one bulky button.
+     *     3: The bar SHOULD NOT contain more than five bulky buttons.
      *
      *   style:
      *     1: The bar MUST have a fixed witdth (desktop).
@@ -139,7 +139,7 @@ interface Factory {
      * ---
      * description:
      *   purpose: >
-     *     The sidebar entry bundles an iconographic button and a slate.
+     *     The sidebar entry bundles an bulky button and a slate.
      *   composition: >
      *     There is no composition (=visual appearance) of this component itself -
      *     its button will be rendered in the sidebar with a signal triggering
@@ -147,12 +147,12 @@ interface Factory {
      *
      * ----
      *
-     * @param  \ILIAS\UI\Component\Button\Iconographic   $button
+     * @param  \ILIAS\UI\Component\Button\Bulky   $button
      * @param  \ILIAS\UI\Component\MainControls\Menu\Slate | null   $slate
      * @return  \ILIAS\UI\Component\Layout\SidebarEntry
      */
     public function sidebarEntry(
-        \ILIAS\UI\Component\Button\Iconographic $button,
+        \ILIAS\UI\Component\Button\Bulky $button,
         MainControls\Menu\Slate $slate=null
     );
 

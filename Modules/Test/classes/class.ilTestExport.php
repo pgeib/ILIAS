@@ -43,7 +43,11 @@ abstract class ilTestExport
 	 */
 	public function __construct(&$a_test_obj, $a_mode = "xml")
 	{
-		global $ilErr, $ilDB, $ilias, $lng;
+		global $DIC;
+		$ilErr = $DIC['ilErr'];
+		$ilDB = $DIC['ilDB'];
+		$ilias = $DIC['ilias'];
+		$lng = $DIC['lng'];
 
 		$this->test_obj =& $a_test_obj;
 
@@ -135,8 +139,9 @@ abstract class ilTestExport
 	*/
 	function buildExportResultFile()
 	{
-		global $ilBench;
-		global $log;
+		global $DIC;
+		$ilBench = $DIC['ilBench'];
+		$log = $DIC['log'];
 
 		//get Log File
 		$expDir = $this->test_obj->getExportDirectory();
@@ -301,6 +306,10 @@ abstract class ilTestExport
 	 */
 	public function exportToExcel($deliver = TRUE, $filterby = "", $filtertext = "", $passedonly = FALSE)
 	{
+		$this->test_obj->setAccessFilteredParticipantList(
+			$this->test_obj->buildStatisticsAccessFilteredParticipantList()
+		);
+		
 		if (strcmp($this->mode, "aggregated") == 0) return $this->aggregatedResultsToExcel($deliver);
 
 		require_once 'Modules/TestQuestionPool/classes/class.ilAssExcelFormatHelper.php';
@@ -803,7 +812,9 @@ abstract class ilTestExport
 	*/
 	function exportToCSV($deliver = TRUE, $filterby = "", $filtertext = "", $passedonly = FALSE)
 	{
-		global $ilLog;
+		$this->test_obj->setAccessFilteredParticipantList(
+			$this->test_obj->buildStatisticsAccessFilteredParticipantList()
+		);
 		
 		if (strcmp($this->mode, "aggregated") == 0) return $this->aggregatedResultsToCSV($deliver);
 
@@ -1038,7 +1049,8 @@ abstract class ilTestExport
 	*/
 	function buildExportFileXML()
 	{
-		global $ilBench;
+		global $DIC;
+		$ilBench = $DIC['ilBench'];
 
 		$ilBench->start("TestExport", "buildExportFile");
 
@@ -1184,7 +1196,7 @@ abstract class ilTestExport
 				unset($mob_obj);
 			}
 		}
-		foreach ($this->test_obj->questions as $question_id)
+		foreach ($this->getQuestionIds() as $question_id)
 		{
 			$mobs = ilObjMediaObject::_getMobsOfObject("qpl:html", $question_id);
 			foreach ($mobs as $mob)
@@ -1215,7 +1227,8 @@ abstract class ilTestExport
 	
 	protected function populateSkillLevelThresholdsXml(ilXmlWriter $a_xml_writer, ilAssQuestionSkillAssignmentList $assignmentList)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		
 		require_once 'Modules/Test/classes/class.ilTestSkillLevelThresholdList.php';
 		$thresholdList = new ilTestSkillLevelThresholdList($ilDB);
@@ -1235,7 +1248,8 @@ abstract class ilTestExport
 	 */
 	protected function buildQuestionSkillAssignmentList()
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		
 		require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionSkillAssignmentList.php';
 		$assignmentList = new ilAssQuestionSkillAssignmentList($ilDB);

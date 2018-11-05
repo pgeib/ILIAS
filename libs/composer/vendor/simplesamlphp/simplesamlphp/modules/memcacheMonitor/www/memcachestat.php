@@ -101,8 +101,59 @@ foreach($stats AS $key => &$entry) {
 
 }
 
-$template = new SimpleSAML_XHTML_Template($config, 'memcacheMonitor:memcachestat.tpl.php');
-$template->data['title'] = 'Memcache stats';
-$template->data['table'] = $stats;
-$template->data['statsraw'] = $statsraw;
-$template->show();
+$t = new SimpleSAML_XHTML_Template($config, 'memcacheMonitor:memcachestat.tpl.php');
+$rowTitles = array(
+    'accepting_conns' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:accepting_conns}'),
+    'auth_cmds' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:auth_cmds}'),
+    'auth_errors' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:auth_errors}'),
+    'bytes' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:bytes}'),
+    'bytes_read' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:bytes_read}'),
+    'bytes_written' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:bytes_written}'),
+    'cas_badval' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:cas_badval}'),
+    'cas_hits' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:cas_hits}'),
+    'cas_misses' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:cas_misses}'),
+    'cmd_flush' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:cmd_flush}'),
+    'cmd_get' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:cmd_get}'),
+    'cmd_set' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:cmd_set}'),
+    'cmd_touch' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:cmd_touch}'),
+    'connection_structures' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:connection_structures}'),
+    'conn_yields' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:conn_yields}'),
+    'curr_connections' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:curr_connections}'),
+    'curr_items' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:curr_items}'),
+    'decr_hits' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:decr_hits}'),
+    'decr_misses' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:decr_misses}'),
+    'delete_hits' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:delete_hits}'),
+    'delete_misses' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:delete_misses}'),
+    'expired_unfetched' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:expired_unfetched}'),
+    'evicted_unfetched' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:evicted_unfetched}'),
+    'evictions' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:evictions}'),
+    'get_hits' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:get_hits}'),
+    'get_misses' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:get_misses}'),
+    'hash_bytes' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:hash_bytes}'),
+    'hash_is_expanding' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:hash_is_expanding}'),
+    'hash_power_level' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:hash_power_level}'),
+    'incr_hits' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:incr_hits}'),
+    'incr_misses' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:incr_misses}'),
+    'libevent' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:libevent}'),
+    'limit_maxbytes' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:limit_maxbytes}'),
+    'listen_disabled_num' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:listen_disabled_num}'),
+    'pid' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:pid}'),
+    'pointer_size' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:pointer_size}'),
+    'reclaimed' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:reclaimed}'),
+    'reserved_fds' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:reserved_fds}'),
+    'rusage_system' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:rusage_system}'),
+    'rusage_user' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:rusage_user}'),
+    'threads' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:threads}'),
+    'time' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:time}'),
+    'total_connections' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:total_connections}'),
+    'total_items' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:total_items}'),
+    'touch_hits' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:touch_hits}'),
+    'touch_misses' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:touch_misses}'),
+    'uptime' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:uptime}'),
+    'version' => \SimpleSAML\Locale\Translate::noop('{memcacheMonitor:memcachestat:version}'),
+);
+$t->data['title'] = 'Memcache stats';
+$t->data['rowtitles'] = $rowTitles;
+$t->data['table'] = $stats;
+$t->data['statsraw'] = $statsraw;
+$t->show();

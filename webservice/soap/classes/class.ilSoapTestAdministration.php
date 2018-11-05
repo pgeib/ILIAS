@@ -36,8 +36,12 @@ class ilSoapTestAdministration extends ilSoapAdministration
 {
 	private function hasWritePermissionForTest($active_id)
 	{
-		global $ilDB;
-		global $ilAccess;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
 
 		$permission_ok = false;
 		$result = $ilDB->queryF("SELECT tst_tests.obj_fi FROM tst_active, tst_tests WHERE tst_active.active_id = %s AND tst_active.test_fi = tst_tests.test_id",
@@ -62,8 +66,12 @@ class ilSoapTestAdministration extends ilSoapAdministration
 	
 	function isAllowedCall($sid, $active_id, $saveaction = true)
 	{
-		global $ilDB;
-		global $ilUser;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		global $DIC;
+
+		$ilUser = $DIC['ilUser'];
 
 		if ($this->hasWritePermissionForTest($active_id)) return TRUE;
 
@@ -82,7 +90,9 @@ class ilSoapTestAdministration extends ilSoapAdministration
 					$now = time();
 					$diff = $now - $time;
 					$client = explode("::", $sid);
-					global $ilClientIniFile;
+					global $DIC;
+
+					$ilClientIniFile = $DIC['ilClientIniFile'];
 					$expires = $ilClientIniFile->readVariable('session','expire');
 					if ($diff <= $expires)
 					{
@@ -137,7 +147,10 @@ class ilSoapTestAdministration extends ilSoapAdministration
 		
 		if (is_array($solution) && (array_key_exists("item", $solution))) $solution = $solution["item"];
 
-		global $ilDB, $ilUser;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		$ilUser = $DIC['ilUser'];
 
 		require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionProcessLockerFactory.php';
 		$processLockerFactory = new ilAssQuestionProcessLockerFactory(new ilSetting('assessment'), $ilDB);
@@ -153,7 +166,7 @@ class ilSoapTestAdministration extends ilSoapAdministration
 
 			$processLocker->executeUserSolutionUpdateLockOperation(function() use (&$totalrows, $active_id, $question_id, $pass, $solution) {
 
-				$ilDB = $GLOBALS['ilDB'];
+				$ilDB = $GLOBALS['DIC']['ilDB'];
 				if (($active_id > 0) && ($question_id > 0) && (strlen($pass) > 0))
 				{
 					$affectedRows = $ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s",
@@ -248,7 +261,7 @@ class ilSoapTestAdministration extends ilSoapAdministration
 		}
 		
 		// Include main header
-		$ilDB = $GLOBALS['ilDB'];
+		$ilDB = $GLOBALS['DIC']['ilDB'];
 		if (($active_id > 0) && ($question_id > 0) && (strlen($pass) > 0))
 		{
 			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s",
@@ -310,7 +323,9 @@ class ilSoapTestAdministration extends ilSoapAdministration
 		}
 		$solution = array();
 		// Include main header
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$use_previous_answers = 1;
 
@@ -379,10 +394,17 @@ class ilSoapTestAdministration extends ilSoapAdministration
 		}
 		if (!$this->isAllowedCall($sid, $active_id, false))
 		{
-			return $this->__raiseError("The required user information is only available for active users.", "");
+			
+			if( !$this->checkActiveIdResultsAccess($active_id) )
+			{
+				return $this->__raiseError("The required user information is only available for active users.", "");
+			}
 		}
 
-		global $lng, $ilDB;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilDB = $DIC['ilDB'];
 
 		$result = $ilDB->queryF("SELECT user_fi, test_fi FROM tst_active WHERE active_id = %s",
 			array('integer'),
@@ -460,7 +482,10 @@ class ilSoapTestAdministration extends ilSoapAdministration
 			return $this->__raiseError("The required user information is only available for active users.", "");
 		}
 
-		global $lng, $ilDB;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilDB = $DIC['ilDB'];
 
 		$result = $ilDB->queryF("SELECT tst_tests.random_test FROM tst_active, tst_tests WHERE tst_active.active_id = %s AND tst_tests.test_id = tst_active.test_fi",
 			array('integer'),
@@ -499,7 +524,10 @@ class ilSoapTestAdministration extends ilSoapAdministration
 			return $this->__raiseError("The required user information is only available for active users.", "");
 		}
 
-		global $lng, $ilDB;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilDB = $DIC['ilDB'];
 
 		$result = $ilDB->queryF("SELECT tst_tests.random_test FROM tst_active, tst_tests WHERE tst_active.active_id = %s AND tst_tests.test_id = tst_active.test_fi",
 			array('integer'),
@@ -563,7 +591,10 @@ class ilSoapTestAdministration extends ilSoapAdministration
 			return $this->__raiseError("The required user information is only available for active users.", "");
 		}
 
-		global $lng, $ilDB;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilDB = $DIC['ilDB'];
 
 		$result = $ilDB->queryF("SELECT tst_tests.random_test FROM tst_active, tst_tests WHERE tst_active.active_id = %s AND tst_tests.test_id = tst_active.test_fi",
 			array('integer'),
@@ -599,10 +630,13 @@ class ilSoapTestAdministration extends ilSoapAdministration
 			return $this->__raiseError('No test id given. Aborting!',
 									   'Client');
 		}
-		global $rbacsystem, $tree, $ilLog;
+		global $DIC;
+
+		$rbacsystem = $DIC['rbacsystem'];
+		$tree = $DIC['tree'];
+		$ilLog = $DIC['ilLog'];
 		
-		global $ilAccess; /* @var ilAccessHandler $ilAccess */
-		if( !$ilAccess->checkAccess('write', '', $test_ref_id) )
+		if( !$this->checkManageParticipantsAccess($test_ref_id) )
 		{
 			return $this->__raiseError('no permission. Aborting!', 'Client');
 		}
@@ -630,8 +664,12 @@ class ilSoapTestAdministration extends ilSoapAdministration
 		
 		include_once './Modules/Test/classes/class.ilObjTest.php';
 		include_once './Modules/Test/classes/class.ilTestParticipantData.php';
-		$part = new ilTestParticipantData($GLOBALS['ilDB'], $GLOBALS['lng']);
-		$part->setUserIds((array) $a_user_ids);
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		$part = new ilTestParticipantData($GLOBALS['DIC']['ilDB'], $GLOBALS['DIC']['lng']);
+		$part->setParticipantAccessFilter(
+			ilTestParticipantAccessFilter::getManageParticipantsUserFilter($test_ref_id)
+		);
+		$part->setUserIdsFilter((array) $a_user_ids);
 		$part->load($tst->getTestId());
 		$tst->removeTestResults($part);
 
@@ -664,7 +702,11 @@ class ilSoapTestAdministration extends ilSoapAdministration
 			return $this->__raiseError('No test id given. Aborting!',
 									   'Client');
 		}
-		global $rbacsystem, $tree, $ilLog;
+		global $DIC;
+
+		$rbacsystem = $DIC['rbacsystem'];
+		$tree = $DIC['tree'];
+		$ilLog = $DIC['ilLog'];
 
 		if(ilObject::_isInTrash($test_ref_id))
 		{
@@ -690,6 +732,11 @@ class ilSoapTestAdministration extends ilSoapAdministration
 				break;
 			}
 		}
+		if( !$permission_ok && $this->checkParticipantsResultsAccess($test_ref_id) )
+		{
+			$permission_ok = $this->checkParticipantsResultsAccess($test_ref_id);
+		}
+		
 		if(!$permission_ok)
 		{
 			return $this->__raiseError('No permission to edit the object with id: '.$test_ref_id,
@@ -710,6 +757,21 @@ class ilSoapTestAdministration extends ilSoapAdministration
 		$test_obj = new ilObjTest($obj_id, false);
 		$participants =  $test_obj->getTestParticipants();
 		
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		require_once 'Modules/Test/classes/class.ilTestParticipantList.php';
+		$accessFilter = ilTestParticipantAccessFilter::getAccessResultsUserFilter($test_ref_id);
+		$participantList = new ilTestParticipantList($test_obj);
+		$participantList->initializeFromDbRows($participants);
+		$participantList = $participantList->getAccessFilteredList($accessFilter);
+		foreach($participants as $activeId => $part)
+		{
+			if( $participantList->isActiveIdInList($activeId) )
+			{
+				continue;
+			}
+			
+			unset($participants[$activeId]);
+		}
 
 		if ($sum_only)  
 		{
@@ -756,7 +818,36 @@ class ilSoapTestAdministration extends ilSoapAdministration
 		$xmlWriter->start();
 		return $xmlWriter->getXML();
 	}
-
 	
+	/**
+	 * @param $refId
+	 * @return bool
+	 */
+	protected function checkManageParticipantsAccess($refId)
+	{
+		return $this->getTestAccess($refId)->checkManageParticipantsAccess();
+	}
+	
+	/**
+	 * @param $refId
+	 * @return bool
+	 */
+	protected function checkParticipantsResultsAccess($refId)
+	{
+		return $this->getTestAccess($refId)->checkParticipantsResultsAccess();
+	}
+	
+	/**
+	 * @param $refId
+	 * @return ilTestAccess
+	 */
+	protected function getTestAccess($refId)
+	{
+		require_once 'Modules/Test/classes/class.ilTestAccess.php';
+
+		$testId = ilObjTestAccess::_getTestIDFromObjectID(ilObject::_lookupObjectId($refId));
+
+		return new ilTestAccess($refId, $testId);
+	}
 }
 ?>

@@ -17,13 +17,13 @@ function getSomeEntries($f) {
         $planks = array($f->maincontrols()->menu()->plank());
         $slate = $f->maincontrols()->menu()->slate($planks);
         $icon = $f->icon()->standard('sidebar_trigger', '')->withSize('medium');
-        $button = $f->button()->iconographic($icon->withAbbreviation('X'), "Button", '#');
+        $button = $f->button()->bulky($icon->withAbbreviation('X'), "Button", '#');
 
         $entries[] = $f->layout()->sidebarentry($button, $slate);
     }
 
     $glyph = $f->glyph()->user();
-    $extra_button = $f->button()->iconographic($glyph,'Extra', '#');
+    $extra_button = $f->button()->bulky($glyph,'Extra', '#');
 
     $entries[] = $f->layout()->sidebarentry($extra_button);
     return $entries;

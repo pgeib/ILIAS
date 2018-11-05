@@ -84,7 +84,12 @@ class ilAuthProviderFactory
 				$this->getLogger()->debug('Using apache authentication.');
 				include_once './Services/AuthApache/classes/class.ilAuthProviderApache.php';
 				return new ilAuthProviderApache($credentials);
-				
+
+			case AUTH_CAS:
+				$this->getLogger()->debug('Using CAS authentication');
+				include_once './Services/CAS/classes/class.ilAuthProviderCAS.php';
+				return new ilAuthProviderCAS($credentials);
+
 			case AUTH_RADIUS:
 				$this->getLogger()->debug('Using radius authentication.');
 				include_once './Services/Radius/classes/class.ilAuthProviderRadius.php';
@@ -111,7 +116,11 @@ class ilAuthProviderFactory
 				require_once 'Services/Saml/classes/class.ilAuthProviderSaml.php';
 				require_once 'Services/Saml/classes/class.ilSamlIdp.php';
 				return new ilAuthProviderSaml($credentials, ilSamlIdp::getIdpIdByAuthMode($saml_info[1]));
-				
+
+			case AUTH_OPENID_CONNECT:
+				$this->getLogger()->debug('Using openid connect authentication.');
+				return new ilAuthProviderOpenIdConnect($credentials);
+
 			default:
 				$this->getLogger('Plugin authentication: '. $a_authmode);
 				foreach(ilAuthUtils::getAuthPlugins() as $pl)

@@ -10,6 +10,9 @@ use ILIAS\UI\Implementation as I;
 use ILIAS\UI\Implementation\Component as CI;
 use ILIAS\UI\Implementation\Component\Input;
 use ILIAS\Transformation\Transformation;
+use ILIAS\Data;
+use ILIAS\Validation;
+use ILIAS\Transformation as T;
 
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,11 +41,15 @@ abstract class Form implements C\Input\Container\Form\Form, CI\Input\NameSource 
 	/**
 	 * @param array $inputs
 	 */
-	public function __construct(array $inputs) {
+	public function __construct(Input\Field\Factory $field_factory, array $inputs) {
 		$classes = [CI\Input\Field\Input::class];
 		$this->checkArgListElements("input", $inputs, $classes);
-		$input_factory = (new I\Factory())->input();
-		$this->input_group = $input_factory->field()->group($inputs)->withNameFrom($this);
+		// TODO: this is a dependency and should be treated as such. `use` statements can be removed then.
+		$this->input_group = $field_factory->group(
+			$inputs,
+			"",
+			""
+		)->withNameFrom($this);
 		$this->transformation = null;
 	}
 

@@ -11,7 +11,7 @@ use \ILIAS\UI\Component as C;
 interface SidebarEntry extends C\Component {
 
 	/**
-	 * @return 	 Button\Iconographic | Glyph\Glyph
+	 * @return 	 Button\Bulky | Glyph\Glyph
 	 */
 	public function getButton();
 

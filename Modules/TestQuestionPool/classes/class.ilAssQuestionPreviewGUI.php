@@ -13,7 +13,7 @@
  * @ilCtrl_Calls ilAssQuestionPreviewGUI: ilAssQuestionHintRequestGUI
  * @ilCtrl_Calls ilAssQuestionPreviewGUI: ilAssGenFeedbackPageGUI
  * @ilCtrl_Calls ilAssQuestionPreviewGUI: ilAssSpecFeedbackPageGUI
-
+ * @ilCtrl_Calls ilAssQuestionPreviewGUI: ilNoteGUI
  */
 class ilAssQuestionPreviewGUI
 {
@@ -25,6 +25,8 @@ class ilAssQuestionPreviewGUI
 	const CMD_GATEWAY_SHOW_HINT_LIST = 'gatewayShowHintList';
 
 	const TAB_ID_QUESTION_PREVIEW = 'preview';
+	
+	const FEEDBACK_FOCUS_ANCHOR = 'focus';
 	
 	/**
 	 * @var ilCtrl
@@ -173,6 +175,16 @@ class ilAssQuestionPreviewGUI
 				$forwarder->forward();
 				break;
 			
+			case 'ilnotegui':
+				
+				$notesGUI = new ilNoteGUI($this->questionOBJ->getObjId(), $this->questionOBJ->getId(), 'quest');
+				$notesGUI->enablePublicNotes(true);
+				$notesGUI->enablePublicNotesDeletion(true);
+				$notesPanelHTML = $this->ctrl->forwardCommand($notesGUI);
+				$this->showCmd($notesPanelHTML);
+				break;
+			
+			
 			default:
 
 				$cmd = $this->ctrl->getCmd(self::CMD_SHOW).'Cmd';
@@ -181,34 +193,92 @@ class ilAssQuestionPreviewGUI
 		}
 	}
 	
-	private function showCmd()
+	/**
+	 * @return string
+	 */
+	protected function buildPreviewFormAction()
+	{
+		return $this->ctrl->getFormAction($this, self::CMD_SHOW) . '#' . self::FEEDBACK_FOCUS_ANCHOR;
+	}
+	
+	protected function isCommentingRequired()
+	{
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		
+		if( $this->previewSettings->isTestRefId() )
+		{
+			return false;
+		}
+		
+		return (bool)$DIC->rbac()->system()->checkAccess('write', (int)$_GET['ref_id']);
+	}
+	
+	private function showCmd($notesPanelHTML = '')
 	{
 		$tpl = new ilTemplate('tpl.qpl_question_preview.html', true, true, 'Modules/TestQuestionPool');
 
-		$tpl->setVariable('PREVIEW_FORMACTION', $this->ctrl->getFormAction($this, self::CMD_SHOW));
+		$tpl->setVariable('PREVIEW_FORMACTION', $this->buildPreviewFormAction());
 
 		$this->populatePreviewToolbar($tpl);
 		
 		$this->populateQuestionOutput($tpl);
 		
-		$this->populateQuestionNavigation($tpl);
-
-		if( $this->isShowGenericQuestionFeedbackRequired() )
+		$this->handleInstantResponseRendering($tpl);
+		
+		if( $this->isCommentingRequired() )
 		{
-			$this->populateGenericQuestionFeedback($tpl);
+			$this->questionGUI->addHeaderAction();
+			$this->populateNotesPanel($tpl, $notesPanelHTML);
 		}
-
-		if( $this->isShowSpecificQuestionFeedbackRequired() )
+		
+		$this->tpl->setContent($tpl->get());
+	}
+	
+	protected function handleInstantResponseRendering(ilTemplate $tpl)
+	{
+		$renderHeader = false;
+		$renderAnchor = false;
+		
+		if( $this->isShowReachedPointsRequired() )
 		{
-			$this->populateSpecificQuestionFeedback($tpl);
+			$this->populateReachedPointsOutput($tpl);
+			$renderAnchor = true;
+			$renderHeader = true;
 		}
 		
 		if( $this->isShowBestSolutionRequired() )
 		{
 			$this->populateSolutionOutput($tpl);
+			$renderAnchor = true;
+			$renderHeader = true;
 		}
 		
-		$this->tpl->setContent($tpl->get());
+		if( $this->isShowGenericQuestionFeedbackRequired() )
+		{
+			$this->populateGenericQuestionFeedback($tpl);
+			$renderAnchor = true;
+			$renderHeader = true;
+		}
+		
+		if( $this->isShowSpecificQuestionFeedbackRequired() )
+		{
+			$renderHeader = true;
+			
+			if( $this->questionGUI->hasInlineFeedback() )
+			{
+				$renderAnchor = false;
+			}
+			else
+			{
+				$this->populateSpecificQuestionFeedback($tpl);
+				$renderAnchor = true;
+			}
+		}
+		
+		if( $renderHeader )
+		{
+			$this->populateInstantResponseHeader($tpl, $renderAnchor);
+		}
 	}
 	
 	private function resetCmd()
@@ -272,6 +342,14 @@ class ilAssQuestionPreviewGUI
 		$this->questionGUI->object->setShuffler($this->getQuestionAnswerShuffler());
 		
 		$questionHtml = $this->questionGUI->getPreview(true, $this->isShowSpecificQuestionFeedbackRequired());
+		$this->questionGUI->magicAfterTestOutput();
+		
+		if( $this->isShowSpecificQuestionFeedbackRequired() && $this->questionGUI->hasInlineFeedback() )
+		{
+			$questionHtml = $this->questionGUI->buildFocusAnchorHtml() . $questionHtml;
+		}
+		
+		$questionHtml .= $this->getQuestionNavigationHtml();
 		
 		$pageGUI->setQuestionHTML(array($this->questionOBJ->getId() => $questionHtml));
 
@@ -282,6 +360,19 @@ class ilAssQuestionPreviewGUI
 
 		$tpl->setVariable('QUESTION_OUTPUT', $pageGUI->preview());
 	}
+	
+	protected function populateReachedPointsOutput(ilTemplate $tpl)
+	{
+		$reachedPoints = $this->questionOBJ->calculateReachedPointsFromPreviewSession($this->previewSession);
+		$maxPoints = $this->questionOBJ->getMaximumPoints();
+		
+		$scoreInformation = sprintf(
+			$this->lng->txt( "you_received_a_of_b_points" ), $reachedPoints, $maxPoints
+		);
+		
+		$tpl->setCurrentBlock( "reached_points_feedback" );
+		$tpl->setVariable("REACHED_POINTS_FEEDBACK", $scoreInformation);
+		$tpl->parseCurrentBlock();	}
 
 	private function populateSolutionOutput(ilTemplate $tpl)
 	{
@@ -304,20 +395,24 @@ class ilAssQuestionPreviewGUI
 
 		$this->questionGUI->setPreviewSession($this->previewSession);
 
-		$pageGUI->setQuestionHTML(array($this->questionOBJ->getId() => $this->questionGUI->getSolutionOutput(0)));
+		$pageGUI->setQuestionHTML(array($this->questionOBJ->getId() => $this->questionGUI->getSolutionOutput(0, null, false, false, true, false, true, false, false)));
 
 		//$pageGUI->setHeader($this->questionOBJ->getTitle()); // NO ADDITIONAL HEADER
 		//$pageGUI->setPresentationTitle($this->questionOBJ->getTitle());
 
 		//$pageGUI->setTemplateTargetVar("ADM_CONTENT"); // NOT REQUIRED, OR IS?
-
+		
+		$output = $this->questionGUI->getSolutionOutput(0, null, false, false, true, false, true, false, false);
+		//$output = $pageGUI->preview();
+		//$output = str_replace('<h1 class="ilc_page_title_PageTitle"></h1>', '', $output);
+		
 		$tpl->setCurrentBlock('solution_output');
 		$tpl->setVariable('TXT_CORRECT_SOLUTION', $this->lng->txt('tst_best_solution_is'));
-		$tpl->setVariable('SOLUTION_OUTPUT', $pageGUI->preview());
+		$tpl->setVariable('SOLUTION_OUTPUT', $output);
 		$tpl->parseCurrentBlock();
 	}
 
-	private function populateQuestionNavigation(ilTemplate $tpl)
+	private function getQuestionNavigationHtml()
 	{
 		require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionRelatedNavigationBarGUI.php';
 		$navGUI = new ilAssQuestionRelatedNavigationBarGUI($this->ctrl, $this->lng);
@@ -332,7 +427,7 @@ class ilAssQuestionPreviewGUI
 		$navGUI->setHintRequestsPossible($this->hintTracking->requestsPossible());
 		$navGUI->setHintRequestsExist($this->hintTracking->requestsExist());
 		
-		$tpl->setVariable('QUESTION_NAVIGATION', $this->ctrl->getHTML($navGUI));
+		return $this->ctrl->getHTML($navGUI);
 	}
 	
 	private function populateGenericQuestionFeedback(ilTemplate $tpl)
@@ -359,8 +454,26 @@ class ilAssQuestionPreviewGUI
 
 	private function populateSpecificQuestionFeedback(ilTemplate $tpl)
 	{
+		$fb = $this->questionGUI->getSpecificFeedbackOutput(
+			(array)$this->previewSession->getParticipantsSolution()
+		);
+		
 		$tpl->setCurrentBlock('instant_feedback_specific');
-		$tpl->setVariable('ANSWER_FEEDBACK', $this->questionGUI->getSpecificFeedbackOutput(0, -1));
+		$tpl->setVariable('ANSWER_FEEDBACK', $fb);
+		$tpl->parseCurrentBlock();
+	}
+	
+	protected function populateInstantResponseHeader(ilTemplate $tpl, $withFocusAnchor)
+	{
+		if( $withFocusAnchor )
+		{
+			$tpl->setCurrentBlock('inst_resp_id');
+			$tpl->setVariable('INSTANT_RESPONSE_FOCUS_ID', self::FEEDBACK_FOCUS_ANCHOR);
+			$tpl->parseCurrentBlock();
+		}
+		
+		$tpl->setCurrentBlock('instant_response_header');
+		$tpl->setVariable('INSTANT_RESPONSE_HEADER', $this->lng->txt('tst_feedback'));
 		$tpl->parseCurrentBlock();
 	}
 
@@ -387,6 +500,16 @@ class ilAssQuestionPreviewGUI
 	private function isShowSpecificQuestionFeedbackRequired()
 	{
 		if( !$this->previewSettings->isSpecificFeedbackEnabled() )
+		{
+			return false;
+		}
+
+		return $this->previewSession->isInstantResponseActive();
+	}
+
+	private function isShowReachedPointsRequired()
+	{
+		if( !$this->previewSettings->isReachedPointsEnabled() )
 		{
 			return false;
 		}
@@ -437,5 +560,17 @@ class ilAssQuestionPreviewGUI
 		$shuffler->setSeed($this->previewSession->getRandomizerSeed());		
 		
 		return $shuffler;
+	}
+	
+	protected function populateNotesPanel(ilTemplate $tpl, $notesPanelHTML)
+	{
+		if( !strlen($notesPanelHTML) )
+		{
+			$notesPanelHTML = $this->questionGUI->getNotesHTML();
+		}
+		
+		$tpl->setCurrentBlock('notes_panel');
+		$tpl->setVariable('NOTES_PANEL', $notesPanelHTML);
+		$tpl->parseCurrentBlock();
 	}
 }

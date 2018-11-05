@@ -86,7 +86,8 @@ class assFlashQuestion extends assQuestion implements ilObjQuestionScoringAdjust
 
 	public function saveAdditionalQuestionDataToDb()
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		$ilDB->manipulateF( "DELETE FROM " . $this->getAdditionalTableName() . " WHERE question_fi = %s",
 							array( "integer" ),
 							array( $this->getId() )
@@ -102,12 +103,30 @@ class assFlashQuestion extends assQuestion implements ilObjQuestionScoringAdjust
 								serialize( $this->getParameters() )
 							)
 		);
-		if ($_SESSION["flash_upload_filename"])
-		{
+
+		try {
+			$this->moveAppletIfExists();
+		} catch (\ilFileUtilsException $e) {
+			\ilLoggerFactory::getRootLogger()->error($e->getMessage());
+		}
+	}
+
+	/**
+	 * Moves an applet file (maybe stored in the PHP session) to its final filesystem destination
+	 * @throws \ilFileUtilsException
+	 */
+	protected function moveAppletIfExists()
+	{
+		if (
+			isset($_SESSION['flash_upload_filename']) && is_string($_SESSION['flash_upload_filename']) &&
+			file_exists($_SESSION['flash_upload_filename']) && is_file($_SESSION['flash_upload_filename'])
+		) {
 			$path = $this->getFlashPath();
-			ilUtil::makeDirParents( $path );
-			@rename( $_SESSION["flash_upload_filename"], $path . $this->getApplet() );
-			unset($_SESSION["flash_upload_filename"]);
+			\ilUtil::makeDirParents($path);
+
+			require_once 'Services/Utilities/classes/class.ilFileUtils.php';
+			\ilFileUtils::rename($_SESSION['flash_upload_filename'], $path . $this->getApplet());
+			unset($_SESSION['flash_upload_filename']);
 		}
 	}
 
@@ -120,7 +139,8 @@ class assFlashQuestion extends assQuestion implements ilObjQuestionScoringAdjust
 	*/
 	function loadFromDb($question_id)
 	{
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		$result = $ilDB->queryF("SELECT qpl_questions.*, " . $this->getAdditionalTableName() . ".* FROM qpl_questions LEFT JOIN " . $this->getAdditionalTableName() . " ON " . $this->getAdditionalTableName() . ".question_fi = qpl_questions.question_id WHERE qpl_questions.question_id = %s",
 			array("integer"),
 			array($question_id)
@@ -385,7 +405,8 @@ class assFlashQuestion extends assQuestion implements ilObjQuestionScoringAdjust
 			throw new ilTestException('return details not implemented for '.__METHOD__);
 		}
 		
-		global $ilDB;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
 		
 		$found_values = array();
 		if (is_null($pass))

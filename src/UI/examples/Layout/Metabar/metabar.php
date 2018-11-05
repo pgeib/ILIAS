@@ -8,12 +8,17 @@ function buildMetabar($f) {
     $awt = buildAwarenessTool($f);
     $nc = buildNotificationCenter($f);
 
+    $search = $f->glyph()->settings();
+    $help = $f->glyph()->note();
+
     $logo = $f->image()->responsive(
         "src/UI/examples/Image/HeaderIconLarge.svg",
         "Thumbnail Example"
     );
 
     return $f->layout()->metabar($logo)
+        ->withElement($search)
+        ->withElement($help)
         ->withElement($nc)
         ->withElement($awt);
 }

@@ -19,6 +19,8 @@ define ("AUTH_ECS",9);
 define ("AUTH_APACHE",11);
 define ("AUTH_SAML", 12);
 
+define ('AUTH_OPENID_CONNECT',15);
+
 define ("AUTH_INACTIVE",18);
 
 define('AUTH_MULTIPLE',20);
@@ -78,6 +80,18 @@ class ilAuthUtils
 		
 	}
 	
+	/**
+	 * Check if authentication is should be forced.
+	 */
+	public static function isAuthenticationForced()
+	{
+		if(isset($_GET['ecs_hash']) or isset($_GET['ecs_hash_url']))
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public static function handleForcedAuthentication()
 	{
 		if(isset($_GET['ecs_hash']) or isset($_GET['ecs_hash_url']))
@@ -122,7 +136,9 @@ class ilAuthUtils
 	
 	static function _getAuthModeOfUser($a_username,$a_password,$a_db_handler = '')
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		if(isset($_GET['ecs_hash']) or isset($_GET['ecs_hash_url']))
 		{
@@ -172,7 +188,10 @@ class ilAuthUtils
 	
 	static function _getAuthMode($a_auth_mode,$a_db_handler = '')
 	{
-		global $ilDB, $ilSetting;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		$ilSetting = $DIC['ilSetting'];
 
 		$db =& $ilDB;
 		
@@ -219,6 +238,10 @@ class ilAuthUtils
 				return AUTH_SHIBBOLETH;
 				break;
 
+			case 'oidc':
+				return AUTH_OPENID_CONNECT;
+				break;
+
 			case 'saml':
 				require_once 'Services/Saml/classes/class.ilSamlIdp.php';
 				return ilSamlIdp::getKeyByAuthMode($a_auth_mode);
@@ -245,7 +268,9 @@ class ilAuthUtils
 	
 	public static function _getAuthModeName($a_auth_key)
 	{
-		global $ilias;
+		global $DIC;
+
+		$ilias = $DIC['ilias'];
 
 		// begin-patch ldap_multiple
 		switch ((int) $a_auth_key)
@@ -298,6 +323,10 @@ class ilAuthUtils
 				return "lti";
 				break;
 
+			case AUTH_OPENID_CONNECT:
+				return 'oidc';
+				break;
+
 			default:
 				return "default";
 				break;	
@@ -306,14 +335,16 @@ class ilAuthUtils
 	
 	static function _getActiveAuthModes()
 	{
-		global $ilias,$ilSetting;
+		global $DIC;
+
+		$ilias = $DIC['ilias'];
+		$ilSetting = $DIC['ilSetting'];
 		
 		$modes = array(
 						'default'	=> $ilSetting->get("auth_mode"),
 						'local'		=> AUTH_LOCAL
 						);
 		include_once('Services/LDAP/classes/class.ilLDAPServer.php');
-		// begin-patch ldap_multiple
 		foreach(ilLDAPServer::_getActiveServerList() as $sid)
 		{
 			$modes['ldap_'.$sid] = (AUTH_LDAP.'_'.$sid);
@@ -324,8 +355,12 @@ class ilAuthUtils
 		{
 			$modes['lti_'.$sid] = (AUTH_PROVIDER_LTI.'_'.$sid);
 		}
-		
-		// end-patch ldap_multiple
+
+		if(ilOpenIdConnectSettings::getInstance()->getActive())
+		{
+			$modes['oidc'] = AUTH_OPENID_CONNECT;
+		}
+
 		if ($ilSetting->get("radius_active")) $modes['radius'] = AUTH_RADIUS;
 		if ($ilSetting->get("shib_active")) $modes['shibboleth'] = AUTH_SHIBBOLETH;
 		if ($ilSetting->get("script_active")) $modes['script'] = AUTH_SCRIPT;
@@ -372,7 +407,7 @@ class ilAuthUtils
 			AUTH_RADIUS,
 			AUTH_ECS,
 			AUTH_PROVIDER_LTI,
-			AUTH_OPENID,
+			AUTH_OPENID_CONNECT,
 			AUTH_APACHE
 		);
 		$ret = array();
@@ -420,7 +455,9 @@ class ilAuthUtils
 	*/
 	public static function _generateLogin($a_login)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		// Check if username already exists
 		$found = false;
@@ -458,7 +495,9 @@ class ilAuthUtils
 		if (count(ilLDAPServer::_getActiveServerList()))
 			return true;
 
-		global $ilSetting;
+		global $DIC;
+
+		$ilSetting = $DIC['ilSetting'];
 
 		if ($ilSetting->get('apache_active')) {
 			return true;
@@ -483,7 +522,9 @@ class ilAuthUtils
 	
 	public static function _getMultipleAuthModeOptions($lng)
 	{
-		global $ilSetting;
+		global $DIC;
+
+		$ilSetting = $DIC['ilSetting'];
 		
 		// in the moment only ldap is activated as additional authentication method
 		include_once('Services/LDAP/classes/class.ilLDAPServer.php');
@@ -508,7 +549,9 @@ class ilAuthUtils
 
 		if ($ilSetting->get('apache_active'))
 		{
-			global $lng;
+			global $DIC;
+
+			$lng = $DIC['lng'];
 			$apache_settings = new ilSetting('apache_auth');
 			$options[AUTH_APACHE]['txt'] = $apache_settings->get('name', $lng->txt('apache_auth'));
 			$options[AUTH_APACHE]['hide_in_ui'] = true;
@@ -566,7 +609,9 @@ class ilAuthUtils
 	 */
 	public static function _isExternalAccountEnabled()
 	{
-		global $ilSetting;
+		global $DIC;
+
+		$ilSetting = $DIC['ilSetting'];
 		
 		if($ilSetting->get("cas_active"))
 		{
@@ -602,6 +647,11 @@ class ilAuthUtils
 			return true;
 		}
 
+		if(ilOpenIdConnectSettings::getInstance()->getActive())
+		{
+			return true;
+		}
+
 		// begin-path auth_plugin
 		foreach(self::getAuthPlugins() as $pl)
 		{
@@ -628,14 +678,13 @@ class ilAuthUtils
 	 */
 	public static function _allowPasswordModificationByAuthMode($a_auth_mode)
 	{
-		// begin-patch ldap_multiple
-		// cast to int
 		switch((int) $a_auth_mode)
 		{
 			case AUTH_LDAP:
 			case AUTH_RADIUS:
 			case AUTH_ECS:
 			case AUTH_PROVIDER_LTI:
+			case AUTH_OPENID_CONNECT:
 				return false;
 			default:
 				return true;
@@ -661,18 +710,36 @@ class ilAuthUtils
 				return true;
 		}
 	}
+
+	/**
+	 * @return bool
+	 */
+	public static function isPasswordModificationHidden()
+	{
+		/** @var $ilSetting \ilSetting */
+		global $DIC;
+
+		$ilSetting = $DIC['ilSetting'];
+
+		if ($ilSetting->get('usr_settings_hide_password') || $ilSetting->get('usr_settings_disable_password')) {
+			return true;
+		}
+
+		return false;
+	}
 	
 	/**
 	 * Check if password modification is enabled
 	 * @param object $a_authmode
-	 * @return 
+	 * @return bool
 	 */
 	public static function isPasswordModificationEnabled($a_authmode)
 	{
-		global $ilSetting;
-		
-		if($ilSetting->get('usr_settings_hide_password') or $ilSetting->get('usr_settings_disable_password'))
-		{
+		global $DIC;
+
+		$ilSetting = $DIC['ilSetting'];
+
+		if (self::isPasswordModificationHidden()) {
 			return false;
 		}
 		
@@ -686,6 +753,7 @@ class ilAuthUtils
 			case AUTH_ECS:
 			case AUTH_SCRIPT:
 			case AUTH_PROVIDER_LTI:
+			case AUTH_OPENID_CONNECT:
 				return false;
 
 			case AUTH_SAML:
@@ -725,6 +793,7 @@ class ilAuthUtils
 				return ilAuthUtils::LOCAL_PWV_FULL;
 			
 			case AUTH_SHIBBOLETH:
+			case AUTH_OPENID_CONNECT:
 			case AUTH_SAML:
 			case AUTH_SOAP:
 			case AUTH_CAS:
@@ -750,7 +819,7 @@ class ilAuthUtils
 	 */
 	public static function getAuthPlugins()
 	{
-		$pls = $GLOBALS['ilPluginAdmin']->getActivePluginsForSlot(
+		$pls = $GLOBALS['DIC']['ilPluginAdmin']->getActivePluginsForSlot(
 				IL_COMP_SERVICE,
 				'Authentication',
 				'authhk'
@@ -758,7 +827,7 @@ class ilAuthUtils
 		$pl_objs = array();
 		foreach($pls as $pl)
 		{
-			$pl_objs[] = $GLOBALS['ilPluginAdmin']->getPluginObject(
+			$pl_objs[] = $GLOBALS['DIC']['ilPluginAdmin']->getPluginObject(
 					IL_COMP_SERVICE,
 					'Authentication',
 					'authhk',
@@ -775,7 +844,9 @@ class ilAuthUtils
 	 */
 	public static function getAuthModeTranslation($a_auth_key)
 	{
-		global $lng;
+		global $DIC;
+
+		$lng = $DIC['lng'];
 		
 		switch((int) $a_auth_key)
 		{

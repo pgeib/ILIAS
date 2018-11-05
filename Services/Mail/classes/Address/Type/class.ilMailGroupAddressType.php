@@ -1,58 +1,51 @@
 <?php
 /* Copyright (c) 1998-2016 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-require_once 'Services/Mail/classes/Address/Type/class.ilBaseMailAddressType.php';
-require_once 'Modules/Group/classes/class.ilObjGroup.php';
-
 /**
  * Class ilMailGroupAddressType
  * @author Michael Jansen <mjansen@databay.de>
  */
-class ilMailGroupAddressType extends ilBaseMailAddressType
+class ilMailGroupAddressType extends \ilBaseMailAddressType
 {
 	/**
-	 * {@inheritdoc}
+	 * @inheritdoc
 	 */
-	public function isValid($a_sender_id)
+	protected function isValid(int $senderId): bool
 	{
-		return ilUtil::groupNameExists(substr($this->address->getMailbox(), 1));
+		return $this->typeHelper->doesGroupNameExists(substr($this->address->getMailbox(), 1));
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @inheritdoc
 	 */
-	public function resolve()
+	public function resolve(): array
 	{
-		$usr_ids = array();
+		$usrIds = [];
 
 		$possibleGroupTitle = substr($this->address->getMailbox(), 1);
-		$possibleGroupObjId = ilObjGroup::_lookupIdByTitle($possibleGroupTitle);
+		$possibleGroupObjId = $this->typeHelper->getGroupObjIdByTitle($possibleGroupTitle);
 
-		$grp_object = null;
-		foreach(ilObject::_getAllReferences($possibleGroupObjId) as $ref_id)
-		{
-			$grp_object = ilObjectFactory::getInstanceByRefId($ref_id);
+		$group = null;
+		foreach ($this->typeHelper->getAllRefIdsForObjId($possibleGroupObjId) as $refId) {
+			$group = $this->typeHelper->getInstanceByRefId($refId);
 			break;
 		}
 
-		if($grp_object instanceof ilObjGroup)
-		{
-			foreach($grp_object->getGroupMemberIds() as $usr_id)
-			{
-				$usr_ids[] = $usr_id;
+		if ($group instanceof \ilObjGroup) {
+			foreach ($group->getGroupMemberIds() as $usr_id) {
+				$usrIds[] = $usr_id;
 			}
 
-			ilLoggerFactory::getLogger('mail')->debug(sprintf(
-				"Found the following group member user ids for address (object title) '%s' and obj_id %s: %s", $possibleGroupTitle, $possibleGroupObjId, implode(', ', array_unique($usr_ids))
+			$this->logger->debug(sprintf(
+				"Found the following group member user ids for address (object title) '%s' and obj_id %s: %s",
+				$possibleGroupTitle, $possibleGroupObjId, implode(', ', array_unique($usrIds))
 			));
-		}
-		else
-		{
-			ilLoggerFactory::getLogger('mail')->debug(sprintf(
+		} else {
+			$this->logger->debug(sprintf(
 				"Did not find any group object for address (object title) '%s'", $possibleGroupTitle
 			));
 		}
 
-		return array_unique($usr_ids);
+		return array_unique($usrIds);
 	}
 }

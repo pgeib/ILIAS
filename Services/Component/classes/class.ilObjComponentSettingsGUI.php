@@ -37,7 +37,10 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 	 */
 	public function executeCommand()
 	{
-		global $rbacsystem, $ilErr, $ilCtrl;
+		global $DIC;
+		$rbacsystem = $DIC->rbac()->system();
+		$ilErr = $DIC['ilErr'];
+		$ilCtrl = $DIC->ctrl();
 
 		$next_class = $this->ctrl->getNextClass($this);
 		$cmd = $this->ctrl->getCmd();
@@ -102,7 +105,9 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 	 */
 	public function getAdminTabs()
 	{
-		global $rbacsystem, $ilAccess, $lng;
+		global $DIC;
+		$rbacsystem = $DIC->rbac()->system();
+		$lng = $DIC->language();
 
 		if ($rbacsystem->checkAccess("visible,read",$this->object->getRefId()))
 		{
@@ -157,7 +162,9 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 	 */
 	protected function listPlugins()
 	{
-		global $tpl, $ilTabs;
+		global $DIC;
+		$tpl = $DIC->ui()->mainTemplate();
+		$ilTabs = $DIC->tabs();
 
 		$ilTabs->activateTab("plugins");
 		include_once("./Services/Component/classes/class.ilPluginsOverviewTableGUI.php");
@@ -170,7 +177,11 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 	 */
 	protected function showPluginSlotInfo()
 	{
-		global $tpl,$lng, $ilTabs, $ilCtrl;
+		global $DIC;
+		$tpl = $DIC->ui()->mainTemplate();
+		$lng = $DIC->language();
+		$ilTabs = $DIC->tabs();
+		$ilCtrl = $DIC->ctrl();
 
 		if(!DEVMODE)
 		{
@@ -242,7 +253,13 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 
 	protected function showPlugin()
 	{
-		global $ilCtrl, $ilTabs, $lng, $tpl, $ilDB, $ilToolbar;
+		global $DIC;
+		$ilCtrl = $DIC->ctrl();
+		$ilTabs = $DIC->tabs();
+		$lng = $DIC->language();
+		$tpl = $DIC->ui()->mainTemplate();
+		$ilDB = $DIC->database();
+		$ilToolbar = $DIC->toolbar();
 
 		if(!$_GET["ctype"] ||
 			!$_GET["cname"] ||
@@ -297,17 +314,19 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 			$db_file = $dbupdate->getFileVersion();
 		}
 
+		$plugin_db_data = ilPlugin::getPluginRecord($plugin["component_type"], $plugin["component_name"], $plugin["slot_id"], $plugin["name"]);
+
 		// toolbar actions
 		if($plugin["must_install"]) {
 			$ilToolbar->addButton($lng->txt("cmps_install"),
 					$ilCtrl->getLinkTarget($this, "installPlugin"));
 		} else {
 			// configure button
-			if (ilPlugin::hasConfigureClass($slot->getPluginsDirectory(), $plugin["name"]) &&
-				$ilCtrl->checkTargetClass(ilPlugin::getConfigureClassName($plugin["name"])))
+			if (ilPlugin::hasConfigureClass($slot->getPluginsDirectory(), $plugin, $plugin_db_data) &&
+				$ilCtrl->checkTargetClass(ilPlugin::getConfigureClassName($plugin)))
 			{
 				$ilToolbar->addButton($lng->txt("cmps_configure"),
-					$ilCtrl->getLinkTargetByClass(strtolower(ilPlugin::getConfigureClassName($plugin["name"])), "configure"));
+					$ilCtrl->getLinkTargetByClass(strtolower(ilPlugin::getConfigureClassName($plugin)), "configure"));
 			}
 			// refresh languages button
 			if (count($langs) > 0)
@@ -455,7 +474,9 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 	*/
 	protected function activatePlugin()
 	{
-		global $ilCtrl, $lng;
+		global $DIC;
+		$ilCtrl = $DIC->ctrl();
+		$lng = $DIC->language();
 
 		include_once("./Services/Component/classes/class.ilPlugin.php");
 		$pl = ilPlugin::getPluginObject($_GET["ctype"], $_GET["cname"],
@@ -525,14 +546,14 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 		}
 
 		// reinitialize control class
-		global $ilCtrl;
+		global $DIC;
+		$ilCtrl = $DIC->ctrl();
 		$ilCtrl->initBaseClass("iladministrationgui");
 		$_GET["cmd"] = "jumpToPluginSlot";
 		$ilCtrl->setParameterByClass("iladministrationgui", "ctype", $_GET["ctype"]);
 		$ilCtrl->setParameterByClass("iladministrationgui", "cname", $_GET["cname"]);
 		$ilCtrl->setParameterByClass("iladministrationgui", "slot_id", $_GET["slot_id"]);
 		$ilCtrl->setParameterByClass("iladministrationgui", "plugin_id", $_GET["plugin_id"]);
-		$ilCtrl->setTargetScript("ilias.php");
 		ilUtil::redirect("ilias.php?admin_mode=settings&baseClass=ilAdministrationGUI".
 			"&cmd=jumpToPluginSlot&ref_id=".$_GET["ref_id"]."&ctype=".$_GET["ctype"].
 			"&cname=".$_GET["cname"]."&slot_id=".$_GET["slot_id"]."&plugin_id=".$_GET["plugin_id"]);
@@ -543,7 +564,9 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 	*/
 	protected function deactivatePlugin()
 	{
-		global $ilCtrl, $lng;
+		global $DIC;
+		$ilCtrl = $DIC->ctrl();
+		$lng = $DIC->language();
 
 		include_once("./Services/Component/classes/class.ilPlugin.php");
 		$pl = ilPlugin::getPluginObject($_GET["ctype"], $_GET["cname"],
@@ -580,7 +603,8 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 	*/
 	protected function refreshLanguages()
 	{
-		global $ilCtrl;
+		global $DIC;
+		$ilCtrl = $DIC->ctrl();
 
 		include_once("./Services/Component/classes/class.ilPlugin.php");
 		$pl = ilPlugin::getPluginObject($_GET["ctype"], $_GET["cname"],
@@ -610,7 +634,10 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 
 	protected function confirmUninstallPlugin()
 	{
-		global $ilCtrl, $tpl, $ilPluginAdmin;
+		global $DIC;
+		$ilCtrl = $DIC->ctrl();
+		$tpl = $DIC->ui()->mainTemplate();
+		$ilPluginAdmin = $DIC['ilPluginAdmin'];
 
 		include_once("./Services/Component/classes/class.ilPlugin.php");
 		$pl = ilPlugin::getPluginObject($_GET["ctype"], $_GET["cname"],
@@ -643,7 +670,8 @@ class ilObjComponentSettingsGUI extends ilObjectGUI
 
 	protected function uninstallPlugin()
 	{
-		global $ilCtrl;
+		global $DIC;
+		$ilCtrl = $DIC->ctrl();
 
 		include_once("./Services/Component/classes/class.ilPlugin.php");
 		$pl = ilPlugin::getPluginObject($_GET["ctype"], $_GET["cname"],

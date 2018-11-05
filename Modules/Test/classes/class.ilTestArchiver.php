@@ -99,7 +99,8 @@ class ilTestArchiver
 	public function __construct($test_obj_id)
 	{
 		/** @var $ilias ILIAS */
-		global $ilias;
+		global $DIC;
+		$ilias = $DIC['ilias'];
 		$this->external_directory_path  = $ilias->ini_ilias->readVariable('clients','datadir');
 		$this->client_id 				= $ilias->client_id;
 		$this->test_obj_id 				= $test_obj_id;
@@ -383,8 +384,9 @@ class ilTestArchiver
 
 		// Generate test pass overview
 		$test = new ilObjTest($this->test_obj_id, false);
-		$gui = new ilObjTestGUI();
-		$gui->object = $test;
+		require_once 'Modules/Test/classes/class.ilParticipantsTestResultsGUI.php';
+		$gui = new ilParticipantsTestResultsGUI();
+		$gui->setTestObj($test);
 		$array_of_actives = array();
 		$participants = $test->getParticipants();
 
@@ -527,7 +529,8 @@ class ilTestArchiver
 			}
 			else
 			{
-				global $ilUser;
+				global $DIC;
+				$ilUser = $DIC['ilUser'];
 				$user = $ilUser;
 			}
 			
@@ -607,7 +610,8 @@ class ilTestArchiver
 		}
 		else
 		{
-			global $ilUser;
+			global $DIC;
+			$ilUser = $DIC['ilUser'];
 			$user = $ilUser;
 		}
 

@@ -71,21 +71,29 @@ class System
     {
         $globalConfig = \SimpleSAML_Configuration::getInstance();
 
-        $tempDir = rtrim($globalConfig->getString('tempdir', sys_get_temp_dir().DIRECTORY_SEPARATOR.'simplesaml'),
-            DIRECTORY_SEPARATOR);
+        $tempDir = rtrim(
+            $globalConfig->getString(
+                'tempdir',
+                sys_get_temp_dir().DIRECTORY_SEPARATOR.'simplesaml'
+            ),
+            DIRECTORY_SEPARATOR
+        );
 
         if (!is_dir($tempDir)) {
             if (!mkdir($tempDir, 0700, true)) {
                 $error = error_get_last();
-                throw new \SimpleSAML_Error_Exception('Error creating temporary directory "'.$tempDir.
-                    '": '.$error['message']);
+                throw new \SimpleSAML_Error_Exception(
+                    'Error creating temporary directory "'.$tempDir.'": '.
+                    (is_array($error) ? $error['message'] : 'no error available')
+                );
             }
         } elseif (function_exists('posix_getuid')) {
             // check that the owner of the temp directory is the current user
             $stat = lstat($tempDir);
             if ($stat['uid'] !== posix_getuid()) {
-                throw new \SimpleSAML_Error_Exception('Temporary directory "'.$tempDir.
-                    '" does not belong to the current user.');
+                throw new \SimpleSAML_Error_Exception(
+                    'Temporary directory "'.$tempDir.'" does not belong to the current user.'
+                );
             }
         }
 
@@ -114,13 +122,20 @@ class System
             $base = $config->getBaseDir();
         }
 
+        // normalise directory separator
+        $base = str_replace('\\', '/', $base);
+        $path = str_replace('\\', '/', $path);
+
         // remove trailing slashes
         $base = rtrim($base, '/');
+        $path = rtrim($path, '/');
 
         // check for absolute path
         if (substr($path, 0, 1) === '/') {
             // absolute path. */
             $ret = '/';
+        } elseif (static::pathContainsDriveLetter($path)) {
+            $ret = '';
         } else {
             // path relative to base
             $ret = $base;
@@ -133,7 +148,7 @@ class System
             } elseif ($d === '..') {
                 $ret = dirname($ret);
             } else {
-                if (substr($ret, -1) !== '/') {
+                if ($ret && substr($ret, -1) !== '/') {
                     $ret .= '/';
                 }
                 $ret .= $d;
@@ -162,6 +177,8 @@ class System
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      * @author Andjelko Horvat
      * @author Jaime Perez, UNINETT AS <jaime.perez@uninett.no>
+     *
+     * @return void
      */
     public static function writeFile($filename, $data, $mode = 0600)
     {
@@ -174,24 +191,49 @@ class System
         $res = @file_put_contents($tmpFile, $data);
         if ($res === false) {
             $error = error_get_last();
-            throw new \SimpleSAML_Error_Exception('Error saving file "'.$tmpFile.
-                '": '.$error['message']);
+            throw new \SimpleSAML_Error_Exception(
+                'Error saving file "'.$tmpFile.'": '.
+                (is_array($error) ? $error['message'] : 'no error available')
+            );
         }
 
         if (self::getOS() !== self::WINDOWS) {
             if (!chmod($tmpFile, $mode)) {
                 unlink($tmpFile);
                 $error = error_get_last();
-                throw new \SimpleSAML_Error_Exception('Error changing file mode of "'.$tmpFile.
-                    '": '.$error['message']);
+                //$error = (is_array($error) ? $error['message'] : 'no error available');
+                throw new \SimpleSAML_Error_Exception(
+                    'Error changing file mode of "'.$tmpFile.'": '.
+                    (is_array($error) ? $error['message'] : 'no error available')
+                );
             }
         }
 
         if (!rename($tmpFile, $filename)) {
             unlink($tmpFile);
             $error = error_get_last();
-            throw new \SimpleSAML_Error_Exception('Error moving "'.$tmpFile.'" to "'.
-                $filename.'": '.$error['message']);
+            throw new \SimpleSAML_Error_Exception(
+                'Error moving "'.$tmpFile.'" to "'.$filename.'": '.
+                (is_array($error) ? $error['message'] : 'no error available')
+            );
         }
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($filename);
+        }
+    }
+
+    /**
+     * Check if the supplied path contains a Windows-style drive letter.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    private static function pathContainsDriveLetter($path)
+    {
+        $letterAsciiValue = ord(strtoupper(substr($path, 0, 1)));
+        return substr($path, 1, 1) === ':'
+                && $letterAsciiValue >= 65 && $letterAsciiValue <= 90;
     }
 }

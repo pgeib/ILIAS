@@ -15,6 +15,9 @@ include_once './Services/Membership/classes/class.ilMembershipRegistrationSettin
 */
 class ilObjSession extends ilObject
 {
+	const MAIL_ALLOWED_ALL = 1;
+	const MAIL_ALLOWED_ADMIN = 2;
+
 	const LOCAL_ROLE_PARTICIPANT_PREFIX = 'il_sess_participant';
 	
 	const CAL_REG_START = 1;
@@ -36,6 +39,16 @@ class ilObjSession extends ilObject
 	protected $reg_waiting_list = 0;
 	protected $reg_waiting_list_autofill; // [bool]
 
+	/**
+	 * @var bool
+	 */
+	protected $show_members = false;
+
+	/**
+	 * @var int
+	 */
+	protected $mail_members = self::MAIL_ALLOWED_ADMIN;
+
 	protected $appointments;
 	protected $files = array();
 	
@@ -43,6 +56,11 @@ class ilObjSession extends ilObject
 	 * @var ilLogger
 	 */
 	protected $session_logger = null;
+
+	/**
+	 * @var \ilSessionParticipants
+	 */
+	protected $members_obj;
 	
 
 	
@@ -54,7 +72,9 @@ class ilObjSession extends ilObject
 	*/
 	public function __construct($a_id = 0,$a_call_by_reference = true)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$this->session_logger = $GLOBALS['DIC']->logger()->sess();
 
@@ -73,7 +93,9 @@ class ilObjSession extends ilObject
 	 */
 	public static function _lookupRegistrationEnabled($a_obj_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = "SELECT reg_type FROM event ".
 			"WHERE obj_id = ".$ilDB->quote($a_obj_id ,'integer')." ";
@@ -92,7 +114,9 @@ class ilObjSession extends ilObject
 	 */
 	public static function lookupSession($a_obj_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = "SELECT * FROM event ".
 			"WHERE obj_id = ".$ilDB->quote($a_obj_id);
@@ -344,6 +368,24 @@ class ilObjSession extends ilObject
 	{
 		return (bool)$this->reg_waiting_list_autofill;
 	}
+
+	/**
+	 * Show members gallery
+	 * @param $a_status
+	 */
+	public function setShowMembers($a_status)
+	{
+		$this->show_members = (bool) $a_status;
+	}
+
+	/**
+	 * Member gallery enabled
+	 * @return bool
+	 */
+	public function getShowMembers()
+	{
+		return (bool) $this->show_members;
+	}
 	
 	/**
 	 * is registration enabled
@@ -413,6 +455,26 @@ class ilObjSession extends ilObject
 	{
 		return $this->files ? $this->files : array();
 	}
+
+
+	/**
+	 * Set mail to members type
+	 * @param int $a_type
+	 */
+	public function setMailToMembersType($a_type)
+	{
+		$this->mail_members = $a_type;
+	}
+
+	/**
+	 * Get mail to members type
+	 * @return int
+	 */
+	public function getMailToMembersType()
+	{
+		return $this->mail_members;
+	}
+
 	
 	/**
 	 * validate
@@ -423,7 +485,9 @@ class ilObjSession extends ilObject
 	 */
 	public function validate()
 	{
-		global $ilErr;
+		global $DIC;
+
+		$ilErr = $DIC['ilErr'];
 		
 		// #17114
 		if($this->isRegistrationUserLimitEnabled() &&
@@ -500,6 +564,8 @@ class ilObjSession extends ilObject
 		$new_obj->setWaitingListAutoFill($this->hasWaitingListAutoFill());
 		$new_obj->setRegistrationMinUsers($this->getRegistrationMinUsers());
 		$new_obj->setRegistrationMaxUsers($this->getRegistrationMaxUsers());
+		$new_obj->setShowMembers($this->getShowMembers());
+		$new_obj->setMailToMembersType($this->getMailToMembersType());
 		
 		$new_obj->update(true);
 		
@@ -515,7 +581,9 @@ class ilObjSession extends ilObject
 	 */
 	public function cloneDependencies($a_target_id,$a_copy_id)
 	{
-		global $ilObjDataCache;
+		global $DIC;
+
+		$ilObjDataCache = $DIC['ilObjDataCache'];
 		
 		parent::cloneDependencies($a_target_id,$a_copy_id);
 
@@ -537,8 +605,12 @@ class ilObjSession extends ilObject
 	 */
 	public function create($a_skip_meta_data = false)
 	{
-		global $ilDB;
-		global $ilAppEventHandler;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		global $DIC;
+
+		$ilAppEventHandler = $DIC['ilAppEventHandler'];
 	
 		parent::create();
 		
@@ -549,7 +621,7 @@ class ilObjSession extends ilObject
 
 		$next_id = $ilDB->nextId('event');
 		$query = "INSERT INTO event (event_id,obj_id,location,tutor_name,tutor_phone,tutor_email,details,registration, ".
-			'reg_type, reg_limit_users, reg_limited, reg_waiting_list, reg_min_users, reg_auto_wait) '.
+			'reg_type, reg_limit_users, reg_limited, reg_waiting_list, reg_min_users, reg_auto_wait,show_members,mail_members) '.
 			"VALUES( ".
 			$ilDB->quote($next_id,'integer').", ".
 			$this->db->quote($this->getId() ,'integer').", ".
@@ -564,7 +636,9 @@ class ilObjSession extends ilObject
 			$this->db->quote($this->isRegistrationUserLimitEnabled(),'integer').', '.
 			$this->db->quote($this->isRegistrationWaitingListEnabled(),'integer').', '.
 			$this->db->quote($this->getRegistrationMinUsers(),'integer').', '.
-			$this->db->quote($this->hasWaitingListAutoFill(),'integer').' '.
+			$this->db->quote($this->hasWaitingListAutoFill(),'integer').', '.
+			$this->db->quote($this->getShowMembers(),'integer').', '.
+			$this->db->quote($this->getMailToMembersType(),'integer').' '.
 			")";
 		$res = $ilDB->manipulate($query);
 		$this->event_id = $next_id;
@@ -587,8 +661,12 @@ class ilObjSession extends ilObject
 	 */
 	public function update($a_skip_meta_update = false)
 	{
-		global $ilDB;
-		global $ilAppEventHandler;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		global $DIC;
+
+		$ilAppEventHandler = $DIC['ilAppEventHandler'];
 
 		if(!parent::update())
 		{
@@ -611,7 +689,9 @@ class ilObjSession extends ilObject
 			"reg_limit_users = ".$this->db->quote($this->getRegistrationMaxUsers() ,'integer').", ".
 			"reg_min_users = ".$this->db->quote($this->getRegistrationMinUsers() ,'integer').", ".
 			"reg_waiting_list = ".$this->db->quote($this->isRegistrationWaitingListEnabled(),'integer').", ".
-			"reg_auto_wait = ".$this->db->quote($this->hasWaitingListAutoFill(),'integer')." ".
+			"reg_auto_wait = ".$this->db->quote($this->hasWaitingListAutoFill(),'integer').", ".
+			'show_members = ' . $this->db->quote($this->getShowMembers(),'integer').', '.
+			'mail_members = ' . $this->db->quote($this->getMailToMembersType(),'integer').' '.
 			"WHERE obj_id = ".$this->db->quote($this->getId() ,'integer')." ";
 		$res = $ilDB->manipulate($query);
 		
@@ -631,8 +711,12 @@ class ilObjSession extends ilObject
 	 */
 	public function delete()
 	{
-		global $ilDB;
-		global $ilAppEventHandler;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		global $DIC;
+
+		$ilAppEventHandler = $DIC['ilAppEventHandler'];
 		
 		if(!parent::delete())
 		{
@@ -698,6 +782,8 @@ class ilObjSession extends ilObject
 			$this->setWaitingListAutoFill($row->reg_auto_wait);
 			$this->setRegistrationMaxUsers($row->reg_limit_users);
 			$this->setRegistrationMinUsers($row->reg_min_users);
+			$this->setShowMembers((bool) $row->show_members);
+			$this->setMailToMembersType((int) $row->mail_members);
 			$this->event_id = $row->event_id;
 		}
 
@@ -806,17 +892,26 @@ class ilObjSession extends ilObject
 			if(in_array($user_id, $parts->getParticipants()))
 			{
 				$this->session_logger->notice('User on waiting list already session member: ' . $user_id);
+				continue;
 			}
 			
 			if($this->enabledRegistration())
 			{
 				$this->session_logger->debug('Registration enabled: register user');
 				$parts->register($user_id);
+				$parts->sendNotification(
+					ilSessionMembershipMailNotification::TYPE_ACCEPTED_SUBSCRIPTION_MEMBER,
+					$user_id
+				);
 			}
 			else
 			{
 				$this->session_logger->debug('Registration disabled: set user status to participated.');
 				$parts->getEventParticipants()->updateParticipation($user_id, true);
+				$parts->sendNotification(
+					ilSessionMembershipMailNotification::TYPE_ACCEPTED_SUBSCRIPTION_MEMBER,
+					$user_id
+				);
 			}
 			
 			$session_waiting_list->removeFromList($user_id);
@@ -829,15 +924,7 @@ class ilObjSession extends ilObject
 		}
 	}
 	
-	/**
-	 * Get mail to members type
-	 * @return int
-	 */
-	public function getMailToMembersType()
-	{
-		return false;
-	}
-	
+
 	/**
 	 * init participants object
 	 * 
@@ -847,26 +934,22 @@ class ilObjSession extends ilObject
 	 */
 	protected function initParticipants()
 	{
-		include_once('./Modules/Session/classes/class.ilSessionParticipants.php');
 		$this->members_obj = ilSessionParticipants::_getInstanceByObjId($this->getId());
 	}
 	
 	/**
 	 * Get members objects
 	 * 
-	 * @return ilGroupParticipants
+	 * @return  \ilSessionParticipants
 	 */
 	public function getMembersObject()
 	{
-		// #17886
-		if(!$this->members_obj instanceof ilGroupParticipants)
+		if(!$this->members_obj instanceof ilSessionParticipants)
 		{
 			$this->initParticipants();
 		}
 		return $this->members_obj;
 	}
-	
-
 }
 
 ?>

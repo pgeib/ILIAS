@@ -13,13 +13,15 @@ use \ILIAS\UI\Implementation\Component\Input\Container\Form\Form;
 use ILIAS\UI\Implementation\Component\SignalGenerator;
 
 use \ILIAS\Transformation\Factory as TransformationFactory;
+use \ILIAS\Data;
+use \ILIAS\Validation;
+use \ILIAS\Transformation;
 
 use Psr\Http\Message\ServerRequestInterface;
 
 class FixedNameSource implements NameSource {
 
 	public $name = "name";
-
 
 	public function getNewName() {
 		return $this->name;
@@ -30,6 +32,10 @@ class ConcreteForm extends Form {
 
 	public $post_data = null;
 
+	public function __construct(Input\Field\Factory $field_factory, array $inputs) {
+		$this->input_factory = $field_factory;
+		parent::__construct($field_factory, $inputs);
+	}
 
 	public function _extractPostData(ServerRequestInterface $request) {
 		return $this->extractPostData($request);
@@ -46,8 +52,7 @@ class ConcreteForm extends Form {
 
 
 	public function setInputs(array $inputs) {
-		$input_factory = new Input\Factory(new SignalGenerator());
-		$this->input_group = $input_factory->field()->group($inputs);
+		$this->input_group = $this->input_factory->group($inputs);
 		$this->inputs = $inputs;
 	}
 
@@ -63,12 +68,18 @@ class ConcreteForm extends Form {
 class FormTest extends ILIAS_UI_TestBase {
 
 	protected function buildFactory() {
-		return new ILIAS\UI\Implementation\Component\Input\Container\Form\Factory(new SignalGenerator());
+		return new ILIAS\UI\Implementation\Component\Input\Container\Form\Factory($this->buildInputFactory());
 	}
 
 
 	protected function buildInputFactory() {
-		return new ILIAS\UI\Implementation\Component\Input\Field\Factory(new SignalGenerator());
+		$df = new Data\Factory();
+		return new ILIAS\UI\Implementation\Component\Input\Field\Factory(
+			new SignalGenerator(),
+			$df,
+			new Validation\Factory($df, $this->createMock(\ilLanguage::class)),
+			new Transformation\Factory()
+		);
 	}
 
 
@@ -105,7 +116,7 @@ class FormTest extends ILIAS_UI_TestBase {
 		$name_source = new FixedNameSource();
 
 		$inputs = [$if->text(""), $if->text("")];
-		$form = new ConcreteForm($inputs);
+		$form = new ConcreteForm($this->buildInputFactory(), $inputs);
 
 		$seen_names = [];
 		$inputs = $form->getInputs();
@@ -130,7 +141,7 @@ class FormTest extends ILIAS_UI_TestBase {
 
 
 	public function test_extractPostData() {
-		$form = new ConcreteForm([]);
+		$form = new ConcreteForm($this->buildInputFactory(), []);
 		$request = \Mockery::mock(ServerRequestInterface::class);
 		$request->shouldReceive("getParsedBody")->once()->andReturn([]);
 		$post_data = $form->_extractPostData($request);
@@ -155,7 +166,7 @@ class FormTest extends ILIAS_UI_TestBase {
 
 		$input_2->shouldReceive("getContent")->once()->andReturn($df->ok(0));
 
-		$form = new ConcreteForm([]);
+		$form = new ConcreteForm($this->buildInputFactory(), []);
 		$form->setInputs([$input_1, $input_2]);
 		$form->post_data = $post_data;
 
@@ -182,7 +193,7 @@ class FormTest extends ILIAS_UI_TestBase {
 		$input_2->shouldReceive("withInput")->once()->with($post_data)->andReturn($input_2);
 		$input_2->shouldReceive("getContent")->once()->andReturn($df->ok(0));
 
-		$form = new ConcreteForm([]);
+		$form = new ConcreteForm($this->buildInputFactory(), []);
 		$form->setInputs(["foo" => $input_1, "bar" => $input_2]);
 		$form->post_data = $post_data;
 
@@ -209,7 +220,7 @@ class FormTest extends ILIAS_UI_TestBase {
 
 		$input_2->shouldReceive("withInput")->once()->andReturn($input_2);
 
-		$form = new ConcreteForm([]);
+		$form = new ConcreteForm($this->buildInputFactory(), []);
 		$form->setInputs([$input_1, $input_2]);
 		$form = $form->withRequest($request);
 		$this->assertEquals([1, 2], $form->getData());
@@ -231,7 +242,7 @@ class FormTest extends ILIAS_UI_TestBase {
 
 		$input_2->shouldReceive("withInput")->once()->andReturn($input_2);
 
-		$form = new ConcreteForm([]);
+		$form = new ConcreteForm($this->buildInputFactory(), []);
 		$form->setInputs(["foo" => $input_1, "bar" => $input_2]);
 		$form = $form->withRequest($request);
 		$this->assertEquals(["foo" => 1, "bar" => 2], $form->getData());
@@ -253,7 +264,7 @@ class FormTest extends ILIAS_UI_TestBase {
 
 		$input_2->shouldReceive("withInput")->once()->andReturn($input_2);
 
-		$form = new ConcreteForm([]);
+		$form = new ConcreteForm($this->buildInputFactory(), []);
 		$form->setInputs(["foo" => $input_1, "bar" => $input_2]);
 
 		//Todo: This is not good, this should throw an error or similar.
@@ -277,7 +288,7 @@ class FormTest extends ILIAS_UI_TestBase {
 
 		$input_2->shouldReceive("withInput")->once()->andReturn($input_2);
 
-		$form = new ConcreteForm([]);
+		$form = new ConcreteForm($this->buildInputFactory(), []);
 		$form->setInputs([$input_1, $input_2]);
 
 		$form2 = $form->withAdditionalTransformation($this->buildTransformation(function ($v) {
@@ -299,7 +310,7 @@ class FormTest extends ILIAS_UI_TestBase {
 			1     => $if->text(""),
 			$if->text(""),
 		];
-		$form = new ConcreteForm([]);
+		$form = new ConcreteForm($this->buildInputFactory(), []);
 		$form->setInputs($inputs);
 		$named_inputs = $form->getInputs();
 		$this->assertEquals(array_keys($inputs), array_keys($named_inputs));

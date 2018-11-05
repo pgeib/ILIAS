@@ -42,7 +42,7 @@ class Renderer extends AbstractComponentRenderer {
 			$f = $this->getUIFactory();
 			$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/icon-sb-more.svg', '');
 			$button = $f->button()
-				->iconographic($icon->withSize('large'), $component->getToolsLabel(), '#')
+				->bulky($icon->withSize('large'), $component->getToolsLabel(), '#')
 				->withOnClick($tools_signal)
 				->withEngagedState($tools_active);
 

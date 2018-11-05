@@ -29,7 +29,11 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 	 */
 	public function executeCommand()
 	{
-		global $ilDB, $ilPluginAdmin, $lng, $ilTabs;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
+		$ilPluginAdmin = $DIC['ilPluginAdmin'];
+		$lng = $DIC['lng'];
+		$ilTabs = $DIC['ilTabs'];
 
 		$this->checkReadAccess();
 
@@ -148,7 +152,8 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 
 	protected function startTestCmd()
 	{
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC['ilUser'];
 
 		$_SESSION['tst_pass_finish'] = 0;
 
@@ -227,7 +232,8 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 	
 	protected function updateLearningProgressOnTestStart()
 	{
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC['ilUser'];
 
 		require_once ('./Modules/Test/classes/class.ilObjTestAccess.php');
 		require_once('./Services/Tracking/classes/class.ilLPStatusWrapper.php');
@@ -278,6 +284,12 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		if( !(int)$questionId && $this->testSession->isObjectiveOriented() )
 		{
 			$this->handleTearsAndAngerNoObjectiveOrientedQuestion();
+		}
+		
+		if( !$this->testSequence->isQuestionPresented($questionId) )
+		{
+			$this->testSequence->setQuestionPresented($questionId);
+			$this->testSequence->saveToDb();
 		}
 
 		$isQuestionWorkedThrough = assQuestion::_isWorkedThrough(
@@ -386,10 +398,10 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		}
 
 // fau: testNav - add feedback modal
-		if (!empty($_SESSION['forced_feedback_navigation_url']))
+		if ($this->isForcedFeedbackNavUrlRegistered())
 		{
-			$this->populateInstantResponseModal($questionGui, $_SESSION['forced_feedback_navigation_url']);
-			unset($_SESSION['forced_feedback_navigation_url']);
+			$this->populateInstantResponseModal($questionGui, $this->getRegisteredForcedFeedbackNavUrl());
+			$this->unregisterForcedFeedbackNavUrl();
 		}
 // fau.
 
@@ -633,6 +645,13 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		{
 			// but only if the ending time is not reached
 			$q_id = $this->testSequence->getQuestionForSequence($_GET["sequence"]);
+			
+			if( $this->isParticipantsAnswerFixed($q_id) )
+			{
+				// should only be reached by firebugging the disabled form in ui
+				throw new ilTestException('not allowed request');
+			}
+			
 			if (is_numeric($q_id) && (int)$q_id) 
 			{
 				$questionOBJ = $this->getQuestionInstance($q_id);
@@ -701,7 +720,7 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		if ($this->getNavigationUrlParameter())
 		{
 			$this->saveNavigationPreventConfirmation();
-			$_SESSION['forced_feedback_navigation_url'] = $this->getNavigationUrlParameter();
+			$this->registerForcedFeedbackNavUrl($this->getNavigationUrlParameter());
 		}
 // fau.
 		$this->ctrl->redirect($this, ilTestPlayerCommands::SHOW_QUESTION);
@@ -734,7 +753,9 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 				// Something went wrong. Maybe the user pressed the start button twice
 				// Questions already exist so there is no need to create new questions
 
-				global $ilLog, $ilUser;
+				global $DIC;
+				$ilLog = $DIC['ilLog'];
+				$ilUser = $DIC['ilUser'];
 
 				$ilLog->write(
 					__METHOD__.' Random Questions allready exists for user '.
@@ -748,7 +769,9 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		{
 			// This may not happen! If it happens, raise a fatal error...
 
-			global $ilLog, $ilUser;
+			global $DIC;
+			$ilLog = $DIC['ilLog'];
+			$ilUser = $DIC['ilUser'];
 
 			$ilLog->write(__METHOD__.' '.sprintf(
 				$this->lng->txt("error_random_question_generation"), $ilUser->getId(), $this->object->getTestId()
@@ -762,7 +785,10 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 
 	protected function generateRandomTestPassForActiveUser()
 	{
-		global $tree, $ilDB, $ilPluginAdmin;
+		global $DIC;
+		$tree = $DIC['tree'];
+		$ilDB = $DIC['ilDB'];
+		$ilPluginAdmin = $DIC['ilPluginAdmin'];
 
 		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetConfig.php';
 		$questionSetConfig = new ilTestRandomQuestionSetConfig($tree, $ilDB, $ilPluginAdmin, $this->object);
@@ -848,7 +874,9 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 
 	protected function adoptUserSolutionsFromPreviousPass()
 	{
-		global $ilDB, $ilUser;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
+		$ilUser = $DIC['ilUser'];
 		
 		$assSettings = new ilSetting('assessment');
 

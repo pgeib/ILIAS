@@ -32,7 +32,11 @@ class ilLearningProgressBaseGUI
 	 * @var ilLogger
 	 */
 	protected $logger;
-	
+
+	/**
+	 * @var ilTabsGUI
+	 */
+	protected $tabs_gui;
 	
 	
 	const LP_CONTEXT_PERSONAL_DESKTOP = 1;
@@ -55,7 +59,13 @@ class ilLearningProgressBaseGUI
 
 	function __construct($a_mode,$a_ref_id = 0,$a_usr_id = 0)
 	{
-		global $tpl,$ilCtrl,$lng,$ilObjDataCache,$ilTabs;
+		global $DIC;
+
+		$tpl = $DIC['tpl'];
+		$ilCtrl = $DIC['ilCtrl'];
+		$lng = $DIC['lng'];
+		$ilObjDataCache = $DIC['ilObjDataCache'];
+		$ilTabs = $DIC['ilTabs'];
 
 		$this->tpl = $tpl;
 		$this->ctrl = $ilCtrl;
@@ -125,7 +135,10 @@ class ilLearningProgressBaseGUI
 
 	function __setSubTabs($a_active)
 	{
-		global $rbacsystem,$ilObjDataCache;
+		global $DIC;
+
+		$rbacsystem = $DIC['rbacsystem'];
+		$ilObjDataCache = $DIC['ilObjDataCache'];
 
 
 		
@@ -137,14 +150,14 @@ class ilLearningProgressBaseGUI
 				if(ilObjUserTracking::_hasLearningProgressLearner() && 
 					ilObjUserTracking::_enabledUserRelatedData())
 				{
-					$this->tabs_gui->addTarget('trac_progress',
+					$this->tabs_gui->addSubTabTarget('trac_progress',
 													$this->ctrl->getLinkTargetByClass('illplistofprogressgui',''),
 													"","","",$a_active == self::LP_ACTIVE_PROGRESS);
 				}
 
 				if(ilObjUserTracking::_hasLearningProgressOtherUsers())
 				{
-					$this->tabs_gui->addTarget('trac_objects',
+					$this->tabs_gui->addSubTabTarget('trac_objects',
 													 $this->ctrl->getLinkTargetByClass("illplistofobjectsgui",''),
 													 "","","",$a_active == self::LP_ACTIVE_OBJECTS);
 				}
@@ -243,7 +256,7 @@ class ilLearningProgressBaseGUI
 	{
 		if($this->getMode() == self::LP_CONTEXT_PERSONAL_DESKTOP)
 		{
-			$this->tpl->setTitle($this->lng->txt("learning_progress"));
+			//$this->tpl->setTitle($this->lng->txt("learning_progress"));
 			
 			// set locator
 /*
@@ -274,7 +287,9 @@ class ilLearningProgressBaseGUI
 	*/
 	function __insertPath(&$a_tpl,$a_ref_id)
 	{
-		global $tree;
+		global $DIC;
+
+		$tree = $DIC['tree'];
 
 		$path_arr = $tree->getPathFull($a_ref_id);
 		$counter = 0;
@@ -304,7 +319,9 @@ class ilLearningProgressBaseGUI
 	// we need this public in table classes
 	public static function _showImageByStatus(&$tpl,$a_status,$tpl_prefix = "")
 	{
-		global $lng;
+		global $DIC;
+
+		$lng = $DIC['lng'];
 		
 		$tpl->setVariable($tpl_prefix."STATUS_IMG",
 			ilLearningProgressBaseGUI::_getImagePathForStatus($a_status));
@@ -357,7 +374,9 @@ class ilLearningProgressBaseGUI
 	 */
 	static function _getStatusText($a_status, $a_lng = null)
 	{
-		global $lng;
+		global $DIC;
+
+		$lng = $DIC['lng'];
 		
 		if(!$a_lng)
 		{
@@ -401,7 +420,9 @@ class ilLearningProgressBaseGUI
 	*/
 	function __showObjectDetails(&$info,$item_id = 0,$add_section = true)
 	{
-		global $ilObjDataCache;
+		global $DIC;
+
+		$ilObjDataCache = $DIC['ilObjDataCache'];
 
 		$details_id = $item_id ? $item_id : $this->details_id;
 		
@@ -436,7 +457,9 @@ class ilLearningProgressBaseGUI
 
 	function __appendUserInfo(&$info, $a_user)
 	{
-		global $ilUser;
+		global $DIC;
+
+		$ilUser = $DIC['ilUser'];
 		
 		// #13525 - irrelevant personal data is not to be presented
 		return;
@@ -461,7 +484,9 @@ class ilLearningProgressBaseGUI
 
 	function __appendLPDetails(&$info,$item_id,$user_id)
 	{
-		global $ilObjDataCache;
+		global $DIC;
+
+		$ilObjDataCache = $DIC['ilObjDataCache'];
 
 		$type = $ilObjDataCache->lookupType($item_id);
 		
@@ -506,6 +531,7 @@ class ilLearningProgressBaseGUI
 			case 'sahs':
 			case 'grp':
 			case 'iass':
+			case 'copa':
 			case 'sess':
 				// display status as image
 				include_once("./Services/Tracking/classes/class.ilLearningProgressBaseGUI.php");
@@ -586,7 +612,9 @@ class ilLearningProgressBaseGUI
 	*/
 	function __sort($a_ids,$a_table,$a_field,$a_id_name)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		if(!$a_ids)
 		{
@@ -622,7 +650,9 @@ class ilLearningProgressBaseGUI
 
 	function __readItemStatusInfo($a_items)
 	{
-		global $ilObjDataCache;
+		global $DIC;
+
+		$ilObjDataCache = $DIC['ilObjDataCache'];
 
 		include_once 'Services/Object/classes/class.ilObjectLP.php';
 		
@@ -654,7 +684,9 @@ class ilLearningProgressBaseGUI
 
 	function __getLegendHTML()
 	{
-		global $lng;
+		global $DIC;
+
+		$lng = $DIC['lng'];
 		
 		$tpl = new ilTemplate("tpl.lp_legend.html", true, true, "Services/Tracking");
 		$tpl->setVariable("IMG_NOT_ATTEMPTED",
@@ -684,7 +716,10 @@ class ilLearningProgressBaseGUI
 	
 	protected function initEditUserForm($a_user_id, $a_obj_id, $a_cancel = null)
 	{
-		global $lng, $ilCtrl;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilCtrl = $DIC['ilCtrl'];
 		
 		include_once 'Services/Object/classes/class.ilObjectLP.php';
 		$olp = ilObjectLP::getInstance($a_obj_id);		
@@ -741,7 +776,9 @@ class ilLearningProgressBaseGUI
 
 	function __showEditUser($a_user_id, $a_ref_id, $a_cancel, $a_sub_id = false)
 	{				
-		global $ilCtrl;
+		global $DIC;
+
+		$ilCtrl = $DIC['ilCtrl'];
 		
 		if(!$a_sub_id)
         {
@@ -798,7 +835,10 @@ class ilLearningProgressBaseGUI
 	
 	static function isObjectOffline($a_obj_id, $a_type = null)
 	{
-		global $objDefinition, $ilObjDataCache;
+		global $DIC;
+
+		$objDefinition = $DIC['objDefinition'];
+		$ilObjDataCache = $DIC['ilObjDataCache'];
 
 		if(!$a_type)
 		{

@@ -320,6 +320,16 @@ class ilImport
 			}
 		}
 
+		// write import ids before(!) final processing
+		$obj_map = $this->getMapping()->getMappingsOfEntity('Services/Container', 'objs');
+		if (is_array($obj_map))
+		{
+			foreach ($obj_map as $obj_id_old => $obj_id_new)
+			{
+				ilObject::_writeImportId($obj_id_new, "il_".$this->mapping->getInstallId()."_".ilObject::_lookupType($obj_id_new)."_".$obj_id_old);
+			}
+		}
+
 		// final processing
 		foreach ($all_importers as $imp)
 		{
@@ -343,7 +353,9 @@ class ilImport
 	 */
 	function processItemXml($a_entity, $a_schema_version, $a_id, $a_xml,$a_install_id, $a_install_url)
 	{
-		global $objDefinition;
+		global $DIC;
+
+		$objDefinition = $DIC['objDefinition'];
 		
 		// skip
 		if ($this->skip_entity[$this->current_comp][$a_entity])

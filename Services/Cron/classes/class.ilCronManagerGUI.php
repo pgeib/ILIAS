@@ -10,7 +10,7 @@ include_once "Services/Cron/classes/class.ilCronManager.php";
  * @author Jörg Lützenkirchen <luetzenkirchen@leifos.com>
  * $Id: class.ilObjFolderGUI.php 25134 2010-08-13 14:22:11Z smeyer $
  *
- * @ilCtrl_Calls ilCronManagerGUI:
+ * @ilCtrl_Calls ilCronManagerGUI: ilPropertyFormGUI
  * @ingroup ServicesCron
  */
 class ilCronManagerGUI 
@@ -51,7 +51,16 @@ class ilCronManagerGUI
 	}
 
 	public function executeCommand()
-	{	
+	{
+		$class = $this->ctrl->getNextClass($this);
+
+		switch($class)
+		{
+			case "ilpropertyformgui":
+				$form = $this->initEditForm();
+				$this->ctrl->forwardCommand($form);
+				break;
+		}
 		$cmd = $this->ctrl->getCmd("render");
 		$this->$cmd();
 
@@ -96,7 +105,7 @@ class ilCronManagerGUI
 	 * @return string
 	 * @throws \InvalidArgumentException
 	 */
-	protected function getScheduleTypeFormElementName($scheduleTypeId)
+	protected function getScheduleTypeFormElementName(int $scheduleTypeId)
 	{
 		switch ($scheduleTypeId) {
 			case ilCronJob::SCHEDULE_TYPE_DAILY:
@@ -132,7 +141,7 @@ class ilCronManagerGUI
 	 * @return string
 	 * @throws \InvalidArgumentException
 	 */
-	protected function getScheduleValueFormElementName($scheduleTypeId)
+	protected function getScheduleValueFormElementName(int $scheduleTypeId)
 	{
 		switch ($scheduleTypeId) {
 			case ilCronJob::SCHEDULE_TYPE_IN_MINUTES:
@@ -147,6 +156,22 @@ class ilCronManagerGUI
 
 		throw new \InvalidArgumentException(sprintf('The passed argument %s is invalid!', var_export($scheduleTypeId, 1)));
  	}
+
+	/**
+	 * @param int $scheduleTypeId
+	 * @return bool
+	 */
+	protected function hasScheduleValue(int $scheduleTypeId): bool 
+	{
+		return in_array(
+			$scheduleTypeId,
+			[
+				ilCronJob::SCHEDULE_TYPE_IN_MINUTES,
+				ilCronJob::SCHEDULE_TYPE_IN_HOURS,
+				ilCronJob::SCHEDULE_TYPE_IN_DAYS
+			]
+		);
+	}
 
 	protected function initEditForm($a_job_id)
 	{
@@ -218,11 +243,11 @@ class ilCronManagerGUI
 		{
 			$this->ctrl->redirect($this, "render");
 		}
-		
+
 		$form = $this->initEditForm($id);
 		if($form->checkInput())
-		{			
-			$job = ilCronManager::getJobInstanceById($id);					
+		{
+			$job = ilCronManager::getJobInstanceById($id);
 			if($job)
 			{
 				$valid = true;

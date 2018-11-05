@@ -1,10 +1,6 @@
 <?php
 /* Copyright (c) 1998-2015 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-include_once './Modules/Forum/interfaces/interface.ilForumNotificationMailData.php';
-include_once './Modules/Forum/classes/class.ilForumProperties.php';
-require_once 'Modules/Forum/classes/class.ilForumAuthorInformation.php';
-
 /**
  * Class ilForumCronNotificationDataProvider
  *
@@ -26,11 +22,6 @@ class ilForumCronNotificationDataProvider implements ilForumNotificationMailData
 	 * @var int $obj_id
 	 */
 	protected $obj_id = 0;
-
-	/**
-	 * @var string $post_user_name
-	 */
-	protected $post_user_name = '';
 
 	/**
 	 * @var int
@@ -131,9 +122,30 @@ class ilForumCronNotificationDataProvider implements ilForumNotificationMailData
 	public $pos_author_id = 0;
 
 	/**
-	 * @param $row
+	 * @var string
 	 */
-	public function __construct($row)
+	public $deleted_by = '';
+
+	/**
+	 * @var \ilForumAuthorInformation[]
+	 */
+	protected static $authorInformationCache = array();
+
+
+	/** @var string|null $post_user_name */
+	private $post_user_name = null;
+
+	/** @var string|null */
+	private $update_user_name = null;
+
+	/** @var ilForumNotificationCache */
+	private $notificationCache;
+
+	/**
+	 * @param $row
+	 * @param ilForumNotificationCache|null $notificationCache
+	 */
+	public function __construct($row, ilForumNotificationCache $notificationCache = null)
 	{
 		$this->obj_id = $row['obj_id'];
 		$this->ref_id = $row['ref_id'];
@@ -161,6 +173,23 @@ class ilForumCronNotificationDataProvider implements ilForumNotificationMailData
 
 		$this->import_name = strlen($row['import_name']) ? $row['import_name'] : '';
 
+		if ($notificationCache === null) {
+			$notificationCache = new ilForumNotificationCache();
+		}
+		$this->notificationCache = $notificationCache;
+
+		if(isset($row['deleted_by']))
+		{
+			//cron context
+			$this->deleted_by = $row['deleted_by'];
+		}
+		else
+		{
+			//  fallback
+			global $DIC;
+			$this->deleted_by = $DIC->user()->getLogin();
+		}
+
 		$this->read();
 	}
 
@@ -180,10 +209,9 @@ class ilForumCronNotificationDataProvider implements ilForumNotificationMailData
 		if(ilForumProperties::isSendAttachmentsByMailEnabled())
 		{
 			// get attachments
-			include_once "./Modules/Forum/classes/class.ilFileDataForum.php";
 			$fileDataForum = new ilFileDataForum($this->getObjId(), $this->getPostId());
 			$filesOfPost   = $fileDataForum->getFilesOfPost();
-			
+
 			foreach($filesOfPost as $attachment)
 			{
 				$this->attachments[] = $attachment['name'];
@@ -367,7 +395,7 @@ class ilForumCronNotificationDataProvider implements ilForumNotificationMailData
 	{
 		$this->post_update_user_id = $post_update_user_id;
 	}
-	
+
 	public function setPosAuthorId($pos_author_id)
 	{
 		$this->pos_author_id = $pos_author_id;
@@ -376,7 +404,7 @@ class ilForumCronNotificationDataProvider implements ilForumNotificationMailData
 	{
 		return $this->pos_author_id;
 	}
-	
+
 	/**
 	 * @return bool
 	 */
@@ -384,7 +412,15 @@ class ilForumCronNotificationDataProvider implements ilForumNotificationMailData
 	{
 		return $this->is_anonymized;
 	}
-	
+
+	/**
+	 * @return int
+	 */
+	public function getDeletedBy()
+	{
+		return $this->deleted_by;
+	}
+
 	/**
 	 * @return string
 	 */
@@ -392,41 +428,41 @@ class ilForumCronNotificationDataProvider implements ilForumNotificationMailData
 	{
 		return $this->import_name;
 	}
-	
+
 	/**
-	 * @param $user_lang
-	 * @return string
+	 * @inheritdoc
 	 */
-	public function getPostUserName($user_lang)
+	public function getPostUserName(\ilLanguage $user_lang)
 	{
-		// GET AUTHOR OF NEW POST
-		$authorinfo = new ilForumAuthorInformation(
-			$this->getPosAuthorId(),
-			$this->getPosDisplayUserId(),
-			$this->getPosUserAlias(),
-			$this->getImportName()
-		);
-		$this->post_user_name = $this->getPublicUserInformation($authorinfo);
-		
+		if ($this->post_user_name === null) {
+			$this->post_user_name = $this->getPublicUserInformation(self::getAuthorInformation(
+				$user_lang,
+				(int) $this->getPosAuthorId(),
+				(int) $this->getPosDisplayUserId(),
+				(string) $this->getPosUserAlias(),
+				(string) $this->getImportName()
+			));
+		}
+
 		return $this->post_user_name;
 	}
 	
 	/**
-	 * @param $user_lang
-	 * @return string
+	 * @inheritdoc
 	 */
-	public function getPostUpdateUserName($user_lang)
+	public function getPostUpdateUserName(\ilLanguage $user_lang)
 	{
-		// GET AUTHOR OF UPDATED POST
-		$authorinfo = new ilForumAuthorInformation(
-			$this->getPosAuthorId(),
-			$this->getPostUpdateUserId(),
-			$this->getPosUserAlias(),
-			$this->getImportName()
-		);
-		$this->post_user_name = $this->getPublicUserInformation($authorinfo);
-		
-		return $this->post_user_name;
+		if ($this->update_user_name === null) {
+			$this->update_user_name = $this->getPublicUserInformation(self::getAuthorInformation(
+				$user_lang,
+				(int) $this->getPosAuthorId(),
+				(int) $this->getPostUpdateUserId(),
+				(string) $this->getPosUserAlias(),
+				(string) $this->getImportName()
+			));
+		}
+
+		return $this->update_user_name;
 	}
 	
 	/**
@@ -435,22 +471,53 @@ class ilForumCronNotificationDataProvider implements ilForumNotificationMailData
 	 */
 	public function getPublicUserInformation(ilForumAuthorInformation $authorinfo)
 	{
-		$public_name = '';
-		
-		if($authorinfo->hasSuffix())
-		{
-			$public_name = $authorinfo->getAuthorName();
+		$publicName = $authorinfo->getAuthorShortName();
+
+		if($authorinfo->hasSuffix()) {
+			$publicName = $authorinfo->getAuthorName();
+		} elseif($authorinfo->getAuthorName() && !$this->isAnonymized()) {
+			$publicName = $authorinfo->getAuthorName();
 		}
-		else
-		{
-			$public_name = $authorinfo->getAuthorShortName();
-			
-			if($authorinfo->getAuthorName() && !$this->isAnonymized())
-			{
-				$public_name = $authorinfo->getAuthorName();
-			}
+
+		return $publicName;
+	}
+
+	/**
+	 * @param ilLanguage $lng
+	 * @param            $authorUsrId
+	 * @param            $displayUserId
+	 * @param            $usrAlias
+	 * @param            $importName
+	 * @return \ilForumAuthorInformation
+	 */
+	private function getAuthorInformation(
+		\ilLanguage $lng,
+		int $authorUsrId,
+		int $displayUserId,
+		string $usrAlias,
+		string $importName
+	) {
+		$cacheKey = $this->notificationCache->createKeyByValues(array(
+			$lng->getLangKey(),
+			(int)$authorUsrId,
+			(int)$displayUserId,
+			(string)$usrAlias,
+			(string)$importName
+		));
+
+		if (false === $this->notificationCache->exists($cacheKey)) {
+			$authorInformation = new ilForumAuthorInformation(
+				$authorUsrId,
+				$displayUserId,
+				$usrAlias,
+				$importName,
+				array(),
+				$lng
+			);
+
+			$this->notificationCache->store($cacheKey, $authorInformation);
 		}
-		
-		return $public_name;
+
+		return $this->notificationCache->fetch($cacheKey);
 	}
 }

@@ -45,7 +45,9 @@ class ilLogComponentLevels
 	 */
 	public static function updateFromXML($a_component_id)
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		if(!$a_component_id)
 		{
@@ -77,7 +79,9 @@ class ilLogComponentLevels
 	
 	public function read()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = 'SELECT * FROM log_components ';
 		$res = $ilDB->query($query);
@@ -85,7 +89,7 @@ class ilLogComponentLevels
 		$this->components = array();
 		while($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT))
 		{
-			$this->components[] = new ilLogComponentLevel($row->component_id);
+			$this->components[] = new ilLogComponentLevel($row->component_id, $row->log_level);
 		}
 		
 	}

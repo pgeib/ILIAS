@@ -4,7 +4,7 @@ namespace ILIAS\UI\Implementation\Component\Dropzone\File;
 
 use ILIAS\UI\Component\Component;
 use ILIAS\UI\Implementation\Component\Signal;
-use ILIAS\UI\Implementation\Component\TriggeredSignalInterface;
+use ILIAS\UI\Implementation\Component\TriggeredSignal;
 use ILIAS\UI\Implementation\DefaultRenderer;
 use ILIAS\UI\Implementation\Render\AbstractComponentRenderer;
 use ILIAS\UI\Implementation\Render\ResourceRegistry;
@@ -87,7 +87,7 @@ class Renderer extends AbstractComponentRenderer {
 		$button = $dropzone->getUploadButton();
 
 		// Select-Button
-		$select_button = $f->button()->shy($this->txt('select_files_from_computer'), '#');
+		$select_button = $f->link()->standard($this->txt('select_files_from_computer'), '#');
 		$tpl->setVariable('SHY_BUTTON', $r->render($select_button));
 
 		// Upload-Button
@@ -143,7 +143,7 @@ class Renderer extends AbstractComponentRenderer {
 	 */
 	protected function registerSignals(\ILIAS\UI\Component\Dropzone\File\File $dropzone) {
 		$signals = array_map(function ($triggeredSignal) {
-			/** @var $triggeredSignal TriggeredSignalInterface */
+			/** @var $triggeredSignal TriggeredSignal */
 			return array(
 				'id'      => $triggeredSignal->getSignal()->getId(),
 				'options' => $triggeredSignal->getSignal()->getOptions(),

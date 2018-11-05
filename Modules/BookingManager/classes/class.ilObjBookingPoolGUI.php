@@ -12,6 +12,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
 * @ilCtrl_Calls ilObjBookingPoolGUI: ilPermissionGUI, ilBookingObjectGUI
 * @ilCtrl_Calls ilObjBookingPoolGUI: ilBookingScheduleGUI, ilInfoScreenGUI, ilPublicUserProfileGUI
 * @ilCtrl_Calls ilObjBookingPoolGUI: ilCommonActionDispatcherGUI, ilObjectCopyGUI, ilObjectMetaDataGUI
+* @ilCtrl_Calls ilObjBookingPoolGUI: ilBookingParticipantGUI
 * @ilCtrl_IsCalledBy ilObjBookingPoolGUI: ilRepositoryGUI, ilAdministrationGUI
 */
 class ilObjBookingPoolGUI extends ilObjectGUI
@@ -32,6 +33,16 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 	protected $help;
 
 	/**
+	 * @var int
+	 */
+	protected $user_id_to_book;  // user who is getting the reservation
+
+	/**
+	 * @var int
+	 */
+	protected $user_id_assigner; // user who performs the reservation.(self/another)
+
+	/**
 	* Constructor
 	*
 	*/
@@ -48,6 +59,20 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		$this->type = "book";
 		parent::__construct($a_data,$a_id,$a_call_by_reference,$a_prepare_output);
 		$this->lng->loadLanguageModule("book");
+
+		$this->user_profile_id = (int)$_GET["user_id"];
+		$this->book_obj_id = (int)$_REQUEST['object_id'];
+		$this->seed = ilUtil::stripSlashes($_GET['seed']);
+		$this->sseed = ilUtil::stripSlashes($_GET['sseed']);
+		$this->reservation_id = (int) $_GET["reservation_id"];
+		$this->profile_user_id = (int) $_GET['user_id'];
+
+		$this->user_id_assigner = $this->user->getId();
+		if($_GET['bkusr']) {
+			$this->user_id_to_book = (int)$_GET['bkusr'];
+		} else {
+			$this->user_id_to_book = $this->user_id_assigner; // by default user books his own booking objects.
+		}
 	}
 
 	/**
@@ -112,7 +137,7 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 			case 'ilpublicuserprofilegui':
 				$ilTabs->clearTargets();
 				include_once("Services/User/classes/class.ilPublicUserProfileGUI.php");
-				$profile = new ilPublicUserProfileGUI((int)$_GET["user_id"]);
+				$profile = new ilPublicUserProfileGUI($this->user_profile_id);
 				$profile->setBackUrl($this->ctrl->getLinkTarget($this, 'log'));
 				$ret = $this->ctrl->forwardCommand($profile);
 				$tpl->setContent($ret);
@@ -141,6 +166,13 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 				include_once 'Services/Object/classes/class.ilObjectMetaDataGUI.php';
 				$md_gui = new ilObjectMetaDataGUI($this->object, 'bobj');	
 				$this->ctrl->forwardCommand($md_gui);
+				break;
+
+			case 'ilbookingparticipantgui':
+				$this->tabs_gui->setTabActive('participants');
+				include_once("Modules/BookingManager/classes/class.ilBookingParticipantGUI.php");
+				$object_gui = new ilBookingParticipantGUI($this);
+				$this->ctrl->forwardCommand($object_gui);
 				break;
 			
 			default:
@@ -199,6 +231,8 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 	
 	protected function initEditCustomForm(ilPropertyFormGUI $a_form)
 	{
+		$obj_service = $this->getObjectService();
+
 		$online = new ilCheckboxInputGUI($this->lng->txt("online"), "online");
 		$a_form->addItem($online);
 
@@ -216,6 +250,20 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		$fixed = new ilRadioOption($this->lng->txt("book_schedule_type_fixed"), ilObjBookingPool::TYPE_FIX_SCHEDULE);
 		$fixed->setInfo($this->lng->txt("book_schedule_type_fixed_info"));
 		$type->addOption($fixed);
+
+		// reminder
+		$rmd = new ilCheckboxInputGUI($this->lng->txt("book_reminder_setting"), "rmd");
+		$rmd->setChecked($this->object->getReminderStatus());
+		$fixed->addSubItem($rmd);
+
+		$rmd_day = new ilNumberInputGUI($this->lng->txt("book_reminder_day"), "rmd_day");
+		$rmd_day->setRequired(true);
+		$rmd_day->setInfo($this->lng->txt("book_reminder_day_info"));
+		$rmd_day->setSize(3);
+		$rmd_day->setSuffix($this->lng->txt("book_reminder_days"));
+		$rmd_day->setValue(max($this->object->getReminderDay(), 1));
+		$rmd_day->setMinValue(1);
+		$rmd->addSubItem($rmd_day);
 		
 		$none = new ilRadioOption($this->lng->txt("book_schedule_type_none"), ilObjBookingPool::TYPE_NO_SCHEDULE);
 		$none->setInfo($this->lng->txt("book_schedule_type_none_info"));
@@ -237,7 +285,15 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		$period->setSize(3);
 		$period->setMinValue(0);
 		$a_form->addItem($period);
-		
+
+		// presentation
+		$pres = new ilFormSectionHeaderGUI();
+		$pres->setTitle($this->lng->txt('obj_presentation'));
+		$a_form->addItem($pres);
+
+		// tile image
+		$obj_service->commonSettings()->legacyForm($a_form, $this->object)->addTileImage();
+
 		// additional features
 		$feat = new ilFormSectionHeaderGUI();
 		$feat->setTitle($this->lng->txt('obj_features'));
@@ -252,16 +308,25 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		$a_values["stype"] = $this->object->getScheduleType();
 		$a_values["limit"] = $this->object->getOverallLimit();		
 		$a_values["period"] = $this->object->getReservationFilterPeriod();
+		$a_values["rmd"] = $this->object->getReminderStatus();
+		$a_values["rmd_day"] = $this->object->getReminderDay();
 	}
 
 	protected function updateCustom(ilPropertyFormGUI $a_form)
-	{		
+	{
+		$obj_service = $this->getObjectService();
+
 		$this->object->setOffline(!$a_form->getInput('online'));
+		$this->object->setReminderStatus($a_form->getInput('rmd'));
+		$this->object->setReminderDay($a_form->getInput('rmd_day'));
 		$this->object->setPublicLog($a_form->getInput('public'));
 		$this->object->setScheduleType($a_form->getInput('stype'));
 		$this->object->setOverallLimit($a_form->getInput('limit') ? $a_form->getInput('limit') : null);
 		$this->object->setReservationFilterPeriod(strlen($a_form->getInput('period')) ? (int)$a_form->getInput('period') : null);
-		
+
+		// tile image
+		$obj_service->commonSettings()->legacyForm($a_form, $this->object)->saveTileImage();
+
 		include_once './Services/Container/classes/class.ilContainer.php';
 		include_once './Services/Object/classes/class.ilObjectServiceSettingsGUI.php';
 		ilObjectServiceSettingsGUI::updateServiceSettingsForm(
@@ -346,6 +411,10 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 
 		if($this->checkPermissionBool('edit_permission'))
 		{
+			$this->tabs_gui->addTab("participants",
+				$this->lng->txt("participants"),
+				$this->ctrl->getLinkTargetByClass("ilbookingparticipantgui", "render"));
+
 			$this->tabs_gui->addTab("perm_settings",
 				$this->lng->txt("perm_settings"),
 				$this->ctrl->getLinkTargetByClass("ilpermissiongui", "perm"));
@@ -382,7 +451,11 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 				
 		$this->lng->loadLanguageModule("dateplaner");
 		$this->ctrl->setParameter($this, 'object_id', $obj->getId());
-		
+
+		if($this->user_id_to_book != $this->user_id_assigner) {
+			$this->ctrl->setParameter($this, 'bkusr', $this->user_id_to_book);
+		}
+
 		if($this->object->getScheduleType() == ilObjBookingPool::TYPE_FIX_SCHEDULE)
 		{
 			include_once 'Modules/BookingManager/classes/class.ilBookingSchedule.php';		
@@ -459,16 +532,16 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 				}
 			}
 
-			if(isset($_GET['seed']))
+			if ($this->seed != "")
 			{
 				$find_first_open = false;
-				$seed = new ilDate($_GET['seed'], IL_CAL_DATE);
+				$seed = new ilDate($this->seed, IL_CAL_DATE);
 			}
 			else
 			{
 				$find_first_open = true;
-				$seed = isset($_GET['sseed']) 
-					? new ilDate($_GET['sseed'], IL_CAL_DATE)
+				$seed = ($this->sseed != "")
+					? new ilDate($this->sseed, IL_CAL_DATE)
 					: new ilDate(time(), IL_CAL_UNIX);
 			}
 			
@@ -772,15 +845,15 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		
 		if($this->object->getScheduleType() == ilObjBookingPool::TYPE_NO_SCHEDULE)
 		{	
-			if($_POST['object_id'])
+			if($this->book_obj_id > 0)
 			{
-				$object_id = $_POST['object_id'];
+				$object_id = $this->book_obj_id;
 				if($object_id)
 				{
 					if(ilBookingReservation::isObjectAvailableNoSchedule($object_id) &&
-						!ilBookingReservation::getObjectReservationForUser($object_id, $ilUser->getId())) // #18304				
+						!ilBookingReservation::getObjectReservationForUser($object_id, $this->user_id_to_book)) // #18304
 					{
-						$rsv_ids[] = $this->processBooking($object_id);						
+						$rsv_ids[] = $this->processBooking($object_id);
 						$success = $object_id;	
 					}
 					else
@@ -801,20 +874,17 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 			}
 						
 			// single object reservation(s)
-			if(isset($_GET['object_id']))
+			if($this->book_obj_id > 0)
 			{
 				$confirm = array();
 				
-				$object_id = (int)$_GET['object_id'];
+				$object_id = $this->book_obj_id;
 				if($object_id)
 				{	
 					$group_id = null;
 					$nr = ilBookingObject::getNrOfItemsForObjects(array($object_id));
 					// needed for recurrence
-					if(true) // if($nr[$object_id] > 1 || sizeof($_POST['date']) > 1)
-					{
-						$group_id = ilBookingReservation::getNewGroupId();									
-					}
+					$group_id = ilBookingReservation::getNewGroupId();
 					foreach($_POST['date'] as $date)
 					{										
 						$fromto = explode('_', $date);
@@ -825,15 +895,7 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 						if($counter)
 						{					
 							// needed for recurrence
-							if(true) // if($counter > 1)
-							{
-								$confirm[$object_id."_".$fromto[0]."_".($fromto[1]+1)] = $counter;
-							}
-							else
-							{								
-								$rsv_ids[] = $this->processBooking($object_id, $fromto[0], $fromto[1], $group_id);
-								$success = $object_id;									
-							}
+							$confirm[$object_id."_".$fromto[0]."_".($fromto[1]+1)] = $counter;
 						}
 					}
 				}
@@ -843,60 +905,11 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 					return $this->confirmBookingNumbers($confirm, $group_id);					
 				}
 			}
-			/*
-			// group object reservation(s)
-			else
-			{														
-				$all_object_ids = array();
-				foreach(ilBookingObject::getList((int)$_GET['type_id']) as $item)
-				{
-					$all_object_ids[] = $item['booking_object_id'];
-				}
-
-				$possible_objects = $counter = array();	
-				sort($_POST['date']);			
-				foreach($_POST['date'] as $date)
-				{
-					$fromto = explode('_', $date);
-					$fromto[1]--;
-					$possible_objects[$date] = ilBookingReservation::getAvailableObject($all_object_ids, $fromto[0], $fromto[1], false);		
-					foreach($possible_objects[$date] as $obj_id)
-					{
-						$counter[$obj_id]++;
-					}
-				}
-
-				if(max($counter))
-				{			
-					// we prefer the objects which are available for most slots
-					arsort($counter);
-					$counter = array_keys($counter);
-
-					// book each slot
-					foreach($possible_objects as $date => $available_ids)
-					{
-						$fromto = explode('_', $date);
-						$fromto[1]--;
-
-						// find "best" object for slot
-						foreach($counter as $best_object_id)
-						{
-							if(in_array($best_object_id, $available_ids))
-							{
-								$object_id = $best_object_id;
-								break;
-							}
-						}				
-						$this->processBooking($object_id, $fromto[0], $fromto[1]);
-						$success = true;	
-					}
-				}
-			}			 
-			*/
 		}
 		
 		if($success)
 		{
+			$this->saveParticipant();
 			$this->handleBookingSuccess($success, $rsv_ids);
 		}
 		else
@@ -1015,7 +1028,14 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 			$grp->setValue($a_group_id);
 			$form->addItem($grp);		
 		}
-				
+
+		if($this->user_id_assigner != $this->user_id_to_book)
+		{
+			$usr = new ilHiddenInputGUI("bkusr");
+			$usr->setValue($this->user_id_to_book);
+			$form->addItem($usr);
+		}
+
 		$form->addCommandButton("confirmedBookingNumbers", $this->lng->txt("confirm"));
 		$form->addCommandButton("render", $this->lng->txt("cancel"));
 		
@@ -1055,7 +1075,13 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 	{
 		include_once 'Modules/BookingManager/classes/class.ilBookingReservation.php';								
 		include_once 'Modules/BookingManager/classes/class.ilBookingObject.php';
-		
+
+		//get the user who will get the booking.
+		if($_POST['bkusr'])
+		{
+			$this->user_id_to_book = (int)$_POST['bkusr'];
+		}
+
 		// convert post data to initial form config
 		$counter = array();
 		$current_first = $obj_id = null;
@@ -1151,6 +1177,7 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 			}
 			if($success)
 			{
+				$this->saveParticipant();
 				$this->handleBookingSuccess($success, $rsv_ids);
 			}
 			else
@@ -1198,15 +1225,14 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 	 */
 	function processBooking($a_object_id, $a_from = null, $a_to = null, $a_group_id = null)
 	{
-		$ilUser = $this->user;
-		
 		// #11995
 		$this->checkPermission('read');		
 		
 		include_once 'Modules/BookingManager/classes/class.ilBookingReservation.php';
 		$reservation = new ilBookingReservation();
 		$reservation->setObjectId($a_object_id);
-		$reservation->setUserId($ilUser->getID());
+		$reservation->setUserId($this->user_id_to_book);
+		$reservation->setAssignerId($this->user_id_assigner);
 		$reservation->setFrom($a_from);
 		$reservation->setTo($a_to);
 		$reservation->setGroupId($a_group_id);
@@ -1217,7 +1243,7 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 			$this->lng->loadLanguageModule('dateplaner');
 			include_once 'Services/Calendar/classes/class.ilCalendarUtil.php';
 			include_once 'Services/Calendar/classes/class.ilCalendarCategory.php';
-			$def_cat = ilCalendarUtil::initDefaultCalendarByType(ilCalendarCategory::TYPE_BOOK,$ilUser->getId(),$this->lng->txt('cal_ch_personal_book'),true);
+			$def_cat = ilCalendarUtil::initDefaultCalendarByType(ilCalendarCategory::TYPE_BOOK,$this->user_id_to_book,$this->lng->txt('cal_ch_personal_book'),true);
 
 			include_once 'Modules/BookingManager/classes/class.ilBookingObject.php';
 			$object = new ilBookingObject($a_object_id);
@@ -1250,9 +1276,15 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		$show_all = ($this->checkPermissionBool('write') || $this->object->hasPublicLog());
 		
 		$filter = null;
-		if($_GET["object_id"])
+		if ($this->book_obj_id > 0)
 		{
-			$filter["object"] = (int)$_GET["object_id"];
+			$filter["object"] = $this->book_obj_id;
+		}
+
+		// coming from participants tab to cancel reservations.
+		if($_GET['user_id'])
+		{
+			$filter["user_id"] = (int)$_GET['user_id'];
 		}
 
 		include_once 'Modules/BookingManager/classes/class.ilBookingReservationsTableGUI.php';
@@ -1274,16 +1306,16 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		$show_all = ($this->checkPermissionBool('write') ||	$this->object->hasPublicLog());
 		
 		$filter = null;
-		if($_GET["object_id"])
+		if ($this->book_obj_id > 0)
 		{
-			$filter["object"] = (int)$_GET["object_id"];
+			$filter["object"] = $this->book_obj_id;
 		}
 
 		include_once 'Modules/BookingManager/classes/class.ilBookingReservationsTableGUI.php';
 		$table = new ilBookingReservationsTableGUI($this, 'log', $this->ref_id, 
 			$this->object->getId(), $show_all, 
 			($this->object->getScheduleType() != ilObjBookingPool::TYPE_NO_SCHEDULE),
-			$filter, $_GET["reservation_id"]);
+			$filter, $this->reservation_id);
 		$tpl->setContent($table->getHTML());
 	}
 	
@@ -1422,9 +1454,9 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		{
 			return $_POST["mrsv"];			
 		}
-		else if($_GET["reservation_id"])
+		else if($this->reservation_id > 0)
 		{
-			return array($_GET["reservation_id"]);
+			return array($this->reservation_id);
 		}				
 	}
 	
@@ -1744,7 +1776,7 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		
 		$this->tabs_gui->clearTargets();
 		
-		$user_id = (int)$_GET['user_id'];
+		$user_id = $this->profile_user_id;
 		
 		include_once 'Services/User/classes/class.ilPublicUserProfileGUI.php';
 		$profile = new ilPublicUserProfileGUI($user_id);
@@ -1758,9 +1790,86 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		
 		if (is_object($this->object))
 		{
-			$ilLocator->addItem($this->object->getTitle(), $this->ctrl->getLinkTarget($this, "render"), "", $_GET["ref_id"]);
+			$ilLocator->addItem($this->object->getTitle(), $this->ctrl->getLinkTarget($this, "render"), "", $this->object->getRefId());
 		}
-	}		
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function initHeaderAction($a_sub_type = null, $a_sub_id = null)
+	{
+		$access = $this->access;
+		$user = $this->user;
+		$ctrl = $this->ctrl;
+		$lng = $this->lng;
+
+		$lng->loadLanguageModule("noti");
+
+		$lg = parent::initHeaderAction($a_sub_type, $a_sub_id);
+
+		if($lg && $access->checkAccess("read", "", $this->ref_id))
+		{
+			// notification
+			if(true)
+			{
+				if(!ilNotification::hasNotification(ilNotification::TYPE_BOOK, $user->getId(), $this->object->getId()))
+				{
+					$lg->addHeaderIcon("not_icon",
+						ilUtil::getImagePath("notification_off.svg"),
+						$lng->txt("noti_notification_deactivated"));
+
+					$ctrl->setParameter($this, "ntf", 1);
+					$caption = "noti_activate_notification";
+				}
+				else
+				{
+					$lg->addHeaderIcon("not_icon",
+						ilUtil::getImagePath("notification_on.svg"),
+						$lng->txt("noti_notification_activated"));
+
+					$ctrl->setParameter($this, "ntf", 0);
+					$caption = "noti_deactivate_notification";
+				}
+
+				$lg->addCustomCommand($ctrl->getLinkTarget($this, "saveNotification"),
+					$caption);
+
+				$ctrl->setParameter($this, "ntf", "");
+			}
+		}
+
+		return $lg;
+	}
+
+	/**
+	 * Save notification
+	 */
+	public function saveNotificationObject()
+	{
+		$ctrl = $this->ctrl;
+		$user = $this->user;
+
+
+		switch ($_GET["ntf"]) {
+			case 0:
+				ilNotification::setNotification(ilNotification::TYPE_BOOK, $user->getId(), $this->object->getId(), false);
+				break;
+
+			case 1:
+				ilNotification::setNotification(ilNotification::TYPE_BOOK, $user->getId(), $this->object->getId(), true);
+				break;
+		}
+		$ctrl->redirect($this, "render");
+	}
+	/*
+	 * save booking participant.
+	 */
+	protected function saveParticipant()
+	{
+		include_once ("./Modules/BookingManager/classes/class.ilBookingParticipant.php");
+		$participant = new ilBookingParticipant($this->user_id_to_book, $this->object->getId());
+	}
 }
 
 ?>

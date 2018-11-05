@@ -5,6 +5,7 @@ namespace ILIAS\DI;
 
 use ILIAS\Filesystem\Filesystems;
 use ILIAS\FileUpload\FileUpload;
+use ILIAS\GlobalScreen\Services;
 
 /**
  * Customizing of pimple-DIC for ILIAS.
@@ -16,7 +17,7 @@ class Container extends \Pimple\Container {
 	/**
 	 * Get interface to the Database.
 	 *
-	 * @return	\ilDB
+	 * @return	\ilDBInterface
 	 */
 	public function database() {
 		return $this["ilDB"];
@@ -151,6 +152,14 @@ class Container extends \Pimple\Container {
 
 
 	/**
+	 * @return Services
+	 */
+	public function globalScreen() {
+		return new Services();
+	}
+
+
+	/**
 	 * @return HTTPServices
 	 */
 	public function http() {
@@ -162,5 +171,101 @@ class Container extends \Pimple\Container {
 	 */
 	public function event() {
 		return $this['ilAppEventHandler'];
+	}
+
+	/**
+	 * @return \ilIniFile
+	 */
+	public function iliasIni() {
+		return $this['ilIliasIniFile'];
+	}
+
+	/**
+	 * @return \ilIniFile
+	 */
+	public function clientIni() {
+		return $this['ilClientIniFile'];
+	}
+
+	/**
+	 *  @return \ilStyleDefinition
+	 */
+	public function systemStyle(){
+		return $this['styleDefinition'];
+	}
+
+	/**
+	 *  @return \ilHelpGUI
+	 */
+	public function help(){
+		return $this['ilHelp'];
+	}
+
+	/**
+	 * Get conditions service
+	 *
+	 * @return	\ilConditionService
+	 */
+	public function conditions() {
+
+		return \ilConditionService::getInstance(new \ilConditionObjectAdapter());
+	}
+
+	/**
+	 * @return \ilLearningHistoryService
+	 */
+	public function learningHistory()
+	{
+		return new \ilLearningHistoryService(
+			$this->user(),
+			$this->language(),
+			$this->ui(),
+			$this->access(),
+			$this->repositoryTree()
+		);
+	}
+
+	/**
+	 * @return \ilNewsService
+	 */
+	public function news() {
+		return new \ilNewsService($this->language(), $this->settings(), $this->user());
+	}
+
+	/**
+	 * @return \ilObjectService
+	 */
+	public function object() {
+		return new \ilObjectService($this->language(), $this->settings(), $this->filesystem(), $this->upload());
+	}
+
+
+	/**
+	 * Note: Only use isDependencyAvailable if strictly required. The need for this,
+	 * mostly points to some underlying problem needing to be solved instead of using this.
+	 * This was introduced as temporary workaround. See: https://github.com/ILIAS-eLearning/ILIAS/pull/1064
+	 *
+	 * This is syntactic sugar for executing the try catch statement in the clients code.
+	 * Note that the use of the offsetSet code of the default container should be avoided,
+	 * since knowledge about the containers internal mechanism is injected.
+	 *
+	 * Example:
+	 * //This is bad since the client should not need to know about the id's name
+	 * $DIC->offsetSet("styleDefinition")
+	 *
+	 * //This is better, since the client just needs to know the name defined in the
+	 * //interface of the component
+	 * $DIC->isDependencyAvailable("systemStyle")
+	 *
+	 * @param $name
+	 * @return bool
+	 */
+	public function isDependencyAvailable($name){
+		try{
+			$this->$name();
+		}catch(\InvalidArgumentException $e){
+			return false;
+		}
+		return true;
 	}
 }

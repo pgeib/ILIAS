@@ -26,7 +26,7 @@ class ilClient
 	 */
 	public $error = '';
 	/**
-	 * @var ilDB
+	 * @var ilDBInterface
 	 */
 	public $db;
 	/**
@@ -206,8 +206,7 @@ class ilClient
 		}
 
 		include_once("./Services/Database/classes/class.ilDBWrapperFactory.php");
-		$this->db = ilDBWrapperFactory::getWrapper($this->getdbType(),
-			$this->ini->readVariable("db","inactive_mysqli"));
+		$this->db = ilDBWrapperFactory::getWrapper($this->getdbType());
 		$this->db->setDBUser($this->getdbUser());
 		$this->db->setDBPort($this->getdbPort());
 		$this->db->setDBPassword($this->getdbPass());
@@ -262,26 +261,6 @@ class ilClient
 	{
 		switch($this->getDbType())
 		{
-			case "oracle":
-				//$this->dsn_host = "oci8://".$this->getdbUser().":".$this->getdbPass()."@".$this->getdbHost();
-				$this->dsn_host = array(
-                                                'phptype' => 'oci8',
-                                                'hostspec' => $this->getdbHost(),
-                                                'username' => $this->getdbUser(),
-												'port' => $this->getdbPort(),
-                                                'password' => $this->getdbPass(),
-                                                );
-				//$this->dsn = "oci8://".$this->getdbUser().":".$this->getdbPass()."@".$this->getdbHost()."/?service=".$this->getdbName();
-				$this->dsn = $this->dsn = array(
-					'phptype' => 'oci8',
-					'hostspec' => $this->getdbHost(),
-					'username' => $this->getdbUser(),
-					'port' => $this->getdbPort(),
-					'password' => $this->getdbPass(),
-					'service' => $this->getdbName()
-					);
-				break;
-
 			case "postgres":
 				$db_port_str = "";
 				if (trim($this->getdbPort()) != "")
@@ -715,8 +694,8 @@ class ilClient
 		}
 
 		$this->nic_status = explode("\n", $response_body);
-		
-		ilLoggerFactory::getLogger('setup')->dump($nic_status);
+
+		ilLoggerFactory::getLogger('setup')->dump($this->nic_status);
 
 		return true;
 	}

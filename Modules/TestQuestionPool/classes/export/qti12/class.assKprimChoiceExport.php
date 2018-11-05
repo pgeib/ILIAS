@@ -18,7 +18,8 @@ class assKprimChoiceExport extends assQuestionExport
 	
 	public function toXML($a_include_header = true, $a_include_binary = true, $a_shuffle = false, $test_output = false, $force_image_references = false)
 	{
-		global $ilias;
+		global $DIC;
+		$ilias = $DIC['ilias'];
 
 		include_once("./Services/Xml/classes/class.ilXmlWriter.php");
 		$xml = new ilXmlWriter;
@@ -278,7 +279,7 @@ class assKprimChoiceExport extends assQuestionExport
 			$xml->xmlStartTag('flow_mat');
 			
 			$this->object->addQTIMaterial($xml, $this->object->feedbackOBJ->getSpecificAnswerFeedbackExportPresentation(
-				$this->object->getId(), $answer->getPosition()
+				$this->object->getId(),0, $answer->getPosition()
 			));
 
 			$xml->xmlEndTag('flow_mat');

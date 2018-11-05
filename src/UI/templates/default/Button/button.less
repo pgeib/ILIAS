@@ -49,6 +49,7 @@ input.btn{
   }
 }
 
+
 // #16322
 button > .glyphicon {
   pointer-events: none;
@@ -98,7 +99,20 @@ a.btn-link.ilSubmitInactive, a.btn-link.ilSubmitInactive:hover {
 
 // shy buttons
 .btn-link {
-	padding: 0;
-	text-align: left;
-	white-space: normal;
+  padding: 0;
+  text-align: left;
+  white-space: normal;
+}
+
+// bulky buttons
+.btn-bulky {
+	width: 100%
+}
+
+// button with loading animation
+.il-btn-with-loading-animation {
+	background-image: url("@{background-images-path}loader.svg");
+	background-repeat: no-repeat;
+	background-position: right center;
+	padding-right: 18px;
 }

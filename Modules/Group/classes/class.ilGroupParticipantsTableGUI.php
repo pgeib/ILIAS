@@ -30,7 +30,10 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 		$show_learning_progress = false
 	)
 	{
-		global $lng, $ilCtrl;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilCtrl = $DIC['ilCtrl'];
 
 		$this->show_learning_progress = $show_learning_progress;
 
@@ -60,7 +63,7 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 
 		$this->setFormName('participants');
 
-		$this->addColumn('', 'f', "1");
+		$this->addColumn('', 'f', "1",true);
 		$this->addColumn($this->lng->txt('name'), 'lastname', '20%');
 
 		$all_cols = $this->getSelectableColumns();
@@ -78,6 +81,7 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 		{
 			$this->addColumn($this->lng->txt('last_access'), 'access_time_unix');
 		}
+		$this->addColumn($this->lng->txt('grp_contact'),'contact');
 		$this->addColumn($this->lng->txt('grp_notification'), 'notification');
 
 		$this->addColumn($this->lng->txt(''), 'optional');
@@ -100,7 +104,7 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 		$this->lng->loadLanguageModule('user');
 		$this->addMultiCommand('addToClipboard', $this->lng->txt('clipboard_add_btn'));
 		
-		$this->setSelectAllCheckbox('participants');
+		$this->setSelectAllCheckbox('participants',true);
 		$this->addCommandButton('updateParticipantsStatus', $this->lng->txt('save'));
 	}
 
@@ -113,7 +117,10 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
      */
     public function fillRow($a_set)
     {
-        global $ilUser,$ilAccess;
+        global $DIC;
+
+        $ilUser = $DIC['ilUser'];
+        $ilAccess = $DIC['ilAccess'];
         
         $this->tpl->setVariable('VAL_ID',$a_set['usr_id']);
         $this->tpl->setVariable('VAL_NAME',$a_set['lastname'].', '.$a_set['firstname']);
@@ -247,6 +254,15 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
         }
         
 		$this->tpl->setVariable('VAL_POSTNAME', 'participants');
+
+        if($this->getParticipants()->isAdmin($a_set['usr_id']))
+		{
+			$this->tpl->setVariable('VAL_CONTACT_ID', $a_set['usr_id']);
+			$this->tpl->setVariable(
+				'VAL_CONTACT_CHECKED',
+				$a_set['contact'] ? 'checked="checked"' : '');
+		}
+
 		if(
 			$this->getParticipants()->isAdmin($a_set['usr_id'])
 		)
@@ -325,8 +341,8 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 		}
 
         $usr_data = ilUserQuery::getUserListData(
-			$this->getOrderField(),
-			$this->getOrderDirection(),
+        	'',
+			'',
 			0,
 			9999,
 			$this->current_filter['login'],
@@ -349,7 +365,7 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 			$user_id = $ud['usr_id'];
 			if($this->current_filter['roles'])
 			{
-				if(!$GLOBALS['rbacreview']->isAssigned($user_id, $this->current_filter['roles']))
+				if(!$GLOBALS['DIC']['rbacreview']->isAssigned($user_id, $this->current_filter['roles']))
 				{
 					continue;
 				}
@@ -372,7 +388,7 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 			foreach($local_roles as $role_id => $role_name)
 			{
 				// @todo fix performance
-				if($GLOBALS['rbacreview']->isAssigned($user_id, $role_id))
+				if($GLOBALS['DIC']['rbacreview']->isAssigned($user_id, $role_id))
 				{
 					$roles[] = $role_name;
 				}
@@ -386,7 +402,7 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 		if($udf_ids)
 		{
 			include_once './Services/User/classes/class.ilUserDefinedData.php';
-			$data = ilUserDefinedData::lookupData($part, $udf_ids);
+			$data = ilUserDefinedData::lookupData($filtered_user_ids, $udf_ids);
 			foreach($data as $usr_id => $fields)
 			{
 	            if(!$this->checkAcceptance($usr_id))
@@ -433,7 +449,7 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 				if($usr_id == $edit_info['update_user'])
 				{
 					$a_user_data[$usr_id]['odf_last_update'] = '';
-					$a_user_data[$usr_id]['odf_info_txt'] = $GLOBALS['lng']->txt('cdf_edited_by_self');
+					$a_user_data[$usr_id]['odf_info_txt'] = $GLOBALS['DIC']['lng']->txt('cdf_edited_by_self');
 					if(ilPrivacySettings::_getInstance()->enabledAccessTimesByType($this->getRepositoryObject()->getType()))
 					{
 						$a_user_data[$usr_id]['odf_last_update'] .= ('_'.$edit_info['editing_time']->get(IL_CAL_UNIX));
@@ -455,7 +471,7 @@ class ilGroupParticipantsTableGUI extends ilParticipantTableGUI
 		if($this->isColumnSelected('consultation_hour'))
 		{
 			include_once './Services/Booking/classes/class.ilBookingEntry.php';
-			foreach(ilBookingEntry::lookupManagedBookingsForObject($this->getRepositoryObject()->getId(), $GLOBALS['ilUser']->getId()) as $buser => $booking)
+			foreach(ilBookingEntry::lookupManagedBookingsForObject($this->getRepositoryObject()->getId(), $GLOBALS['DIC']['ilUser']->getId()) as $buser => $booking)
 			{
 				if(isset($a_user_data[$buser]))
 				{

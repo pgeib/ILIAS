@@ -13,10 +13,15 @@ class ilLogComponentLevel
 	private $compontent_id  = '';
 	private $component_level = null;
 	
-	public  function __construct($a_component_id)
+	public  function __construct($a_component_id, $a_level = null)
 	{
 		$this->compontent_id = $a_component_id;
-		$this->read();
+		if ($a_level === null) {
+			$this->read();
+		}
+		else {
+			$this->setLevel($a_level);
+		}
 	}
 	
 	public function getComponentId()
@@ -36,7 +41,9 @@ class ilLogComponentLevel
 	
 	public function update()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		ilLoggerFactory::getLogger('log')->debug('update called');
 		
@@ -53,7 +60,9 @@ class ilLogComponentLevel
 	 */
 	public function read()
 	{
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$query = 'SELECT * FROM log_components '.
 				'WHERE component_id = '.$ilDB->quote($this->getComponentId(),'text');

@@ -38,7 +38,7 @@ class Factory implements Layout\Factory {
 	 * @inheritdoc
 	 */
 	public function sidebarEntry(
-		\ILIAS\UI\Component\Button\Iconographic $button,
+		\ILIAS\UI\Component\Button\Bulky $button,
 		MainControls\Menu\Slate $slate=null
 	) {
 		return new SidebarEntry($button, $slate);

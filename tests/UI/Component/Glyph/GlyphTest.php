@@ -37,6 +37,16 @@ class GlyphTest extends ILIAS_UI_TestBase {
 		, C\Glyph\Glyph::TAG				=> "glyphicon glyphicon-tag"
 		, C\Glyph\Glyph::NOTE				=> "glyphicon glyphicon-pushpin"
 		, C\Glyph\Glyph::COMMENT			=> "glyphicon glyphicon-comment"
+		, C\Glyph\Glyph::LIKE				=> "glyphicon il-glyphicon-like"
+		, C\Glyph\Glyph::LOVE				=> "glyphicon il-glyphicon-love"
+		, C\Glyph\Glyph::DISLIKE			=> "glyphicon il-glyphicon-dislike"
+		, C\Glyph\Glyph::LAUGH				=> "glyphicon il-glyphicon-laugh"
+		, C\Glyph\Glyph::ASTOUNDED			=> "glyphicon il-glyphicon-astounded"
+		, C\Glyph\Glyph::SAD				=> "glyphicon il-glyphicon-sad"
+		, C\Glyph\Glyph::ANGRY				=> "glyphicon il-glyphicon-angry"
+		, C\Glyph\Glyph::ATTACHMENT			=> "glyphicon glyphicon-paperclip"
+		, C\Glyph\Glyph::RESET				=> "glyphicon glyphicon-repeat"
+		, C\Glyph\Glyph::APPLY				=> "glyphicon glyphicon-ok"
 		);
 
 	static $aria_labels = array(
@@ -57,6 +67,16 @@ class GlyphTest extends ILIAS_UI_TestBase {
 		, C\Glyph\Glyph::TAG				=> "tags"
 		, C\Glyph\Glyph::NOTE				=> "notes"
 		, C\Glyph\Glyph::COMMENT			=> "comments"
+		, C\Glyph\Glyph::LIKE				=> "like"
+		, C\Glyph\Glyph::LOVE				=> "love"
+		, C\Glyph\Glyph::DISLIKE			=> "dislike"
+		, C\Glyph\Glyph::LAUGH				=> "laugh"
+		, C\Glyph\Glyph::ASTOUNDED			=> "astounded"
+		, C\Glyph\Glyph::SAD				=> "sad"
+		, C\Glyph\Glyph::ANGRY				=> "angry"
+		, C\Glyph\Glyph::ATTACHMENT			=> "attachment"
+		, C\Glyph\Glyph::RESET				=> "reset"
+		, C\Glyph\Glyph::APPLY				=> "apply"
 	);
 
 	/**
@@ -100,6 +120,18 @@ class GlyphTest extends ILIAS_UI_TestBase {
 
 		$this->assertNotNull($g);
 		$this->assertEquals(null, $g->getAction());
+	}
+
+	/**
+	 * @dataProvider glyph_type_provider
+	 */
+	public function test_with_unavailable_action($factory_method) {
+		$f = $this->getGlyphFactory();
+		$g = $f->$factory_method();
+		$g2 = $f->$factory_method()->withUnavailableAction();
+
+		$this->assertTrue($g->isActive());
+		$this->assertFalse($g2->isActive());
 	}
 
 	/**
@@ -241,6 +273,16 @@ class GlyphTest extends ILIAS_UI_TestBase {
 			, array(C\Glyph\Glyph::TAG)
 			, array(C\Glyph\Glyph::NOTE)
 			, array(C\Glyph\Glyph::COMMENT)
+			, array(C\Glyph\Glyph::LIKE)
+			, array(C\Glyph\Glyph::LOVE)
+			, array(C\Glyph\Glyph::DISLIKE)
+			, array(C\Glyph\Glyph::LAUGH)
+			, array(C\Glyph\Glyph::ASTOUNDED)
+			, array(C\Glyph\Glyph::SAD)
+			, array(C\Glyph\Glyph::ANGRY)
+			, array(C\Glyph\Glyph::ATTACHMENT)
+			, array(C\Glyph\Glyph::RESET)
+			, array(C\Glyph\Glyph::APPLY)
 			);
 	}
 
@@ -265,6 +307,24 @@ class GlyphTest extends ILIAS_UI_TestBase {
 		$aria_label = self::$aria_labels[$type];
 
 		$expected = "<a class=\"glyph\" href=\"http://www.ilias.de\" aria-label=\"$aria_label\"><span class=\"$css_classes\" aria-hidden=\"true\"></span></a>";
+		$this->assertEquals($expected, $html);
+	}
+
+	/**
+	 * @dataProvider glyph_type_provider
+	 */
+	public function test_render_with_unavailable_action($type) {
+		$f = $this->getGlyphFactory();
+		$r = $this->getDefaultRenderer();
+		$c = $f->$type("http://www.ilias.de")->withUnavailableAction();
+
+		$html = $this->normalizeHTML($r->render($c));
+
+		$css_classes = self::$canonical_css_classes[$type];
+		$aria_label = self::$aria_labels[$type];
+
+		$expected = "<a class=\"glyph disabled\" href=\"http://www.ilias.de\" aria-label=\"$aria_label\" ".
+					"aria-disabled=\"true\"><span class=\"$css_classes\" aria-hidden=\"true\"></span></a>";
 		$this->assertEquals($expected, $html);
 	}
 

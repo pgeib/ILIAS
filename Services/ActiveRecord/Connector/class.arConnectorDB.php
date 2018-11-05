@@ -70,12 +70,8 @@ class arConnectorDB extends arConnector {
 	public function updateIndices(ActiveRecord $ar) {
 		$ilDB = $this->returnDB();
 		$arFieldList = $ar->getArFieldList();
-		$res = $ilDB->query('SHOW INDEX FROM ' . $ar->getConnectorContainerName());
-		$existing_indices = array();
+		$existing_indices = $ilDB->loadModule('Manager')->listTableIndexes($ar->getConnectorContainerName());
 
-		while ($rec = $ilDB->fetchObject($res)) {
-			$existing_indices[] = $rec->column_name;
-		}
 		foreach ($arFieldList->getFields() as $i => $arField) {
 			if ($arField->getIndex() === true) {
 				if (!in_array($arField->getName(), $existing_indices)) {
@@ -304,15 +300,8 @@ class arConnectorDB extends arConnector {
 	 * @return mixed|string
 	 */
 	protected function buildQuery(ActiveRecordList $arl) {
-		$ilDB = $this->returnDB();
-		/**
-		 * @var $ilDB ilDBInterface
-		 */
-		if ($ilDB->getDBType() == ilDBConstants::TYPE_ORACLE) {
-			$method = 'asORACLEStatement';
-		} else {
-			$method = 'asSQLStatement';
-		}
+		$method = 'asSQLStatement';
+
 		// SELECTS
 		$q = $arl->getArSelectCollection()->{$method}();
 		// Concats
@@ -320,10 +309,10 @@ class arConnectorDB extends arConnector {
 		$q .= ' FROM ' . $arl->getAR()->getConnectorContainerName();
 		// JOINS
 		$q .= $arl->getArJoinCollection()->{$method}();
-		// HAVING
-		$q .= $arl->getArHavingCollection()->{$method}();
 		// WHERE
 		$q .= $arl->getArWhereCollection()->{$method}();
+		// HAVING
+		$q .= $arl->getArHavingCollection()->{$method}();
 		// ORDER
 		$q .= $arl->getArOrderCollection()->{$method}();
 		// LIMIT
@@ -363,15 +352,6 @@ class arConnectorDB extends arConnector {
 	 * @return string
 	 */
 	public function fixDate($value) {
-		$ilDB = $this->returnDB();
-		/**
-		 * @var $ilDB ilDBInterface
-		 */
-		if ($ilDB->getDBType() != ilDBConstants::TYPE_ORACLE) {
-			return parent::fixDate($value);
-		}
-
 		return parent::fixDate($value);
-		//		return "TO_DATE('{$value}','YYYY-MM-DD HH24:MI:SS')";
 	}
 }

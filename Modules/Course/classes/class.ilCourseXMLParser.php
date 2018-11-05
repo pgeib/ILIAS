@@ -58,7 +58,10 @@ class ilCourseXMLParser extends ilMDSaxParser implements ilSaxSubsetParser
 	*/
 	public function __construct($a_course_obj, $a_xml_file = '')
 	{
-		global $lng,$ilLog;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilLog = $DIC['ilLog'];
 
 		parent::__construct($a_xml_file);
 
@@ -204,7 +207,7 @@ class ilCourseXMLParser extends ilMDSaxParser implements ilSaxSubsetParser
 			case 'NotAvailable':
 				if($this->in_availability)
 				{
-					$this->course_obj->setActivationType(IL_CRS_ACTIVATION_OFFLINE);
+					$this->course_obj->setOfflineStatus(true);
 				}
 				elseif($this->in_registration)
 				{
@@ -217,7 +220,6 @@ class ilCourseXMLParser extends ilMDSaxParser implements ilSaxSubsetParser
 				if($this->in_availability)
 				{
 					$this->course_obj->setOfflineStatus(false);
-					$this->course_obj->setActivationType(IL_CRS_ACTIVATION_UNLIMITED);
 				}
 				elseif($this->in_registration)
 				{
@@ -229,7 +231,6 @@ class ilCourseXMLParser extends ilMDSaxParser implements ilSaxSubsetParser
 				if($this->in_availability)
 				{
 					$this->course_obj->setOfflineStatus(false);
-					$this->course_obj->setActivationType(IL_CRS_ACTIVATION_LIMITED);
 				}
 				elseif($this->in_registration)
 				{
@@ -372,7 +373,9 @@ class ilCourseXMLParser extends ilMDSaxParser implements ilSaxSubsetParser
 
 	private function handleAdmin ($a_attribs, $id_data) 
 	{
-		global $rbacadmin;
+		global $DIC;
+
+		$rbacadmin = $DIC['rbacadmin'];
 	
 		if (!isset($a_attribs['action']) || $a_attribs['action'] == 'Attach')
 			// if action not set, or attach
@@ -661,7 +664,15 @@ class ilCourseXMLParser extends ilMDSaxParser implements ilSaxSubsetParser
 				{
 					$this->course_obj->setSubscriptionMinMembers((int)$this->cdata);
 				}
-				break;						
+				break;
+
+			case 'ViewMode':
+				$this->course_obj->setViewMode((int)$this->cdata);
+				break;
+
+			case 'TimingMode':
+				$this->course_obj->setTimingMode((int)$this->cdata);
+				break;
 		}
 		$this->cdata = '';
 
@@ -693,7 +704,9 @@ class ilCourseXMLParser extends ilMDSaxParser implements ilSaxSubsetParser
 	// PRIVATE
 	function __parseId($a_id)
 	{
-		global $ilias;
+		global $DIC;
+
+		$ilias = $DIC['ilias'];
 
 		$fields = explode('_',$a_id);
 

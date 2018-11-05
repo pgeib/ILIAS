@@ -22,10 +22,7 @@ require_once 'Services/Environment/classes/class.ilRuntime.php';
 require_once("Services/Exceptions/classes/class.ilDelegatingHandler.php");
 require_once("Services/Exceptions/classes/class.ilPlainTextHandler.php");
 require_once("Services/Exceptions/classes/class.ilTestingHandler.php");
-set_include_path("./Services/Database/lib/PEAR" . PATH_SEPARATOR . ini_get('include_path'));
-if (!class_exists('PEAR')) {
-	require_once 'PEAR.php';
-}
+
 use Whoops\Run;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Handler\CallbackHandler;
@@ -350,7 +347,7 @@ class ilErrorHandling extends PEAR
 	 * @return bool
 	 */
 	protected function isDevmodeActive() {
-		return DEVMODE;
+		return defined("DEVMODE") && (int)DEVMODE === 1;
 	}
 
 	/**
@@ -385,10 +382,10 @@ class ilErrorHandling extends PEAR
 					$message .= " ".sprintf($lng->txt("log_error_message_send_mail"), $logger->mail(), $file_name, $logger->mail());
 				}
 			} else {
-				$message = "Error ".$file_name." occurred.";
+				$message = 'Sorry, an error occured. A logfile has been created which can be identified via the code "'.$file_name.'"';
 
 				if($logger->mail()) {
-					$message .= ' '.'Please send a mail to <a href="mailto:'.$logger->mail().'?subject=code: '.$file_name.'">'.$logger->mail().'%s</a>';
+					$message .= ' '.'Please send a mail to <a href="mailto:'.$logger->mail().'?subject=code: '.$file_name.'">'.$logger->mail().'</a>';
 				}
 			}
 

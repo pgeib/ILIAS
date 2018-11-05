@@ -15,6 +15,16 @@ include_once './Services/AdvancedMetaData/classes/class.ilAdvancedMDRecordScope.
  */
 class ilAdvancedMDSettingsGUI
 {
+	const MODE_ADMINISTRATION = 1;
+	const MODE_OBJECT = 2;
+
+	/**
+	 * Active settings mode
+	 * @var null
+	 */
+	private $mode = null;
+
+
 	protected $lng;
 	protected $tpl;
 	protected $ctrl;
@@ -38,7 +48,12 @@ class ilAdvancedMDSettingsGUI
 	 */
 	public function __construct($a_ref_id = null, $a_obj_type = null, $a_sub_type = null)
 	{
-	 	global $tpl,$lng,$ilCtrl,$ilTabs;
+	 	global $DIC;
+
+	 	$tpl = $DIC['tpl'];
+	 	$lng = $DIC['lng'];
+	 	$ilCtrl = $DIC['ilCtrl'];
+	 	$ilTabs = $DIC['ilTabs'];
 	 	
 	 	$this->ctrl = $ilCtrl;
 	 	$this->lng = $lng;
@@ -53,6 +68,17 @@ class ilAdvancedMDSettingsGUI
 		{
 			$this->obj_id = ilObject::_lookupObjId($a_ref_id);
 		}
+
+		if(!$this->ref_id)
+		{
+			$this->mode = self::MODE_ADMINISTRATION;
+		}
+		else
+		{
+			$this->mode = self::MODE_OBJECT;
+		}
+
+
 		$this->obj_type = $a_obj_type;
 		$this->sub_type = $a_sub_type 
 			? $a_sub_type
@@ -118,7 +144,10 @@ class ilAdvancedMDSettingsGUI
 	 */
 	public function showRecords()
 	{
-		global $ilToolbar, $ilAccess;
+		global $DIC;
+
+		$ilToolbar = $DIC['ilToolbar'];
+		$ilAccess = $DIC['ilAccess'];
 		
 		$perm = $this->getPermissions()->hasPermissions(
 			ilAdvancedMDPermissionHelper::CONTEXT_MD,
@@ -151,8 +180,6 @@ class ilAdvancedMDSettingsGUI
 			$ilToolbar->addButtonInstance($button);			
 		}
 		
-		$this->tpl->addBlockFile('ADM_CONTENT','adm_content','tpl.show_records.html','Services/AdvancedMetaData');
-
 		include_once("./Services/AdvancedMetaData/classes/class.ilAdvancedMDRecordTableGUI.php");
 		$table_gui = new ilAdvancedMDRecordTableGUI($this, "showRecords", $this->getPermissions(), (bool)$this->obj_id);
 		$table_gui->setTitle($this->lng->txt("md_record_list_table"));
@@ -168,10 +195,8 @@ class ilAdvancedMDSettingsGUI
 			$table_gui->addMultiCommand("confirmDeleteRecords", $this->lng->txt("delete"));		
 			$table_gui->addCommandButton("updateRecords", $this->lng->txt("save"));
 		}
-		
-		
-		$this->tpl->setVariable('RECORD_TABLE',$table_gui->getHTML());
-		
+
+		$DIC->ui()->mainTemplate()->setContent($table_gui->getHTML());
 		return true;
 	}
 	
@@ -196,7 +221,9 @@ class ilAdvancedMDSettingsGUI
 	 */
 	public function updateSubstitutions()
 	{
-		global $ilAccess;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
 		
 		if(!$ilAccess->checkAccess('write','',$_REQUEST["ref_id"]))
 		{	
@@ -568,6 +595,17 @@ class ilAdvancedMDSettingsGUI
 	 */
 	public function updateRecords()
 	{
+		// sort positions and renumber
+		$positions = $_POST['pos'];
+		asort($positions);
+
+		$sorted_positions = [];
+		$i = 1;
+		foreach($positions as $record_id => $pos)
+		{
+			$sorted_positions[$record_id] = $i++;
+		}
+
 		$selected_global = array();
 		foreach($this->getParsedRecordObjects() as $item)
 		{
@@ -580,7 +618,7 @@ class ilAdvancedMDSettingsGUI
 						ilAdvancedMDPermissionHelper::SUBACTION_RECORD_OBJECT_TYPES)
 				));
 						
-			if(!$this->obj_type)
+			if($this->mode == self::MODE_ADMINISTRATION)
 			{
 				$record_obj = ilAdvancedMDRecord::_getInstanceByRecordId($item['id']);			
 				
@@ -610,6 +648,7 @@ class ilAdvancedMDSettingsGUI
 					$record_obj->setActive(isset($_POST['active'][$record_obj->getRecordId()]));
 				}
 
+				$record_obj->setGlobalPosition((int) $sorted_positions[$record_obj->getRecordId()]);
 				$record_obj->update();
 			}
 			else if($perm[ilAdvancedMDPermissionHelper::ACTION_RECORD_TOGGLE_ACTIVATION])			
@@ -627,7 +666,17 @@ class ilAdvancedMDSettingsGUI
 					$record_obj->setActive(isset($_POST['active'][$item['id']]));
 					$record_obj->update();
 				}
-			}			
+			}
+
+			// save local sorting
+			if($this->mode == self::MODE_OBJECT)
+			{
+				global $DIC;
+
+				$local_position = new \ilAdvancedMDRecordObjectOrdering($item['id'], $this->obj_id, $DIC->database());
+				$local_position->setPosition((int) $sorted_positions[$item['id']]);
+				$local_position->save();
+			}
 		}
 
 		if($this->obj_type)
@@ -738,7 +787,9 @@ class ilAdvancedMDSettingsGUI
 	
 	public function editFields()
 	{		
-		global $ilToolbar;
+		global $DIC;
+
+		$ilToolbar = $DIC['ilToolbar'];
 		
 		$this->ctrl->saveParameter($this,'record_id');
 	 	$this->initRecordObject();
@@ -1282,7 +1333,7 @@ class ilAdvancedMDSettingsGUI
 			$subitems->setValue($this->record->getScopeRefIds());
 			$exp = $subitems->getExplorerGUI();
 			
-			$definition = $GLOBALS['objDefinition'];
+			$definition = $GLOBALS['DIC']['objDefinition'];
 			$white_list = [];
 			foreach($definition->getAllRepositoryTypes() as $type)
 			{
@@ -1427,7 +1478,9 @@ class ilAdvancedMDSettingsGUI
 	 */
 	protected function initFormSubstitutions()
 	{
-		global $ilAccess;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
 		
 		include_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
 		
@@ -1724,16 +1777,21 @@ class ilAdvancedMDSettingsGUI
 	{
 		$res = array();
 		
-		if($this->obj_type)
+		if($this->mode == self::MODE_OBJECT)
 		{			
 			$selected = ilAdvancedMDRecord::getObjRecSelection($this->obj_id, $this->sub_type);
 		}
 
-		foreach(ilAdvancedMDRecord::_getRecords() as $record)
+		$records = ilAdvancedMDRecord::_getRecords();
+		$orderings = new ilAdvancedMDRecordObjectOrderings();
+		$records = $orderings->sortRecords($records, $this->obj_id);
+
+		$position = 0;
+		foreach($records as $record)
 		{			
 			$parent_id = $record->getParentObject();
 			
-			if(!$this->obj_type)
+			if($this->mode == self::MODE_ADMINISTRATION)
 			{
 				if($parent_id)
 				{
@@ -1772,6 +1830,8 @@ class ilAdvancedMDSettingsGUI
 			$tmp_arr['description'] = $record->getDescription();
 			$tmp_arr['fields'] = array();
 			$tmp_arr['obj_types'] = $record->getAssignedObjectTypes();
+			$position += 10;
+			$tmp_arr['position'] = $position;
 
 			$tmp_arr['perm'] = $this->permissions->hasPermissions(
 				ilAdvancedMDPermissionHelper::CONTEXT_RECORD, 

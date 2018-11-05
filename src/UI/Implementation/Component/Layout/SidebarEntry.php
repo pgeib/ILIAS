@@ -16,7 +16,7 @@ class SidebarEntry implements C\Layout\SidebarEntry {
 	//use JavaScriptBindable;
 
 	/**
-	 * @var Button\Iconographic | Glyph\Glyph
+	 * @var Button\Bulky | Glyph\Glyph
 	 */
 	private $button;
 

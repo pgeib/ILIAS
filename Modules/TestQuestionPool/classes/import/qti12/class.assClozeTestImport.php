@@ -29,7 +29,8 @@ class assClozeTestImport extends assQuestionImport
 	*/
 	function fromXML(&$item, $questionpool_id, &$tst_id, &$tst_object, &$question_counter, &$import_mapping)
 	{
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC['ilUser'];
 
 		// empty session variable for imported xhtml mobs
 		unset($_SESSION["import_mob_xhtml"]);
@@ -299,6 +300,9 @@ class assClozeTestImport extends assQuestionImport
 		$textgap_rating = $item->getMetadataEntry("textgaprating");
 		$this->object->setFixedTextLength($item->getMetadataEntry("fixedTextLength"));
 		$this->object->setIdenticalScoring($item->getMetadataEntry("identicalScoring"));
+		$this->object->setFeedbackMode( strlen($item->getMetadataEntry("feedback_mode")) ?
+			$item->getMetadataEntry("feedback_mode") : ilAssClozeTestFeedback::FB_MODE_GAP_QUESTION
+		);
 		$combination = json_decode(base64_decode($item->getMetadataEntry("combinations")));
 		if (strlen($textgap_rating) == 0) $textgap_rating = "ci";
 		$this->object->setTextgapRating($textgap_rating);
@@ -373,8 +377,8 @@ class assClozeTestImport extends assQuestionImport
 				{
 					$importfile = $this->getQplImportArchivDirectory() . '/' . $mob["uri"];
 				}
-				
-				$GLOBALS['ilLog']->write(__METHOD__.': import mob from dir: '. $importfile);
+				global $DIC; /* @var ILIAS\DI\Container $DIC */
+				$DIC['ilLog']->write(__METHOD__.': import mob from dir: '. $importfile);
 				
 				$media_object =& ilObjMediaObject::_saveTempFileAsMediaObject(basename($importfile), $importfile, FALSE);
 				$questiontext = str_replace("src=\"" . $mob["mob"] . "\"", "src=\"" . "il_" . IL_INST_ID . "_mob_" . $media_object->getId() . "\"", $questiontext);
@@ -393,8 +397,10 @@ class assClozeTestImport extends assQuestionImport
 		$this->object->setClozeTextValue(ilRTE::_replaceMediaObjectImageSrc($clozetext, 1));
 		foreach ($feedbacks as $ident => $material)
 		{
+			$fbIdentifier = $this->buildFeedbackIdentifier($ident);
 			$this->object->feedbackOBJ->importSpecificAnswerFeedback(
-					$this->object->getId(), $ident, ilRTE::_replaceMediaObjectImageSrc($material, 1)
+					$this->object->getId(), $fbIdentifier->getQuestionIndex(), $fbIdentifier->getAnswerIndex(),
+					ilRTE::_replaceMediaObjectImageSrc($material, 1)
 			);
 		}
 		foreach ($feedbacksgeneric as $correctness => $material)
@@ -432,6 +438,29 @@ class assClozeTestImport extends assQuestionImport
 		}
 		$this->object->saveToDb();
 	}
+	
+	/**
+	 * @param string $ident
+	 * @return ilAssSpecificFeedbackIdentifier
+	 */
+	protected function buildFeedbackIdentifier($ident)
+	{
+		require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssSpecificFeedbackIdentifier.php';
+		$fbIdentifier = new ilAssSpecificFeedbackIdentifier();
+		
+		$ident = explode('_', $ident);
+		
+		if( count($ident) > 1 )
+		{
+			$fbIdentifier->setQuestionIndex($ident[0]);
+			$fbIdentifier->setAnswerIndex($ident[1]);
+		}
+		else
+		{
+			$fbIdentifier->setQuestionIndex($ident[0]);
+			$fbIdentifier->setAnswerIndex(0);
+		}
+		
+		return $fbIdentifier;
+	}
 }
-
-?>

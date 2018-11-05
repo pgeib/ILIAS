@@ -669,6 +669,24 @@ interface ilDBInterface {
 	 * @return \ilAtomQuery
 	 */
 	public function buildAtomQuery();
+
+
+	/**
+	 * @param string $a_field_name
+	 * @param string $a_seperator
+	 * @param string $a_order
+	 * @return string
+	 */
+	public function groupConcat($a_field_name, $a_seperator = ",", $a_order = NULL);
+
+
+	/**
+	 * @param string $a_field_name
+	 * @param string $a_dest_type
+	 * @return string;
+	 */
+	public function cast($a_field_name, $a_dest_type);
+
 }
 
 /**
@@ -832,16 +850,16 @@ interface ilDBPdoInterface extends ilDBInterface {
 	 * @param string $tablename of the table
 	 * @param array $fields ($key=>$value) where $key is a field name and $value its value
 	 * @param int $mode of query to build
-	 *                          ilDBConstants::MDB2_AUTOQUERY_INSERT
-	 *                          ilDBConstants::MDB2_AUTOQUERY_UPDATE
-	 *                          ilDBConstants::MDB2_AUTOQUERY_DELETE
-	 *                          ilDBConstants::MDB2_AUTOQUERY_SELECT
+	 *                          ilDBConstants::AUTOQUERY_INSERT
+	 *                          ilDBConstants::AUTOQUERY_UPDATE
+	 *                          ilDBConstants::AUTOQUERY_DELETE
+	 *                          ilDBConstants::AUTOQUERY_SELECT
 	 * @param string $where (in case of update and delete queries, this string will be put after the sql WHERE statement)
 	 *
 	 * @deprecated Will be removed in ILIAS 5.3
 	 * @return bool
 	 */
-	public function autoExecute($tablename, $fields, $mode = ilDBConstants::MDB2_AUTOQUERY_INSERT, $where = false);
+	public function autoExecute($tablename, $fields, $mode = ilDBConstants::AUTOQUERY_INSERT, $where = false);
 
 
 	/**

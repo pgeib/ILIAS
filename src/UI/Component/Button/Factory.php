@@ -19,12 +19,20 @@ interface Factory {
 	 *       is the one that should be used.
 	 *   composition: >
 	 *       The standard button uses the primary color as background.
+	 *   effect: >
+	 *       If the loading animation is activated, the button shows a spinner wheel
+	 *       on-click and automatically switches to a deactivated state.
 	 *
 	 * rules:
 	 *   usage:
 	 *       1: >
 	 *          Standard buttons MUST be used if there is no good reason using
 	 *          another instance.
+	 *       2: >
+	 *          The loading animation SHOULD be activated if the Buttons starts
+	 *          any background process (e.g. ajax calls) without any other immediate
+	 *          feedback for the user. After the process finished, the button MUST be
+	 *          removed from/replaced in the DOM.
 	 *   ordering:
 	 *       1: >
 	 *          The most important standard button SHOULD be first in reading
@@ -63,7 +71,9 @@ interface Factory {
 	 *       attention while there are several buttons competing for attention.
 	 *   effect: >
 	 *      In toolbars the primary button are required to be sticky, meaning
-	 *      they stay in view in the responsive view.
+	 *      they stay in view in the responsive view. If the loading animation
+	 *      is activated, the button shows a spinner wheel on-click and automatically
+	 *      switches to a deactivated state.
 	 *
 	 * background: >
 	 *      Tiddwell refers to the primary button as “prominent done button” and
@@ -90,6 +100,8 @@ interface Factory {
 	 *       3: >
 	 *           The decision to make a Button a Primary Button MUST be confirmed
 	 *           by the JF.
+	 *       4: >
+	 *           The loading animation rules of the Standard Button MUST be respected.
 	 * ---
 	 * @param	string		$label
 	 * @param	string|Signal		$action		will be triggered on click
@@ -190,7 +202,6 @@ interface Factory {
 	 *     There is no visual difference (besides the cursor) between
 	 *     clickable tags and tags with unavailable action.
 	 *
-	 * context:
 	 *
 	 * rules:
 	 *   style:
@@ -213,42 +224,100 @@ interface Factory {
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     The iconographic button combines the recognisability of a graphical
-	 *     element with the explicity of a text-label.
-	 *     These button are used in prominent places as triggers for navigation.
-	 *     They are not to be used e.g. as form controls.
+	 *     The bulky button is highly obtrusive. It combines the recognisability
+	 *     of a graphical element with an explicit textual label on an unusually
+	 *     sized button. It is hard to overlook and indicates an important action
+	 *     on the screen.
 	 *
 	 *   composition: >
-	 *     The iconographic button consists of an icon and a (very short) text.
+	 *     The Bulky Button consists of an icon or glyph and a (very short) text.
 	 *
 	 *   effect: >
-	 *     Both, icon and text, form an entity an can only be operated together.
-	 *     The button MAY have a "down"-state: When the button is used to toggle
-	 *     the visibility of a slate, it stays engaged until the slate is closed
-	 *     or it is clicked again.
+	 *     The button has an "engaged"-state: When the button is used to toggle the
+	 *     visibility of a component, it stays engaged until the component is hidden again.
 	 *
-	 * context: >
-	 *     Iconographic Buttons are used in the Sidebar.
+	 *   rivals:
+	 *     Primary Button: >
+	 *       Primary Buttons indicate the most important action among a collection
+	 *       of actions, e.g. in a tool bar, controls of a form or in a modal. Bulky
+	 *       Buttons make it hard to miss the indicated action by occupying space.
 	 *
 	 * rules:
+	 *   usage:
+	 *     1: >
+	 *       Since Bulky Buttons are so obtrusive they MUST only be used
+	 *       to indicate important actions on the screen.
+	 *   wording:
+	 *     1: The icon/glyph and the text on the Bulky Button MUST be corresponding.
 	 *   style:
-	 *       1: Iconographic Buttons SHOULD only be used in the Sidebar.
-	 *       2: Iconographic Buttons MUST trigger navigation.
-	 *       3: When used to trigger a slate, the button MUST reflect the slate's state.
+	 *     1: >
+	 *       Bulky Buttons MUST occupy as much space as their container
+	 *       leaves them.
+	 *     2: >
+	 *       When used to toggle the visibility of another component, the button
+	 *       MUST reflect the componentes state of visibility.
 	 *
 	 *   accessibility:
-	 *       1: >
-	 *           The functionality of the Iconographic button MUST be indicated for screen
-	 *           readers by an aria-label.
-	 *       2: >
-	 *           Iconographic buttons MUST define aria-pressed attribute.
+	 *     1: >
+	 *       The functionality of the Bulky Button MUST be indicated for screen
+	 *       readers by an aria-label.
+	 *     2: Bulky Buttons MUST define aria-pressed attribute.
 	 *
 	 * ---
 	 * @param	\ILIAS\UI\Component\Icon\Icon | \ILIAS\UI\Component\Glyph\Glyph		$icon_or_glyph
 	 * @param	string		$label
 	 * @param	string		$action
-	 * @return  \ILIAS\UI\Component\Button\Iconographic
+	 * @return  \ILIAS\UI\Component\Button\Bulky
 	 */
-	public function iconographic($icon_or_glyph, $label, $action);
+	public function bulky($icon_or_glyph, $label, $action);
+
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *       The Toggle Button triggers the activation/deactivation of some control already shown on the screen, i.e.
+	 *       a filter. The deactivation of a control means, that it is still shown and the user can still interact
+	 *       with it, but it has no effect on the system.
+	 *   composition: >
+	 *       The Toggle Button uses different background colors for the on and off state.
+	 *       The toggle of the Toggle Button is placed on the left side when it is off, and on the right side
+	 *       when it is on.
+	 *   effect: >
+	 *       Clicking the Toggle Button activates/deactivates the related control. The on/off state of the control
+	 *       is visually noticeable for the user, i.e. by greying out the control in the off state.
+	 *   rivals:
+	 *     Checkbox: >
+	 *       Checkboxes are established as controls for choosing a value for submission and are therefore handled as Inputs.
+	 *       Toggle Buttons are used for switching the activation of some control and are therefore handled as Buttons.
+	 *     Collapse/Expand Glyph: >
+	 *       Collapse and Expand Glyphs hide or trigger the display of some content. Toggle Buttons leave a control
+	 *       visible to the user, but activate or deactivate it.
+	 *     Mode View Control: >
+	 *       Mode View Controls enable the switching between different aspects of some data. Toggle Buttons
+	 *       activate/deactivate some control, but do not change or switch the control which the user see currently.
+	 *
+	 * rules:
+	 *   usage:
+	 *       1: >
+	 *           The Toggle Button MUST be placed next to the control it activates/deactivates.
+	 *   ordering:
+	 *       1: >
+	 *           The Toggle Button SHOULD be placed above the control it activates/deactivates.
+	 *   accessibility:
+	 *       1: >
+	 *           The functionality of the Toggle Button MUST be indicated for screen
+	 *           readers by an aria-label.
+	 *       2: >
+	 *           The state of the Toggle Button MUST be indicated for screen readers
+	 *           by using the aria-pressed attribute.
+	 * ---
+	 * @param	string			$label
+	 * @param	string|Signal	$toggle_on_action action performed when button changes from off to on
+	 * @param	string|Signal	$toggle_off_action action performed when button changes from on to off
+	 * @param	bool			$is_on
+	 * @param	Signal|null		$click_signal action performed when button is clicked
+	 * @return  \ILIAS\UI\Component\Button\Toggle
+	 */
+	public function toggle(string $label, $on_action, $off_action, bool $is_on = false, Signal $click_signal = null): \ILIAS\UI\Component\Button\Toggle;
 
 }

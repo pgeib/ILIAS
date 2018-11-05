@@ -30,7 +30,13 @@ class ilCourseContentGUI
 	 */
 	public function __construct($container_gui_obj)
 	{
-		global $tpl,$ilCtrl,$lng,$ilObjDataCache,$ilTabs;
+		global $DIC;
+
+		$tpl = $DIC['tpl'];
+		$ilCtrl = $DIC['ilCtrl'];
+		$lng = $DIC['lng'];
+		$ilObjDataCache = $DIC['ilObjDataCache'];
+		$ilTabs = $DIC['ilTabs'];
 
 		$this->tpl = $tpl;
 		$this->ctrl = $ilCtrl;
@@ -46,15 +52,18 @@ class ilCourseContentGUI
 
 	function executeCommand()
 	{
-		global $ilAccess, $ilErr, $ilTabs, $ilCtrl;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$ilErr = $DIC['ilErr'];
+		$ilTabs = $DIC['ilTabs'];
+		$ilCtrl = $DIC['ilCtrl'];
 
 		if(!$ilAccess->checkAccess('read','',$this->container_obj->getRefId()))
 		{
 			$ilErr->raiseError($this->lng->txt('msg_no_perm_read'),$ilErr->WARNING);
 		}
 		
-		// Handle timings view
-		$_SESSION['crs_timings'] = true;
 
 		$this->__setSubTabs();
 		$this->tabs_gui->setTabActive('view_content');
@@ -101,14 +110,24 @@ class ilCourseContentGUI
 		}
 	}
 
+	/**
+	 * @return ilObject
+	 */
+	public function getContainerObject()
+	{
+		return $this->container_obj;
+	}
+
 	function __getDefaultCommand()
 	{
-		global $ilAccess;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
 
 		// edit timings if panel is on
 		if($_SESSION['crs_timings_panel'][$this->course_obj->getId()])
 		{
-			return 'editTimings';
+			return 'manageTimings';
 		}
 		if($ilAccess->checkAccess('write','',$this->container_obj->getRefId()))
 		{
@@ -126,7 +145,10 @@ class ilCourseContentGUI
 	{
 		include_once './Modules/Course/classes/class.ilCourseStart.php';
 
-		global $ilAccess,$ilUser;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$ilUser = $DIC['ilUser'];
 
 		if($ilAccess->checkAccess('write','',$this->course_obj->getRefId()))
 		{
@@ -146,7 +168,13 @@ class ilCourseContentGUI
 		include_once './Services/Repository/classes/class.ilRepositoryExplorer.php';
 		include_once './Services/Link/classes/class.ilLink.php';
 
-		global $rbacsystem,$ilias,$ilUser,$ilAccess,$ilObjDataCache;
+		global $DIC;
+
+		$rbacsystem = $DIC['rbacsystem'];
+		$ilias = $DIC['ilias'];
+		$ilUser = $DIC['ilUser'];
+		$ilAccess = $DIC['ilAccess'];
+		$ilObjDataCache = $DIC['ilObjDataCache'];
 
 		$this->tabs_gui->setSubTabActive('crs_content');
 
@@ -271,7 +299,9 @@ class ilCourseContentGUI
 	{
 		// BEGIN ChangeEvent: record read event.
 		require_once('Services/Tracking/classes/class.ilChangeEvent.php');
-		global $ilUser;
+		global $DIC;
+
+		$ilUser = $DIC['ilUser'];
 		$obj_id = ilObject::_lookupObjId($this->container_obj->getRefId());
 		ilChangeEvent::_recordReadEvent(
 			$this->container_obj->getType(), $this->container_obj->getRefId(),
@@ -291,7 +321,12 @@ class ilCourseContentGUI
 	*/
 	function getRightColumnHTML()
 	{
-		global $ilUser, $lng, $ilCtrl, $ilAccess;
+		global $DIC;
+
+		$ilUser = $DIC['ilUser'];
+		$lng = $DIC['lng'];
+		$ilCtrl = $DIC['ilCtrl'];
+		$ilAccess = $DIC['ilAccess'];
 
 		$ilCtrl->saveParameterByClass("ilcolumngui", "col_return");
 
@@ -328,7 +363,10 @@ class ilCourseContentGUI
 
 	function setColumnSettings($column_gui)
 	{
-		global $ilAccess, $lng;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$lng = $DIC['lng'];
 		
 		$column_gui->setRepositoryMode(true);
 		$column_gui->setEnableEdit(false);
@@ -376,7 +414,10 @@ class ilCourseContentGUI
 	*/
 	function __forwardToColumnGUI()
 	{
-		global $ilCtrl, $ilAccess;
+		global $DIC;
+
+		$ilCtrl = $DIC['ilCtrl'];
+		$ilAccess = $DIC['ilAccess'];
 		
 		include_once("Services/Block/classes/class.ilColumnGUI.php");
 
@@ -414,12 +455,153 @@ class ilCourseContentGUI
 		return $html;
 	}
 
-	function editTimings()
+
+	/**
+	 * Manage timings
+	 * @global type $ilAccess
+	 * @global type $ilErr
+	 * @param type $failed_items
+	 */
+	protected function manageTimings($failed_items = array())
+	{
+		global $DIC;
+
+		$ilAccess = $DIC->access();
+		$ilErr = $DIC['ilErr'];
+		$mainTemplate = $DIC->ui()->mainTemplate();
+		
+		if(!$ilAccess->checkAccess('write','',$this->container_obj->getRefId()))
+		{
+			$ilErr->raiseError($this->lng->txt('msg_no_perm_write'),$ilErr->WARNING);
+		}
+		$GLOBALS['DIC']['ilTabs']->setTabActive('timings_timings');
+		$GLOBALS['DIC']['ilTabs']->clearSubTabs();
+		
+		$table = new ilTimingsManageTableGUI(
+				$this,
+				'manageTimings',
+				$this->getContainerObject(),
+				$this->course_obj
+		);
+		if(count($failed_items))
+		{
+			$table->setFailureStatus(TRUE);
+		}
+		$table->init();
+		$table->parse(ilObjectActivation::getTimingsAdministrationItems($this->getContainerObject()->getRefId()),$failed_items);
+		
+		
+		$mainTemplate->setContent($table->getHTML());
+	}
+
+	/**
+	 * Manage personal timings
+	 */
+	protected function managePersonalTimings($failed = array())
+	{
+		global $ilErr, $ilAccess;
+		
+		if(!$ilAccess->checkAccess('read','',$this->container_obj->getRefId()))
+		{
+			$ilErr->raiseError($this->lng->txt('msg_no_perm_read'),$ilErr->WARNING);
+		}
+		$GLOBALS['ilTabs']->setTabActive('timings_timings');
+		$GLOBALS['ilTabs']->clearSubTabs();
+		
+		include_once './Modules/Course/classes/Timings/class.ilTimingsPersonalTableGUI.php';
+		$table = new ilTimingsPersonalTableGUI(
+				$this,
+				'managePersonalTimings',
+				$this->getContainerObject(),
+				$this->course_obj
+		);
+		$table->setFailureStatus(count($failed));
+		$table->setUserId($GLOBALS['ilUser']->getId());
+		$table->init();
+		$table->parse(
+			ilObjectActivation::getItems(
+					$this->getContainerObject()->getRefId(),
+					FALSE
+			),
+			$failed
+		);
+		$GLOBALS['tpl']->setContent($table->getHTML());
+	}
+	
+	
+	/**
+	 * Update personal timings
+	 * @global type $ilAccess
+	 * @global type $ilErr
+	 */
+	protected function updatePersonalTimings()
 	{
 		global $ilAccess,$ilErr;
 
-		include_once 'Services/MetaData/classes/class.ilMDEducational.php';
-		include_once './Services/Link/classes/class.ilLink.php';
+		if(!$ilAccess->checkAccess('read','',$this->container_obj->getRefId()))
+		{
+			$ilErr->raiseError($this->lng->txt('msg_no_perm_write'),$ilErr->WARNING);
+		}
+		
+		$this->tabs_gui->clearSubTabs();
+		
+		$failed = array();
+		include_once './Services/Calendar/classes/class.ilCalendarUtil.php';
+		foreach((array) $_POST['item'] as $ref_id => $data)
+		{
+			$sug_start_dt = ilCalendarUtil::dateFromUserSetting($data['sug_start']);
+			$sug_end_dt = ilCalendarUtil::dateFromUserSetting($data['sug_end']);
+			
+			if(($sug_start_dt instanceof ilDate) and ($sug_end_dt instanceof ilDate))
+			{
+				include_once './Services/Calendar/classes/class.ilDateTime.php';
+				if(ilDateTime::_after($sug_start_dt, $sug_end_dt))
+			{
+					$failed[$ref_id] = 'crs_timing_err_start_end';
+					continue;
+				}
+				// update user date
+				include_once './Modules/Course/classes/Timings/class.ilTimingUser.php';
+				$tu = new ilTimingUser($ref_id, $GLOBALS['ilUser']->getId());
+				$tu->getStart()->setDate($sug_start_dt->get(IL_CAL_UNIX),IL_CAL_UNIX);
+				$tu->getEnd()->setDate($sug_end_dt->get(IL_CAL_UNIX),IL_CAL_UNIX);
+				$tu->update();
+			}
+			else
+			{
+				$failed['ref_id'] = 'crs_timing_err_valid_dates';
+				continue;
+			}
+		}
+		// cognos-blu-patch: begin
+		if(!$failed)
+		{
+			ilUtil::sendSuccess($GLOBALS['lng']->txt('settings_saved'));
+			$this->managePersonalTimings();
+			return TRUE;
+		}
+		else
+		{
+			ilUtil::sendFailure($this->lng->txt('err_check_input'));
+			$this->managePersonalTimings($failed);
+			return TRUE;
+		}
+		// cognos-blu-patch: end
+		
+	}
+	
+	
+	
+
+	
+
+
+	function editTimings()
+	{
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$ilErr = $DIC['ilErr'];
 
 		$this->lng->loadLanguageModule('meta');
 
@@ -427,10 +609,9 @@ class ilCourseContentGUI
 		{
 			$ilErr->raiseError($this->lng->txt('msg_no_perm_write'),$ilErr->WARNING);
 		}
-		$this->__showTimingsPanel();
-		$this->tabs_gui->setSubTabActive('timings_timings');
+		$this->tabs_gui->setTabActive('timings_timings');
+		$this->tabs_gui->clearSubTabs();
 
-		include_once 'Services/Object/classes/class.ilObjectActivation.php';
 		$this->cont_arr = ilObjectActivation::getTimingsAdministrationItems($this->container_obj->getRefId());
 
 		$this->tpl->addBlockfile('ADM_CONTENT','adm_content','tpl.crs_edit_items.html','Modules/Course');
@@ -530,15 +711,6 @@ class ilCourseContentGUI
 
 			$this->tpl->setVariable('SUG_END',ilDatePresentation::formatDate(new ilDate($item['suggestion_end'],IL_CAL_UNIX)));
 
-			// Limit
-			if(is_array($_POST['item']["$item[ref_id]"]['lim_end']))
-			{
-				$end = $this->__toUnix($_POST['item']["$item[ref_id]"]['lim_end']);
-			}
-			else
-			{
-				$end = $item['latest_end'];
-			}
 
 			$date = $this->__prepareDateSelect($end);
 			$this->tpl->setVariable("LIM_END",
@@ -582,62 +754,19 @@ class ilCourseContentGUI
 
 	}
 
-	function __showUserAcceptanceTable()
-	{
-		global $ilUser;
-
-		include_once 'Modules/Course/classes/Timings/class.ilTimingAccepted.php';
-		$accept_obj = new ilTimingAccepted($this->course_obj->getId(),$ilUser->getId());
-		
-		include_once('Services/Form/classes/class.ilPropertyFormGUI.php');
-		$form = new ilPropertyFormGUI();
-		$form->setFormAction($this->ctrl->getFormAction($this, 'saveAcceptance'));
-		$form->setTitle($this->lng->txt('timing_accept_table'));
-		
-		$accept = new ilCheckboxInputGUI($this->lng->txt('timing_user_accept'), "accepted");	
-		$accept->setChecked($accept_obj->isAccepted());
-		$form->addItem($accept);
-		
-		$remark = new ilTextAreaInputGUI($this->lng->txt('timing_remark'), "remark");
-		$remark->setValue($accept_obj->getRemark());
-		$form->addItem($remark);
-		
-		$tutor = new ilCheckboxInputGUI($this->lng->txt('timing_tutor_visible'), "tutor");	
-		$tutor->setChecked($accept_obj->isVisible());
-		$form->addItem($tutor);
-		
-		$form->addCommandButton('saveAcceptance', $this->lng->txt('save'));
-		$this->tpl->setVariable("FORM", $form->getHTML());
-	}
-	
-	function saveAcceptance()
-	{
-		global $ilUser;
-
-		include_once 'Modules/Course/classes/Timings/class.ilTimingAccepted.php';
-		$accept_obj = new ilTimingAccepted($this->course_obj->getId(),$ilUser->getId());
-
-		$accept_obj->setRemark(ilUtil::stripSlashes($_POST['remark']));
-		$accept_obj->accept($_POST['accepted']);
-		$accept_obj->setVisible($_POST['tutor']);
-		$accept_obj->update();
-		ilUtil::sendSuccess($this->lng->txt('settings_saved'));
-		$this->editUserTimings();
-	}
-
 	function editUserTimings()
 	{
-		if($_SESSION['crs_timings_panel'][$this->course_obj->getId()])
-		{
-			return $this->editTimings();
-		}
-		global $ilAccess,$ilErr;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$ilErr = $DIC['ilErr'];
 
 		if(!$ilAccess->checkAccess('read','',$this->container_obj->getRefId()))
 		{
 			$ilErr->raiseError($this->lng->txt('msg_no_perm_read'),$ilErr->WARNING);
 		}
-		$this->tabs_gui->setSubTabActive('timings_timings');
+		$this->tabs_gui->clearSubTabs();
+		$this->tabs_gui->setTabActive('timings_timings');
 
 		$_SESSION['crs_timings_user_hidden'] = isset($_GET['show_details']) ? $_GET['show_details'] : $_SESSION['crs_timings_user_hidden'];
 
@@ -677,31 +806,6 @@ class ilCourseContentGUI
 		$this->tpl->setVariable("BTN_TXT",$this->lng->txt("back"));
 		$this->tpl->parseCurrentBlock();
 
-		include_once 'Modules/Course/classes/Timings/class.ilTimingAccepted.php';
-		$usr_accepted = new ilTimingAccepted($this->course_obj->getId(),(int) $_GET['member_id']);
-
-		if($usr_accepted->isAccepted())
-		{
-			$this->tpl->setVariable("ACC_IMG",ilUtil::getImagePath('icon_ok.svg'));
-			$this->tpl->setVariable("ACC_ALT",$this->lng->txt('timing_accepted'));
-		}
-		else
-		{
-			$this->tpl->setVariable("ACC_IMG",ilUtil::getImagePath('icon_not_ok.svg'));
-			$this->tpl->setVariable("ACC_ALT",$this->lng->txt('timing_not_accepted'));
-		}
-		if($usr_accepted->isVisible() and strlen($usr_accepted->getRemark()))
-		{
-			$this->tpl->setVariable("REMARK",nl2br($usr_accepted->getRemark()));
-		}
-		else
-		{
-			$this->tpl->setVariable("REMARK",$this->lng->txt('not_available'));
-		}
-
-		$this->tpl->setVariable("TIMING_ACCEPT",$this->lng->txt('timing_accept_table'));
-		$this->tpl->setVariable("TXT_ACCEPTED",$this->lng->txt('timing_user_accepted'));
-		$this->tpl->setVariable("TXT_REMARK",$this->lng->txt('timing_remark'));
 
 		$this->tpl->setVariable("HEADER_IMG",ilUtil::getImagePath('icon_usr.svg'));
 		$this->tpl->setVariable("HEADER_ALT",$this->lng->txt('obj_usr'));
@@ -735,7 +839,9 @@ class ilCourseContentGUI
 
 		$this->lng->loadLanguageModule('meta');
 
-		$usr_planed = new ilTimingPlaned($item['ref_id'],$_GET['member_id']);
+		include_once './Modules/Course/classes/Timings/class.ilTimingUser.php';
+		$usr_planed = new ilTimingUser($item['ref_id'], (int) $_GET['member_id']);
+
 		for($i = 0;$i < $level;$i++)
 		{
 			$this->tpl->touchBlock('start_indent');
@@ -776,11 +882,14 @@ class ilCourseContentGUI
 
 		if($item['timing_type'] == ilObjectActivation::TIMINGS_PRESETTING)
 		{
-			$this->tpl->setVariable('SUG_START',ilDatePresentation::formatDate(new ilDate($item['suggestion_start'],IL_CAL_UNIX)));
-			$this->tpl->setVariable('SUG_END',ilDatePresentation::formatDate(new ilDate($item['suggestion_end'],IL_CAL_UNIX)));
+			if($usr_planed->getStart()->get(IL_CAL_UNIX))
+				$this->tpl->setVariable('SUG_START',$usr_planed->getStart()->get(IL_CAL_DATE));
+			if($usr_planed->getEnd()->get(IL_CAL_UNIX))
+				$this->tpl->setVariable('SUG_END',$usr_planed->getEnd()->get(IL_CAL_DATE));
 		}
 
-		if($item['changeable'] and $item['timing_type'] == ilObjectActivation::TIMINGS_PRESETTING)
+		
+		if(0 and $item['changeable'] and $item['timing_type'] == ilObjectActivation::TIMINGS_PRESETTING)
 		{
 			if($usr_planed->getPlanedStartingTime())
 			{
@@ -792,7 +901,7 @@ class ilCourseContentGUI
 			}
 			$this->tpl->setVariable('OWN_START',ilDatePresentation::formatDate(new ilDate($start,IL_CAL_UNIX)));
 
-			if($usr_planed->getPlanedEndingTime())
+			if($usr_planed->getPlanedEndingTime() and 0)
 			{
 				$end = $usr_planed->getPlanedEndingTime();
 			}
@@ -830,8 +939,8 @@ class ilCourseContentGUI
 	function __editAdvancedUserTimings()
 	{
 		$this->tpl->addBlockfile('ADM_CONTENT','adm_content','tpl.crs_usr_edit_timings_adv.html','Modules/Course');
-		$this->__showTimingsPanel();
-		$this->__showUserAcceptanceTable();
+
+		$this->tabs_gui->clearSubTabs();
 
 		$this->tpl->setVariable("FORMACTION",$this->ctrl->getFormAction($this));
 		$this->tpl->setVariable("HEADER_IMG",ilUtil::getImagePath('icon_crs.svg'));
@@ -855,8 +964,6 @@ class ilCourseContentGUI
 		$this->tpl->setVariable("TXT_START_END",$this->lng->txt('crs_timings_short_start_end'));
 		$this->tpl->setVariable("TXT_INFO_START_END",$this->lng->txt('crs_timings_start_end_info'));
 
-		$this->tpl->setVariable("TXT_LIMIT",$this->lng->txt('crs_timings_short_limit_start_end'));
-		$this->tpl->setVariable("TXT_INFO_LIMIT",$this->lng->txt('crs_timings_from_until'));
 
 		$this->tpl->setVariable("TXT_OWN_PRESETTING",$this->lng->txt('crs_timings_planed_start'));
 		$this->tpl->setVariable("TXT_INFO_OWN_PRESETTING",$this->lng->txt('crs_timings_start_end_info'));
@@ -889,8 +996,7 @@ class ilCourseContentGUI
 	{
 		$this->tpl->addBlockfile('ADM_CONTENT','adm_content','tpl.crs_usr_edit_timings.html','Modules/Course');
 
-		$this->__showTimingsPanel();
-		$this->__showUserAcceptanceTable();
+		$this->tabs_gui->clearSubTabs();
 
 		$this->tpl->setVariable("FORMACTION",$this->ctrl->getFormAction($this));
 		$this->tpl->setVariable("HEADER_IMG",ilUtil::getImagePath('icon_crs.svg'));
@@ -935,7 +1041,10 @@ class ilCourseContentGUI
 
 	function __renderItem($item,$level)
 	{
-		global $ilUser,$ilAccess;
+		global $DIC;
+
+		$ilUser = $DIC['ilUser'];
+		$ilAccess = $DIC['ilAccess'];
 
 		include_once 'Modules/Course/classes/Timings/class.ilTimingPlaned.php';
 		include_once './Services/Link/classes/class.ilLink.php';
@@ -1058,8 +1167,6 @@ class ilCourseContentGUI
 			{
 				$this->tpl->setVariable("VAL_DURATION",intval(($end - $start) / (60 * 60 * 24)));
 			}
-			$this->tpl->setVariable('LIM_START',ilDatePresentation::formatDate(new ilDate($item['earliest_start'],IL_CAL_UNIX)));
-			$this->tpl->setVariable('LIM_END',ilDatePresentation::formatDate(new ilDate($item['latest_end'],IL_CAL_UNIX)));
 		}
 
 		$this->tpl->parseCurrentBlock();
@@ -1075,57 +1182,16 @@ class ilCourseContentGUI
 		}
 	}
 
-	function __showTimingsPanel()
-	{
-		global $ilAccess, $ilToolbar;
-
-		if(!$ilAccess->checkAccess('write','',$this->container_obj->getRefId()))
-		{
-			return true;
-		}
-		
-		include_once "Services/UIComponent/Button/classes/class.ilLinkButton.php";
-		$btn = ilLinkButton::getInstance();
-			
-		if(!$_SESSION['crs_timings_panel'][$this->course_obj->getId()])
-		{
-			$btn->setCaption("timings_timings_on");
-			$btn->setUrl($this->ctrl->getLinkTarget($this,'timingsOn'));		
-		}
-		else
-		{
-			$btn->setCaption("timings_timings_off");
-			$btn->setUrl($this->ctrl->getLinkTarget($this,'timingsOff'));			
-		}
-		
-		$ilToolbar->addButtonInstance($btn);
-	}
-
-	function timingsOn()
-	{
-		global $ilTabs;
-		$_SESSION['crs_timings_panel'][$this->course_obj->getId()] = 1;
-
-		$ilTabs->clearSubTabs();
-		$this->__setSubTabs();
-		$this->editTimings();
-	}
-
-	function timingsOff()
-	{
-		global $ilTabs;
-		$_SESSION['crs_timings_panel'][$this->course_obj->getId()] = 0;
-
-		$ilTabs->clearSubTabs();
-		$this->__setSubTabs();
-		$this->editUserTimings();
-	}
-
 
 	function updateUserTimings()
 	{
-		global $ilUser,$ilObjDataCache;
+		global $DIC;
+
+		$ilUser = $DIC['ilUser'];
+		$ilObjDataCache = $DIC['ilObjDataCache'];
 		include_once 'Modules/Course/classes/Timings/class.ilTimingPlaned.php';
+
+		$this->tabs_gui->clearSubTabs();
 
 		// Validate
 		$this->invalid = array();
@@ -1183,8 +1249,6 @@ class ilCourseContentGUI
 			// #9325
 			$item['suggestion_end'] = $this->__toUnix($_POST['item'][$obj_id]['sug_end']);
 		}
-		$item['earliest_start'] = $this->__toUnix($_POST['item'][$obj_id]['lim_start']);
-		$item['latest_end'] = $this->__toUnix($_POST['item'][$obj_id]['lim_end']);
 		$item['changeable'] = $_POST['item'][$obj_id]['change'];
 		$item['timing_type'] = $_POST['item'][$obj_id]['active'] ? ilObjectActivation::TIMINGS_PRESETTING : $item['timing_type'];
 		$item['duration_a'] = $_POST['item'][$obj_id]['duration_a'];
@@ -1193,11 +1257,104 @@ class ilCourseContentGUI
 		return $item;
 	}
 
+	/**
+	 * @return bool
+	 * @throws ilDateTimeException
+	 */
+	protected function updateManagedTimings()
+	{
+		global $DIC;
+
+		$ilAccess = $DIC->access();
+		$ilErr = $DIC['ilErr'];
+
+		if(!$ilAccess->checkAccess('write','',$this->container_obj->getRefId()))
+		{
+			$ilErr->raiseError($this->lng->txt('msg_no_perm_write'),$ilErr->WARNING);
+		}
+
+		$this->tabs_gui->clearSubTabs();
+		
+		$failed = array();
+		$all_items = array();
+		include_once './Services/Calendar/classes/class.ilCalendarUtil.php';
+		foreach((array) $_POST['item'] as $ref_id => $data)
+		{
+			$item_obj = new ilObjectActivation();
+			$item_obj->read($ref_id);
+
+			$item_obj->setTimingType($data['active'] ? 	ilObjectActivation::TIMINGS_PRESETTING : ilObjectActivation::TIMINGS_DEACTIVATED);
+			#$item_obj->setTimingStart($old_data['timing_start']);
+			#$item_obj->setTimingEnd($old_data['timing_end']);
+			#$item_obj->toggleVisible($old_data['visible']);
+			$item_obj->toggleChangeable((int) $data['change']);
+
+			if($this->course_obj->getTimingMode() == ilCourseConstants::IL_CRS_VIEW_TIMING_ABSOLUTE)
+			{
+				$sug_start_dt = ilCalendarUtil::dateFromUserSetting($data['sug_start']);
+				$sug_end_dt = ilCalendarUtil::dateFromUserSetting($data['sug_end']);
+				
+				if(($sug_start_dt instanceof ilDate) and ($sug_end_dt instanceof ilDate)) 
+				{
+					include_once './Services/Calendar/classes/class.ilDateTime.php';
+					if(ilDateTime::_after($sug_start_dt, $sug_end_dt))
+				{
+						$failed[$ref_id] = 'crs_timing_err_start_end';
+						continue;
+					}
+					$item_obj->setSuggestionStart($sug_start_dt->get(IL_CAL_UNIX));
+					$item_obj->setSuggestionEnd($sug_end_dt->get(IL_CAL_UNIX));
+				}
+				else
+				{
+					$failed['ref_id'] = 'crs_timing_err_valid_dates';
+					continue;
+				}
+			}
+			else
+			{
+				if(
+					((int) $data['sug_start_rel'] < 0 ) or
+					((int) $data['duration_a'] < 0 )
+				)
+				{
+					$failed[$ref_id] = 'crs_timing_err_start_dur_rel';
+					continue;
+				}
+				$item_obj->setSuggestionStartRelative($data['sug_start_rel']);
+				$item_obj->setSuggestionEndRelative($data['sug_start_rel'] + $data['duration_a']);
+
+				// add default values for start/end (relative to now)
+				$start = new ilDate(time(),IL_CAL_UNIX);
+				$start->increment(IL_CAL_DAY, $data['sug_start_rel']);
+				$item_obj->setSuggestionStart($start->get(IL_CAL_UNIX));
+				
+				$start->increment(IL_CAL_DAY, $data['duration_a']);
+				$item_obj->setSuggestionEnd($start->get(IL_CAL_UNIX));
+			}
+			
+			$item_obj->update($ref_id);
+		}
+		if(!$failed)
+		{
+			ilUtil::sendSuccess($this->lng->txt('settings_saved'));
+			$this->manageTimings();
+			return TRUE;
+		}
+		else
+		{
+			ilUtil::sendFailure($this->lng->txt('err_check_input'));
+			$this->manageTimings($failed);
+			return TRUE;
+		}
+	}
+
 	function updateTimings()
 	{
-		include_once 'Services/Object/classes/class.ilObjectActivation.php';
+		global $DIC;
 
-		global $ilAccess,$ilErr;
+		$ilAccess = $DIC['ilAccess'];
+		$ilErr = $DIC['ilErr'];
 
 		if(!$ilAccess->checkAccess('write','',$this->container_obj->getRefId()))
 		{
@@ -1224,10 +1381,6 @@ class ilCourseContentGUI
 			// add duration
 			$data['sug_start']['d'] += abs($data['duration_a']);
 			$item_obj->setSuggestionEnd($this->__toUnix($data['sug_start'],array('h' => 23,'m' => 55)));
-
-			$item_obj->setEarliestStart(time());
-			$item_obj->setLatestEnd($this->__toUnix($data['lim_end'],array('h' => 23,'m' => 55)));
-
 			$item_obj->toggleVisible($old_data['visible']);
 			$item_obj->toggleChangeable($_POST['item_change'][$ref_id]['change']);
 
@@ -1269,7 +1422,9 @@ class ilCourseContentGUI
 	
 	function __initCourseObject()
 	{
-		global $tree;
+		global $DIC;
+
+		$tree = $DIC['tree'];
 
 		if($this->container_obj->getType() == 'crs')
 		{
@@ -1307,7 +1462,9 @@ class ilCourseContentGUI
 
 	function __buildPath($a_ref_id)
 	{
-		global $tree;
+		global $DIC;
+
+		$tree = $DIC['tree'];
 
 		$path_arr = $tree->getPathFull($a_ref_id,$this->course_obj->getRefId());
 		$counter = 0;

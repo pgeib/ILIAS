@@ -17,7 +17,7 @@ function slate() {
 
 
 	$icon = $f->glyph()->note();
-	$button = $f->button()->iconographic($icon, 'trigger slate', '#')
+	$button = $f->button()->bulky($icon, 'trigger slate', '#')
 		->withOnClick($slate->getToggleSignal());
 
 	return $renderer->render([$button, $slate]);

@@ -37,7 +37,8 @@ class ilTestService
 	{
 		$passOverwiewData = array();
 		
-		global $ilUser;
+		global $DIC;
+		$ilUser = $DIC['ilUser'];
 
 		$scoredPass = $this->object->_getResultPass($active_id);
 		$lastPass = ilObjTest::_getPass($active_id);
@@ -191,7 +192,10 @@ class ilTestService
 	
 	public function buildVirtualSequence(ilTestSession $testSession)
 	{
-		global $ilDB, $lng, $ilPluginAdmin;
+		global $DIC;
+		$ilDB = $DIC['ilDB'];
+		$lng = $DIC['lng'];
+		$ilPluginAdmin = $DIC['ilPluginAdmin'];
 
 		require_once 'Modules/Test/classes/class.ilTestVirtualSequence.php';
 		$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
@@ -268,9 +272,15 @@ class ilTestService
 		}
 
 		$data = array();
+		$firstQuestion = true;
 
 		foreach($result_array as $key => $value)
 		{
+			$disableLink = (
+				$this->object->isFollowupQuestionAnswerFixationEnabled()
+				&& !$value['presented'] && !$firstQuestion 
+			);
+			
 			$description = "";
 			if($this->object->getListOfQuestionsDescription())
 			{
@@ -297,7 +307,21 @@ class ilTestService
 			}
 
 // fau: testNav - add number parameter for getQuestionTitle()
-			$data[] = array('order' => $value["nr"], 'title' => $this->object->getQuestionTitle($value["title"], $value["nr"]), 'description' => $description, 'worked_through' => $value["worked_through"], 'postponed' => $value["postponed"], 'points' => $points, 'marked' => $marked, 'sequence' => $value["sequence"], 'obligatory' => $value['obligatory'], 'isAnswered' => $value['isAnswered']);
+			$data[] = array(
+				'order' => $value["nr"],
+				'title' => $this->object->getQuestionTitle($value["title"], $value["nr"]),
+				'description' => $description,
+				'disabled' => $disableLink,
+				'worked_through' => $value["worked_through"],
+				'postponed' => $value["postponed"],
+				'points' => $points,
+				'marked' => $marked,
+				'sequence' => $value["sequence"],
+				'obligatory' => $value['obligatory'],
+				'isAnswered' => $value['isAnswered']
+			);
+			
+			$firstQuestion = false;
 // fau.
 		}
 

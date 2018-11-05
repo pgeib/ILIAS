@@ -78,6 +78,11 @@ class ilUserAutoComplete
 	 * @var bool
 	 */
 	private $more_link_available = false;
+	
+	/**
+	 * @var callable
+	 */
+	protected $user_filter = null;
 
 	/**
 	 * Default constructor
@@ -92,6 +97,20 @@ class ilUserAutoComplete
 		$this->setPrivacyMode(self::PRIVACY_MODE_IGNORE_USER_SETTING);
 		
 		$this->logger = $DIC->logger()->user();
+	}
+	
+	/**
+	 * Closure for filtering users
+	 * e.g
+	 * $rep_search_gui->addUserAccessFilterCallable(function($user_ids) use($ref_id,$rbac_perm,$pos_perm)) {
+	 * // filter users 
+	 * return $filtered_users
+	 * }
+	 * @param callable $user_filter
+	 */
+	public function addUserAccessFilterCallable(callable $user_filter)
+	{
+		$this->user_filter = $user_filter;
 	}
 	
 	public function setLimit($a_limit)
@@ -248,7 +267,9 @@ class ilUserAutoComplete
 		/**
 		 * @var $ilDB  ilDB
 		 */
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 		
 		$parsed_query = $this->parseQueryString($a_str);
 
@@ -285,6 +306,8 @@ class ilUserAutoComplete
 		$cnt    = 0;
 		$more_results = FALSE;
 		$result = array();
+		$recs = array();
+		$usrIds = array();
 		while(($rec = $ilDB->fetchAssoc($res)) && $cnt < ($max + 1))
 		{
 			if($cnt >= $max && $this->isMoreLinkAvailable())
@@ -292,7 +315,16 @@ class ilUserAutoComplete
 				$more_results = TRUE;
 				break;
 			}
-			
+			$recs[$rec['usr_id']] = $rec;
+			$usrIds[] = $rec['usr_id'];
+		}
+		if(is_callable($this->user_filter,true, $callable_name = ''))
+		{
+			$usrIds = call_user_func_array($this->user_filter,[$usrIds]);
+		}
+		foreach($usrIds as $usr_id)
+		{
+			$rec = $recs[$usr_id];
 			// @todo: Open discussion: We should remove all non public fields from result
 			$label = $rec['lastname'] . ', ' . $rec['firstname'] . ' [' . $rec['login'] . ']';
 
@@ -354,7 +386,9 @@ class ilUserAutoComplete
 		/**
 		 * @var $ilDB ilDB
 		 */
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$joins = array();
 
@@ -393,7 +427,10 @@ class ilUserAutoComplete
 		 * @var $ilDB      ilDB
 		 * @var $ilSetting ilSetting
 		 */
-		global $ilDB, $ilSetting;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
+		$ilSetting = $DIC['ilSetting'];
 
 		$outer_conditions = array();
 
@@ -517,7 +554,9 @@ class ilUserAutoComplete
 		/**
 		 * @var $ilDB ilDB
 		 */
-		global $ilDB;
+		global $DIC;
+
+		$ilDB = $DIC['ilDB'];
 
 		$query_strings = array($query['query']);
 		

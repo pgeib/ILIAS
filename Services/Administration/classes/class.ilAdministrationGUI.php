@@ -207,7 +207,7 @@ class ilAdministrationGUI
 				{
 					// check db update
 					include_once ("./Services/Database/classes/class.ilDBUpdate.php");
-					$dbupdate = new ilDBUpdate($ilDB,true);
+					$dbupdate = new ilDBUpdate($ilDB);
 					if (!$dbupdate->getDBVersionStatus())
 					{
 						ilUtil::sendFailure($this->lng->txt("db_need_update"));
@@ -490,7 +490,7 @@ class ilAdministrationGUI
 		$layout = array(
 			1 => array(
 				"basic" =>
-					array("adm", "stys", "adve", "lngf", "hlps", "accs", "cmps", "extt", "wfe"),
+					array("adm", "stys", "mme", "adve", "lngf", "hlps", "accs", "cmps", "extt", "wfe"),
 				"user_administration" =>
 					array("usrf", 'tos', "rolf", "orgu", "auth", "ps"),
 				"learning_outcomes" =>

@@ -16,7 +16,7 @@ class ilCtrlStructureReader
 	var $class_childs;
 	var $executed;
 
-	function __construct()
+	function __construct($a_ini_file = null)
 	{
 		$this->class_script = array();
 		$this->class_childs = array();
@@ -27,11 +27,6 @@ class ilCtrlStructureReader
 	function setIniFile($a_ini_file)
 	{
 		$this->ini = $a_ini_file;
-	}
-
-	function setErrorObject(&$err)
-	{
-		$this->err_object =& $err;
 	}
 	
 	/**
@@ -96,13 +91,6 @@ class ilCtrlStructureReader
 				$this->ini->write();
 			}
 		}
-		
-		// read module information
-		// not clear whether this is a good place for module reading info
-		// or not
-		include_once("./Services/UICore/classes/class.ilCtrl.php");
-		$ctrl = new ilCtrl();
-//		$ctrl->storeCommonStructures();
 	}
 
 	/**
@@ -179,13 +167,15 @@ class ilCtrlStructureReader
 										{
 											$ilDB->manipulate("DELETE FROM ctrl_calls WHERE comp_prefix IS NULL");
 										}
-										
-										$this->err_object->raiseError(
-											sprintf($lng->txt("duplicate_ctrl"),
+
+										throw new \Exception(
+											sprintf(
+												$lng->txt("duplicate_ctrl"),
 												$parent,
 												$this->class_script[$parent],
-												$a_cdir."/".$file)
-											, $this->err_object->MESSAGE);
+												$a_cdir."/".$file
+											)
+										);
 									}
 
 									$this->class_script[$parent] = $a_cdir."/".$file;

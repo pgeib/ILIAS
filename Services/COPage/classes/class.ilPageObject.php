@@ -82,7 +82,7 @@ abstract class ilPageObject
 	var $xml;
 	var $encoding;
 	var $node;
-	var $cur_dtd = "ilias_pg_5_3.dtd";
+	var $cur_dtd = "ilias_pg_5_4.dtd";
 	var $contains_int_link;
 	var $needs_parsing;
 	var $parent_type;
@@ -141,10 +141,6 @@ abstract class ilPageObject
 		$this->lng = $DIC->language();
 		$this->tree = $DIC->repositoryTree();
 		$this->log = ilLoggerFactory::getLogger('copg');
-
-		// @todo: move this elsewhere
-//		require_once("./Services/COPage/syntax_highlight/php/Beautifier/Init.php");
-//		require_once("./Services/COPage/syntax_highlight/php/Output/Output_css.php");
 
 		$this->parent_type = $this->getParentType();
 		$this->id = $a_id;
@@ -787,7 +783,6 @@ abstract class ilPageObject
 		global $DIC;
 
 		$db = $DIC->database();
-
 		$db->manipulateF("UPDATE page_object SET parent_id = %s WHERE page_id = %s".
 			" AND parent_type = %s", array("integer", "integer", "text"),
 			array($a_par_id, $a_pg_id, $a_parent_type));
@@ -2493,9 +2488,8 @@ abstract class ilPageObject
 
 	/**
 	 * Handle repository links on copy process
-	 *
-	 * @param
-	 * @return
+	 * @param array $a_mapping
+	 * @param int $a_source_ref_id
 	 */
 	function handleRepositoryLinksOnCopy($a_mapping, $a_source_ref_id)
 	{
@@ -4798,7 +4792,7 @@ abstract class ilPageObject
 			}
 		}
 
-		$set = $db->queryF("SELECT count(DISTINCT page_id, parent_type, hdate, lang) as cnt, lang, page_id, user_id FROM page_history ".
+		$set = $db->queryF("SELECT count(*) as cnt, lang, page_id, user_id FROM page_history ".
 			" WHERE parent_id = %s AND parent_type = %s AND user_id != %s ".$and_lang.
 			" GROUP BY page_id, user_id, lang ",
 			array("integer", "text", "integer"),
@@ -4868,7 +4862,7 @@ abstract class ilPageObject
 			}
 		}
 
-		$set = $db->queryF("SELECT count(DISTINCT page_id, parent_type, hdate, lang) as cnt, lang, page_id, user_id FROM page_history ".
+		$set = $db->queryF("SELECT count(*) as cnt, lang, page_id, user_id FROM page_history ".
 			" WHERE page_id = %s AND parent_type = %s AND user_id != %s ".$and_lang.
 			" GROUP BY user_id, page_id, lang ",
 			array("integer", "text", "integer"),
@@ -5545,5 +5539,15 @@ abstract class ilPageObject
 		return $file_obj_ids;
 	}
 
+	/**
+	 * Resolve resources
+	 * @todo: move this into proper "afterImport" routine that calls all PC components
+	 */
+	public function resolveResources($ref_mapping)
+	{
+		include_once("./Services/COPage/classes/class.ilPCResources.php");
+		ilPCResources::resolveResources($this, $ref_mapping);
+	}
+	
 }
 ?>

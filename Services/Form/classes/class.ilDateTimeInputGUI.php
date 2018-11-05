@@ -1,9 +1,6 @@
 <?php
 /* Copyright (c) 1998-2009 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-require_once("./Services/Calendar/classes/class.ilCalendarUtil.php");
-include_once("./Services/Table/interfaces/interface.ilTableFilterItem.php");
-
 /**
 * This class represents a date/time property in a property form.
 *
@@ -311,7 +308,7 @@ class ilDateTimeInputGUI extends ilSubEnabledFormPropertyGUI implements ilTableF
 		$tpl->setVariable('PLACEHOLDER', $pl_format);		
 		
 		// current value		
-		$date_value = $this->invalid_input;			
+		$date_value = htmlspecialchars($this->invalid_input);			
 		if(!$date_value &&
 			$this->getDate())
 		{			

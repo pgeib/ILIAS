@@ -55,7 +55,10 @@ class ilObjectXMLWriter extends ilXmlWriter
 	*/
 	function __construct()
 	{
-		global $ilias,$ilUser;
+		global $DIC;
+
+		$ilias = $DIC['ilias'];
+		$ilUser = $DIC['ilUser'];
 
 		parent::__construct();
 
@@ -132,7 +135,10 @@ class ilObjectXMLWriter extends ilXmlWriter
 
 	function start()
 	{
-		global $ilAccess,$objDefinition;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$objDefinition = $DIC['objDefinition'];
 		
 		$this->__buildHeader();
 
@@ -159,19 +165,33 @@ class ilObjectXMLWriter extends ilXmlWriter
 
 
 	// PRIVATE
-	function __appendObject(&$object)
+	function __appendObject(ilObject $object)
 	{
+		global $DIC;
 
-	  global $tree, $rbacreview;
+		$tree = $DIC['tree'];
+		$rbacreview = $DIC['rbacreview'];
+
+		/**
+		 * @var ilObjectDefinition
+		 */
+		$objectDefinition = $DIC['objDefinition'];
 
 	  	$id = $object->getId();
 		if ($object->getType() == "role" && $rbacreview->isRoleDeleted($id))
 		{
 			return;				
-		}			
-	  
-		$attrs = array('type' => $object->getType(),
-			       'obj_id' => $id);
+		}
+
+		$attrs = array(
+			'type' => $object->getType(),
+			'obj_id' => $id
+		);
+
+		if($objectDefinition->supportsOfflineHandling($object->getType()))
+		{
+			$attrs['offline'] = (int) $object->getOfflineStatus();
+		}
 
 		$this->xmlStartTag('Object',$attrs);
 		//$this->xmlElement('Title',null,$object->getTitle());
@@ -229,7 +249,10 @@ class ilObjectXMLWriter extends ilXmlWriter
 			if (!$tree->isInTree($ref_id))
 				continue;
 			
-			$attr = array('ref_id' => $ref_id, 'parent_id'=> $tree->getParentId(intval($ref_id)));
+			$attr = array(
+				'ref_id' => $ref_id,
+				'parent_id'=> $tree->getParentId(intval($ref_id))
+			);
 			$attr['accessInfo'] = $this->__getAccessInfo($object,$ref_id);			
 			$this->xmlStartTag('References',$attr);
 			$this->__appendTimeTargets($ref_id);
@@ -247,7 +270,9 @@ class ilObjectXMLWriter extends ilXmlWriter
 	 */
 	public function __appendTimeTargets($a_ref_id)
 	{
-		global $tree;
+		global $DIC;
+
+		$tree = $DIC['tree'];
 		
 		if(!$tree->checkForParentType($a_ref_id,'crs')) {
 			return;	
@@ -284,22 +309,12 @@ class ilObjectXMLWriter extends ilXmlWriter
 		}
 #		if($type == self::TIMING_PRESETTING)
 		{
-			if($time_targets['changeable'] or 1)
-			{
 				$this->xmlElement('Suggestion',
-					array('starting_time' => $time_targets['suggestion_start'],
+				array(
+					'starting_time' => $time_targets['suggestion_start'],
 						'ending_time' => $time_targets['suggestion_end'],
-						'changeable' => $time_targets['changeable'],
-						'earliest_start' => $time_targets['earliest_start'],
-						'latest_end' => $time_targets['latest_end']));
-			}
-			else
-			{
-				$this->xmlElement('Suggestion',
-					array('starting_time' => $time_targets['suggestion_start'],
-						'ending_time' => $time_targets['suggestion_end'],
-						'changeable' => $time_targets['changeable']));
-			}
+					'changeable' => $time_targets['changeable'])
+			);
 		}
 		$this->xmlEndTag('TimeTarget');
 		return;		
@@ -333,7 +348,11 @@ class ilObjectXMLWriter extends ilXmlWriter
 
 	function __appendOperations($a_ref_id,$a_type)
 	{
-		global $ilAccess,$rbacreview,$objDefinition;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$rbacreview = $DIC['rbacreview'];
+		$objDefinition = $DIC['objDefinition'];
 
 		if($this->enabledOperations())
 		{
@@ -397,7 +416,9 @@ class ilObjectXMLWriter extends ilXmlWriter
 
 	function __getAccessInfo(&$object,$ref_id)
 	{
-		global $ilAccess;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
 
 		include_once 'Services/AccessControl/classes/class.ilAccess.php';
 
@@ -415,7 +436,10 @@ class ilObjectXMLWriter extends ilXmlWriter
 
 	
 	public static function appendPathToObject ($writer, $refid){
-		global $tree, $lng;
+		global $DIC;
+
+		$tree = $DIC['tree'];
+		$lng = $DIC['lng'];
 		$items = $tree->getPathFull($refid);
 		$writer->xmlStartTag("Path");
 		foreach ($items as $item) {

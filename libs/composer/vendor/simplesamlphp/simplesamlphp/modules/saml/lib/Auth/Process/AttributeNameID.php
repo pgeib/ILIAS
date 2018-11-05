@@ -28,7 +28,7 @@ class sspmod_saml_Auth_Process_AttributeNameID extends sspmod_saml_BaseNameIDGen
     public function __construct($config, $reserved)
     {
         parent::__construct($config, $reserved);
-        assert('is_array($config)');
+        assert(is_array($config));
 
         if (!isset($config['Format'])) {
             throw new SimpleSAML_Error_Exception("AttributeNameID: Missing required option 'Format'.");
@@ -52,14 +52,14 @@ class sspmod_saml_Auth_Process_AttributeNameID extends sspmod_saml_BaseNameIDGen
     {
 
         if (!isset($state['Attributes'][$this->attribute]) || count($state['Attributes'][$this->attribute]) === 0) {
-            SimpleSAML_Logger::warning(
+            SimpleSAML\Logger::warning(
                 'Missing attribute '.var_export($this->attribute, true).
                 ' on user - not generating attribute NameID.'
             );
             return null;
         }
         if (count($state['Attributes'][$this->attribute]) > 1) {
-            SimpleSAML_Logger::warning(
+            SimpleSAML\Logger::warning(
                 'More than one value in attribute '.var_export($this->attribute, true).
                 ' on user - not generating attribute NameID.'
             );

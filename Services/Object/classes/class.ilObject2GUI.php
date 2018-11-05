@@ -60,6 +60,7 @@ abstract class ilObject2GUI extends ilObjectGUI
 		$ilTabs  = $DIC["ilTabs"];
 		$tree  = $DIC["tree"];
 		$ilAccess  = $DIC["ilAccess"];
+		$this->object_service = $DIC->object();
 		
 		if (!isset($ilErr))
 		{
@@ -76,7 +77,6 @@ abstract class ilObject2GUI extends ilObjectGUI
 		$this->type = $this->getType();
 		$this->html = "";
 		
-		// use globals instead?
 		$this->tabs_gui = $ilTabs;
 		$this->objDefinition = $objDefinition;
 		$this->tpl = $tpl;

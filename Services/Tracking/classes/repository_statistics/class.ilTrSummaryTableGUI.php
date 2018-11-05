@@ -19,7 +19,10 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 	 */
 	function __construct($a_parent_obj, $a_parent_cmd, $a_ref_id, $a_print_mode = false)
 	{
-		global $ilCtrl, $objDefinition;
+		global $DIC;
+
+		$ilCtrl = $DIC['ilCtrl'];
+		$objDefinition = $DIC['objDefinition'];
 		
 		$this->setId("trsmy");
 
@@ -79,7 +82,10 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 
 	function getSelectableColumns()
 	{
-		global $lng, $ilSetting;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilSetting = $DIC['ilSetting'];
 
 		$lng_map = array("user_total" => "users", "first_access_min" => "trac_first_access",
 			"last_access_max" => "trac_last_access", "mark" => "trac_mark", "status" => "trac_status",
@@ -201,7 +207,10 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 	*/
 	function initFilter()
 	{
-		global $lng, $ilSetting;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilSetting = $DIC['ilSetting'];
 		
 		if($this->is_root)
 		{
@@ -270,8 +279,12 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 		if($ilSetting->get("usr_settings_course_export_gender"))
 		{
 			$item = $this->addFilterItemByMetaType("gender", ilTable2GUI::FILTER_SELECT, true);
-			$item->setOptions(array("" => $lng->txt("trac_all"), "m" => $lng->txt("gender_m"),
-				"f" => $lng->txt("gender_f")));
+			$item->setOptions(array(
+				"" => $lng->txt("trac_all"),
+				"n" => $lng->txt("gender_n"),
+				"m" => $lng->txt("gender_m"),
+				"f" => $lng->txt("gender_f"),
+			));
 			$this->filter["gender"] = $item->getValue();
 		}
 
@@ -312,7 +325,9 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 
 	function getSelCountryCodes()
 	{
-		global $lng;
+		global $DIC;
+
+		$lng = $DIC['lng'];
 		
 		include_once("./Services/Utilities/classes/class.ilCountry.php");
 		$options = array();
@@ -332,12 +347,36 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 	 */
 	function getItems($a_object_id, $a_ref_id)
 	{
-		global $lng, $rbacsystem;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$rbacsystem = $DIC['rbacsystem'];
 		
 		include_once("./Services/Tracking/classes/class.ilTrQuery.php");
-
+		
+		// show only selected subobjects for lp mode 
 		$preselected_obj_ids = $filter = NULL;
-		if($this->is_root)
+
+		$olp = ilObjectLP::getInstance(ilObject::_lookupObjId($a_ref_id));
+		if(
+			$olp->getCurrentMode() == ilLPObjSettings::LP_MODE_COLLECTION_MANUAL ||
+			$olp->getCurrentMode() == ilLPObjSettings::LP_MODE_COLLECTION || 
+			$olp->getCurrentMode() == ilLPObjSettings::LP_MODE_MANUAL_BY_TUTOR
+		)
+		{
+			$collection = $olp->getCollectionInstance();
+			$preselected_obj_ids[$a_object_id][] = $a_ref_id;
+			foreach($collection->getItems() as $item => $item_info)
+			{
+				$tmp_lp = ilObjectLP::getInstance(ilObject::_lookupObjId($item_info));
+				if($tmp_lp->isActive())
+				{
+					$preselected_obj_ids[ilObject::_lookupObjId($item_info)][] = $item_info;
+				}
+			}
+			$filter = $this->getCurrentFilter();
+		}
+		elseif($this->is_root)
 		{
 			// using search to get all relevant objects
 			// #8498/#8499: restrict to objects with at least "read_learning_progress" access
@@ -348,6 +387,8 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 			// using summary filters
 			$filter = $this->getCurrentFilter();
 		}
+
+		
 		
 		$data = ilTrQuery::getObjectsSummaryForObject(
 				$a_object_id,
@@ -427,7 +468,11 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 			// percentages
 			$users_no = $result["user_total"];
 			$data["set"][$idx]["country"] = $this->getItemsPercentages($result["country"], $users_no);
-			$data["set"][$idx]["gender"] = $this->getItemsPercentages($result["gender"], $users_no, array("m"=>$lng->txt("gender_m"), "f"=>$lng->txt("gender_f")));
+			$data["set"][$idx]["gender"] = $this->getItemsPercentages($result["gender"], $users_no, array(
+				"n"=>$lng->txt("gender_n"),
+				"m"=>$lng->txt("gender_m"),
+				"f"=>$lng->txt("gender_f"),
+			));
 			$data["set"][$idx]["city"] = $this->getItemsPercentages($result["city"], $users_no);
 			$data["set"][$idx]["sel_country"] = $this->getItemsPercentages($result["sel_country"], $users_no, $this->getSelCountryCodes());
 			$data["set"][$idx]["mark"] = $this->getItemsPercentages($result["mark"], $users_no);
@@ -466,7 +511,9 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 	 */
 	protected function getItemsPercentages(array $data = NULL, $overall, array $value_map = NULL, $limit = 3)
 	{
-		global $lng;
+		global $DIC;
+
+		$lng = $DIC['lng'];
 
 		if(!$overall)
 		{
@@ -519,7 +566,7 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 			{
 				$perc = round($others_sum/$overall*100);
 				$result[] = array(
-					"caption" => $otherss_counter."  ".$lng->txt("trac_others"),
+					"caption" => $others_counter."  ".$lng->txt("trac_others"),
 					"absolute" => $others_sum, // ." ".($others_sum > 1 ? $lng->txt("users") : $lng->txt("user")),
 					"percentage" => $perc
 					);
@@ -539,7 +586,9 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 	 */
 	protected function getItemsPercentagesStatus(array $data = NULL, $overall, array $value_map = NULL)
 	{
-		global $lng;
+		global $DIC;
+
+		$lng = $DIC['lng'];
 
 		$result = array();
 		foreach($value_map as $id => $caption)
@@ -563,7 +612,9 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 
 	protected function parseValue($id, $value, $type)
 	{
-		global $lng;
+		global $DIC;
+
+		$lng = $DIC['lng'];
 		
 		// get rid of aggregation
 		$pos = strrpos($id, "_");
@@ -635,7 +686,10 @@ class ilTrSummaryTableGUI extends ilLPTableBaseGUI
 	 */
 	protected function fillRow($a_set)
 	{
-		global $lng, $ilCtrl;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilCtrl = $DIC['ilCtrl'];
 		
 		$this->tpl->setVariable("ICON", ilObject::_getIcon("", "tiny", $a_set["type"]));
 		$this->tpl->setVariable("ICON_ALT", $lng->txt($a_set["type"]));

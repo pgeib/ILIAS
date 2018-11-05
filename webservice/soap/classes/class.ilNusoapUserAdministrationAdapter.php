@@ -52,7 +52,6 @@ class ilNusoapUserAdministrationAdapter
 		define('SERVICE_NAMESPACE','urn:ilUserAdministration');
 		define('SERVICE_STYLE','rpc');
 		define('SERVICE_USE','encoded');
-		#global $debug; $debug = true;
 		$this->server = new soap_server();
 		$this->server->decode_utf8 = false;
 		$this->server->class = "ilSoapFunctions";
@@ -69,9 +68,8 @@ class ilNusoapUserAdministrationAdapter
 
 	function start()
 	{
-		global $HTTP_RAW_POST_DATA;
-
-		$this->server->service($HTTP_RAW_POST_DATA);
+		$postdata = file_get_contents("php://input");
+		$this->server->service($postdata);
 		exit();
 	}
 
@@ -1353,6 +1351,40 @@ class ilNusoapUserAdministrationAdapter
 			'Process task in background'
 		);
 
+		$this->server->register(
+			'addDesktopItems',
+			[
+				'sid' => 'xsd:string',
+				'user_id' => 'xsd:int',
+				'reference_ids' => 'tns:intArray'
+			],
+			[
+				'num_added' => 'xsd:int'
+			],
+			SERVICE_NAMESPACE,
+			SERVICE_NAMESPACE . '#addDesktopItems',
+			SERVICE_STYLE,
+			SERVICE_USE,
+			'Add desktop items for user'
+		);
+
+		$this->server->register(
+			'removeDesktopItems',
+			[
+				'sid' => 'xsd:string',
+				'user_id' => 'xsd:int',
+				'reference_ids' => 'tns:intArray'
+			],
+			[
+				'num_added' => 'xsd:int'
+			],
+			SERVICE_NAMESPACE,
+			SERVICE_NAMESPACE . '#removeDesktopItems',
+			SERVICE_STYLE,
+			SERVICE_USE,
+			'Remove desktop items for user'
+		);
+
 		// If a client ID is submitted, there might be some SOAP plugins registering methods/types
 		if (isset($_GET['client_id'])) {
 			$this->handleSoapPlugins();
@@ -1372,7 +1404,9 @@ class ilNusoapUserAdministrationAdapter
 		ilInitialisation::initILIAS();
 		ilContext::init(ilContext::CONTEXT_SOAP);
 
-		global $ilPluginAdmin;
+		global $DIC;
+
+		$ilPluginAdmin = $DIC['ilPluginAdmin'];
 		$soapHook = new ilSoapHook($ilPluginAdmin);
 		foreach ($soapHook->getWsdlTypes() as $type) {
 			$this->server->wsdl->addComplexType(

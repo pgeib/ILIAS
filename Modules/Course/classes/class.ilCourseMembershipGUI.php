@@ -17,6 +17,13 @@ include_once './Services/Membership/classes/class.ilMembershipGUI.php';
  */
 class ilCourseMembershipGUI extends ilMembershipGUI
 {
+	/**
+	 * @return ilAbstractMailMemberRoles
+	 */
+	protected function getMailMemberRoles()
+	{
+		return new ilMailMemberCourseRoles();
+	}
 	
 	/**
 	 * Filter user ids by access 
@@ -33,8 +40,23 @@ class ilCourseMembershipGUI extends ilMembershipGUI
 		);
 	}
 
-	
-	
+	/**
+	 * @inheritdoc
+	 */
+	protected function getMailContextOptions()
+	{
+		$context_options = [];
+
+		$context_options =
+			[
+				ilMailFormCall::CONTEXT_KEY => ilCourseMailTemplateTutorContext::ID,
+				'ref_id' => $this->getParentObject()->getRefId(),
+				'ts'     => time()
+			];
+		return $context_options;
+	}
+
+
 	/**
 	 * callback from repository search gui
 	 * @global ilRbacSystem $rbacsystem
@@ -44,7 +66,10 @@ class ilCourseMembershipGUI extends ilMembershipGUI
 	 */
 	public function assignMembers(array $a_usr_ids,$a_type)
 	{
-		global $rbacsystem, $ilErr;
+		global $DIC;
+
+		$rbacsystem = $DIC['rbacsystem'];
+		$ilErr = $DIC['ilErr'];
 
 		if(!$this->checkRbacOrPositionAccessBool('manage_members', 'manage_members'))
 		{
@@ -115,7 +140,12 @@ class ilCourseMembershipGUI extends ilMembershipGUI
 	 */
 	protected function updateParticipantsStatus()
 	{
-		global $ilAccess,$ilErr,$ilUser,$rbacadmin;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$ilErr = $DIC['ilErr'];
+		$ilUser = $DIC['ilUser'];
+		$rbacadmin = $DIC['rbacadmin'];
 		
 		$visible_members = (array) $_POST['visible_member_ids'];
 		$passed = (array) $_POST['passed'];
@@ -260,7 +290,7 @@ class ilCourseMembershipGUI extends ilMembershipGUI
 	 */
 	protected function deliverCertificate()
 	{
-		return $this->getParentGUI()->deliverCertificateObject($user_id);
+		return $this->getParentGUI()->deliverCertificateObject();
 	}
 	
 	/**
@@ -269,7 +299,10 @@ class ilCourseMembershipGUI extends ilMembershipGUI
 	 */
 	protected function getPrintMemberData($a_members)
 	{
-		global $ilAccess,$lng;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$lng = $DIC['lng'];
 
 		$lng->loadLanguageModule('trac');
 

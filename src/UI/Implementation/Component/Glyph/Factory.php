@@ -144,6 +144,90 @@ class Factory implements G\Factory {
 	/**
 	 * @inheritdoc
 	 */
+	public function like($action = null) {
+		return new Glyph(G\Glyph::LIKE, "like", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function love($action = null) {
+		return new Glyph(G\Glyph::LOVE, "love", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function dislike($action = null) {
+		return new Glyph(G\Glyph::DISLIKE, "dislike", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function laugh($action = null) {
+		return new Glyph(G\Glyph::LAUGH, "laugh", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function astounded($action = null) {
+		return new Glyph(G\Glyph::ASTOUNDED, "astounded", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function sad($action = null) {
+		return new Glyph(G\Glyph::SAD, "sad", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function angry($action = null) {
+		return new Glyph(G\Glyph::ANGRY, "angry", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function eyeopen($action = null) {
+		return new Glyph(G\Glyph::EYEOPEN, "eyeopen", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function eyeclosed($action = null) {
+		return new Glyph(G\Glyph::EYECLOSED, "eyeclosed", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attachment($action = null) {
+		return new Glyph(G\Glyph::ATTACHMENT, "attachment", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function reset($action = null) {
+		return new Glyph(G\Glyph::RESET, "reset", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function apply($action = null) {
+		return new Glyph(G\Glyph::APPLY, "apply", $action);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function logout($action = null) {
 		return new Glyph(G\Glyph::LOGOUT, "log-out", $action);
 	}

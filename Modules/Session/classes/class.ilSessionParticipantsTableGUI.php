@@ -127,7 +127,7 @@ class ilSessionParticipantsTableGUI extends ilTable2GUI
 		$this->initFilter();
 		
 
-		$this->setSelectAllCheckbox('participants');
+		$this->setSelectAllCheckbox('participants',true);
 		$this->setShowRowsSelector(TRUE);
 		
 		$this->enable('sort');
@@ -140,7 +140,7 @@ class ilSessionParticipantsTableGUI extends ilTable2GUI
 
 		$this->setRowTemplate("tpl.sess_members_row.html","Modules/Session");
 
-		$this->addColumn('','f',"1");
+		$this->addColumn('','f','1',true);
 	 	$this->addColumn($this->lng->txt('name'),'name','20%');
 		$this->addColumn($this->lng->txt('login'),'login','10%');
 		
@@ -162,6 +162,7 @@ class ilSessionParticipantsTableGUI extends ilTable2GUI
 			$this->setDefaultOrderField('name');
 		}
 		$this->addColumn($this->lng->txt('event_tbl_participated'),'participated');
+		$this->addColumn($this->lng->txt('sess_contact'),'contact');
 	 	$this->addColumn($this->lng->txt('trac_mark'),'mark');
 	 	$this->addColumn($this->lng->txt('trac_comment'),'comment');
 		
@@ -225,7 +226,9 @@ class ilSessionParticipantsTableGUI extends ilTable2GUI
 	 */
 	public function getSelectableColumns()
 	{		
-		global $ilSetting;
+		global $DIC;
+
+		$ilSetting = $DIC['ilSetting'];
 		
 		
 		self::$all_columns['roles'] = array(
@@ -273,13 +276,14 @@ class ilSessionParticipantsTableGUI extends ilTable2GUI
 			$tmp_data['comment'] = $usr_data['comment'];
 			$tmp_data['participated'] = $this->getParticipants()->getEventParticipants()->hasParticipated($participant['usr_id']);
 			$tmp_data['registered'] = $this->getParticipants()->getEventParticipants()->isRegistered($participant['usr_id']);
+			$tmp_data['contact'] = $this->getParticipants()->isContact($participant['usr_id']);
 			
 			$roles = array();
 			$local_roles = $this->getParentLocalRoles();
 			foreach($local_roles as $role_id => $role_name)
 			{
 				// @todo fix performance
-				if($GLOBALS['rbacreview']->isAssigned($participant['usr_id'], $role_id))
+				if($GLOBALS['DIC']['rbacreview']->isAssigned($participant['usr_id'], $role_id))
 				{
 					$tmp_data['role_ids'][] = $role_id;
 					$roles[] = $role_name;
@@ -390,7 +394,8 @@ class ilSessionParticipantsTableGUI extends ilTable2GUI
 		$this->tpl->setVariable('LOGIN',$a_set['login']);
 		$this->tpl->setVariable('MARK',$a_set['mark']);
 		$this->tpl->setVariable('COMMENT',$a_set['comment']);
-		$this->tpl->setVariable('PART_CHECKED',$a_set['participated'] ? 'checked="checked"' : '');		
+		$this->tpl->setVariable('PART_CHECKED',$a_set['participated'] ? 'checked="checked"' : '');
+		$this->tpl->setVariable('CONTACT_CHECKED', $a_set['contact'] ? 'checked="checked"' : '');
 	}
 	
 	/**

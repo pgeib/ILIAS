@@ -241,7 +241,7 @@ class ilObjStyleSheet extends ilObject
 	// displayed with matching tag (group -> tags)
 	public static $filtered_groups =
 			array("ol" => array("ol"), "ul" => array("ul"),
-				"table" => array("table"), "positioning" => array("h1", "h2", "h3", "div", "img", "table", "a"));
+				"table" => array("table"), "positioning" => array("h1", "h2", "h3", "div", "img", "table", "a", "figure"));
 
 	// style types and their super type
 	public static $style_super_types = array(
@@ -541,8 +541,9 @@ class ilObjStyleSheet extends ilObject
 		);
 
 	// basic style xml file, image directory and dom
-	protected static $basic_style_file = "./Services/Style/Content/basic_style/style.xml";
-	protected static $basic_style_image_dir = "./Services/Style/Content/basic_style/images";
+	protected static $basic_style_file = "./libs/ilias/Style/basic_style/style.xml";
+	protected static $basic_style_zip = "./libs/ilias/Style/basic_style/style.zip";
+	protected static $basic_style_image_dir = "./libs/ilias/Style/basic_style/images";
 	protected static $basic_style_dom;
 	
 	/**
@@ -565,6 +566,16 @@ class ilObjStyleSheet extends ilObject
 		}
 
 		parent::__construct($a_id, false);
+	}
+
+	/**
+	 * Get basic zip path
+	 *
+	 * @return string
+	 */
+	static public function getBasicZipPath(): string
+	{
+		return self::$basic_style_zip;
 	}
 
 	/**
@@ -2409,11 +2420,19 @@ class ilObjStyleSheet extends ilObject
 					$s = substr($char["class"], strlen($char["class"]) - 6);
 					if ($s != ":hover")
 					{
+						$ilDB->replace("style_char",
+							array(
+								"style_id" => array("integer", $this->getId()),
+								"type" => array("text", $char["type"]),
+								"characteristic" => array("text", $char["class"])),
+							array("hide" => array("integer", 0))
+							);
+						/*
 						$q = "INSERT INTO style_char (style_id, type, characteristic) VALUES ".
 							"(".$ilDB->quote($this->getId(), "integer").",".
 							$ilDB->quote($char["type"], "text").",".
 							$ilDB->quote($char["class"], "text").")";
-						$ilDB->manipulate($q);
+						$ilDB->manipulate($q);*/
 						$this->is_3_10_skin = false;
 					}
 				}
@@ -2611,7 +2630,7 @@ class ilObjStyleSheet extends ilObject
 		
 		return $pars;
 	}
-	
+
 	
 	/**
 	* Add missing style classes to all styles

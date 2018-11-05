@@ -13,32 +13,41 @@ class ilCronStartUp
 	private $client = '';
 	private $username = '';
 	private $password = '';
-	
+
+	/** @var ilAuthSession */
+	private $authSession;
+
 	/**
-	 * Constructor
+	 * @param $a_client_id
+	 * @param $a_login
+	 * @param $a_password
+	 * @param ilAuthSession|null $authSession
 	 */
-	public function __construct($a_client_id, $a_login, $a_password)
-	{
+	public function __construct(
+		$a_client_id,
+		$a_login,
+		$a_password,
+		ilAuthSession $authSession = null
+	) {
 		$this->client = $a_client_id;
 		$this->username = $a_login;
 		$this->password = $a_password;
-	}
-	
-	/** 
-	 * Init ILIAS
-	 */
-	public function initIlias()
-	{
+
 		include_once './Services/Context/classes/class.ilContext.php';
 		ilContext::init(ilContext::CONTEXT_CRON);
-		
+
 		// define client
 		// @see mantis 20371
 		$_GET['client_id'] = $this->client;
-		
+
 		include_once './include/inc.header.php';
+
+		if (null === $authSession) {
+			global $DIC;
+			$authSession = $DIC['ilAuthSession'];
+		}
+		$this->authSession = $authSession;
 	}
-	
 	
 
 	/**
@@ -49,23 +58,20 @@ class ilCronStartUp
 	 */
 	public function authenticate()
 	{
-		include_once './Services/Authentication/classes/Frontend/class.ilAuthFrontendCredentials.php';
 		$credentials = new ilAuthFrontendCredentials();
 		$credentials->setUsername($this->username);
 		$credentials->setPassword($this->password);
 		
-		include_once './Services/Authentication/classes/Provider/class.ilAuthProviderFactory.php';
 		$provider_factory = new ilAuthProviderFactory();
 		$providers = $provider_factory->getProviders($credentials);
 			
-		include_once './Services/Authentication/classes/class.ilAuthStatus.php';
 		$status = ilAuthStatus::getInstance();
 			
-		include_once './Services/Authentication/classes/Frontend/class.ilAuthFrontendFactory.php';
 		$frontend_factory = new ilAuthFrontendFactory();
 		$frontend_factory->setContext(ilAuthFrontendFactory::CONTEXT_CLI);
+
 		$frontend = $frontend_factory->getFrontend(
-			$GLOBALS['DIC']['ilAuthSession'],
+			$this->authSession,
 			$status,
 			$credentials,
 			$providers
@@ -82,9 +88,8 @@ class ilCronStartUp
 
 			default:
 			case ilAuthStatus::STATUS_AUTHENTICATION_FAILED:
-				include_once './Services/Cron/exceptions/class.ilCronException.php';
 				throw new ilCronException($status->getTranslatedReason());
-		}				
+		}
 		return true;
 	}
 
@@ -94,6 +99,6 @@ class ilCronStartUp
 	public function logout()
 	{
 		ilSession::setClosingContext(ilSession::SESSION_CLOSE_USER);
-		$GLOBALS['DIC']['ilAuthSession']->logout();
+		$this->authSession->logout();
 	}
 }

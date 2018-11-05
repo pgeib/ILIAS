@@ -37,6 +37,19 @@ class ilObjGroupReferenceListGUI extends ilObjGroupListGUI
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function getTypeIcon()
+	{
+		$reference_obj_id = ilObject::_lookupObjId($this->getCommandId());
+		return ilObject::_getIcon(
+			$reference_obj_id,
+			'small'
+		);
+	}
+
+
+	/**
 	 * get command id
 	 *
 	 * @access public
@@ -94,7 +107,10 @@ class ilObjGroupReferenceListGUI extends ilObjGroupListGUI
 	*/
 	function initItem($a_ref_id, $a_obj_id, $a_title = "", $a_description = "")
 	{
-		global $ilBench,$ilAccess,$tree;
+		global $DIC;
+
+		$ilAccess = $DIC['ilAccess'];
+		$tree = $DIC['tree'];
 		
 		$this->reference_ref_id = $a_ref_id;
 		$this->reference_obj_id = $a_obj_id;
@@ -110,10 +126,8 @@ class ilObjGroupReferenceListGUI extends ilObjGroupListGUI
 
 		$this->deleted = $tree->isDeleted($target_ref_id);
 		
-		$ilBench->start("ilObjGroupListGUI", "1000_checkAllConditions");
 		$this->conditions_ok = ilConditionHandler::_checkAllConditionsOfTarget($target_ref_id,$target_obj_id);
-		$ilBench->stop("ilObjGroupListGUI", "1000_checkAllConditions");
-		
+
 		
 		parent::initItem($target_ref_id, $target_obj_id,$target_title,$target_description);
 
@@ -133,7 +147,11 @@ class ilObjGroupReferenceListGUI extends ilObjGroupListGUI
 	
 	function getProperties()
 	{
-		global $lng,$ilUser,$tree;
+		global $DIC;
+
+		$lng = $DIC['lng'];
+		$ilUser = $DIC['ilUser'];
+		$tree = $DIC['tree'];
 
 		$props = parent::getProperties();
 
@@ -183,7 +201,9 @@ class ilObjGroupReferenceListGUI extends ilObjGroupListGUI
 	 */
 	public function getCommandLink($a_cmd)
 	{
-		global $ilCtrl;
+		global $DIC;
+
+		$ilCtrl = $DIC['ilCtrl'];
 		
 		switch($a_cmd)
 		{
