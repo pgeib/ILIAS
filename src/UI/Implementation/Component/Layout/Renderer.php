@@ -53,8 +53,7 @@ class Renderer extends AbstractComponentRenderer {
 
 			//this is to remove a tool
 			$button = $f->button()
-				//->close() //TODO: use close-button
-				->standard('X','#')
+				->close()
 				->withOnClick($tools_removal_signal);
 
 			$tpl->setCurrentBlock("tool_removal");
