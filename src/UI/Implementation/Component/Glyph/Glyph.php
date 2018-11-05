@@ -79,6 +79,8 @@ class Glyph implements C\Glyph\Glyph {
 		, self::RESET
 		, self::APPLY
 		, self::LOGOUT
+		, self::SEARCH
+		, self::HELP
 		);
 
 

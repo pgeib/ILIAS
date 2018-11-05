@@ -1,8 +1,10 @@
 <?php
 namespace ILIAS\UI\Component\MainControls\Prompts;
+
 /**
  * This is what a factory for prompts looks like.
  */
+
 interface Factory {
 
 	/**
@@ -77,7 +79,5 @@ interface Factory {
      * @return  \ILIAS\UI\Component\MainControls\Prompts\AwarenessTool
      */
      public function awarenessTool();
-
-
 
 }

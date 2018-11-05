@@ -44,6 +44,8 @@ interface Glyph extends \ILIAS\UI\Component\Component, \ILIAS\UI\Component\JavaS
 	const RESET = "reset";
 	const APPLY = "apply";
 	const LOGOUT = "logout";
+	const SEARCH = "search";
+	const HELP = "help";
 
 
 	/**

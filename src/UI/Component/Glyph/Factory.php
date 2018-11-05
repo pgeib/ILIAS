@@ -838,17 +838,23 @@ interface Factory {
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *       The Logout Glyph is used to log out the user from ILIAS.
+	 *       The Logout Glyph is used to log out the current user from ILIAS.
 	 *   composition: >
 	 *       The Logout Glyph uses the glyphicon-log-out.
 	 *   effect: >
 	 *       Upon clicking the current user is either logged out directly or presented
 	 *       with an interruptive modal to confirm or cancel the logout.
 	 *
+	 * context:
+	 *    - The Logout Glyph appears in the Meta-bar.
+	 *
 	 * rules:
+	 *   usage:
+	 *       1: >
+	 *          The Logout Glyph MUST be unique on the page.
 	 *   composition:
 	 *       1: >
-	 *          Novelty and Status Counter MUST NOT be used with this.
+	 *          Novelty and Status Counter MUST NOT be used with this glyph.
 	 *   accessibility:
 	 *       1: >
 	 *          The aria-label MUST be 'Logout'.
@@ -857,5 +863,56 @@ interface Factory {
 	 * @return	\ILIAS\UI\Component\Glyph\Glyph
 	 */
 	public function logout($action = null);
+
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *       The Search Glyph is used to trigger a search-dialog.
+	 *   composition: >
+	 *       The Search Glyph uses the glyphicon-search.
+	 *   effect: >
+	 *       Clicking this glyph will open a search dialog.
+	 *       Since the context for the Search Glyph primarily is the Metabar,
+	 *       the according search dialog will be opened as Tool in the Sidebar.
+	 *
+	 * context:
+	 *    - The Search Glyph appears in the Metabar.
+	 *
+	 * rules:
+	 *   accessibility:
+	 *       1: >
+	 *          The aria-label MUST be 'Search'.
+	 * ---
+	 * @param	string|null	$action
+	 * @return	\ILIAS\UI\Component\Glyph\Glyph
+	 */
+	public function search($action = null);
+
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *       The Help Glyph is used to open a context-sensitive help screen.
+	 *   composition: >
+	 *       The Help Glyph uses the glyphicon-question-sign.
+	 *   effect: >
+	 *       When clicked, the user is provided with explanations or
+	 *       instructions for the usage of the current context.
+	 *       When used in the Metabar, the help is displayed as tool in the
+	 *       Sidebar.
+	 *
+	 * context:
+	 *    - The Search Glyph appears in the Metabar.
+	 *
+	 * rules:
+	 *   accessibility:
+	 *       1: >
+	 *          The aria-label MUST be 'Help'.
+	 * ---
+	 * @param	string|null	$action
+	 * @return	\ILIAS\UI\Component\Glyph\Glyph
+	 */
+	public function help($action = null);
 
 }

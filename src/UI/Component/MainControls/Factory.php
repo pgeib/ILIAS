@@ -1,5 +1,7 @@
 <?php
+
 namespace ILIAS\UI\Component\MainControls;
+
 /**
  * This is what a factory for main controls looks like.
  */
@@ -31,6 +33,5 @@ interface Factory {
 	 * @return  \ILIAS\UI\Component\MainControls\Menu\Factory
 	 */
 	public function menu();
-
 
 }

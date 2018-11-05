@@ -764,7 +764,7 @@ interface Factory {
 	 * ---
 	 *
 	 * @return \ILIAS\UI\Component\Layout\Factory
-	 **/
+	 */
 	public function layout();
 
 	/**
@@ -777,19 +777,21 @@ interface Factory {
 	 *       MainControls provide global navigation and information.
 	 *
 	 *   rivals:
-	 *     1: >
+	 *     ViewControls: >
 	 *        ViewControls are used to change the visualisation of, or rather within,
 	 *        components.
+	 *
+	 * context:
+	 *    - MainControls are used in Layout-Components.
 	 *
 	 * rules:
 	 *   usage:
 	 *     1: MainControls MUST NOT change persistent data in any way.
-	 *   accessibility:
-	 *     1:
+	 *
 	 * ---
 	 *
 	 * @return \ILIAS\UI\Component\MainControls\Factory
-	 **/
+	 */
 	public function mainControls();
 
 }
