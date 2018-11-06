@@ -9145,80 +9145,9 @@ div.alert ul > li:before {
 .carousel.slide.text-only .carousel-control {
   background: none !important;
 }
-.il-maincontrol-menu-slate.engaged {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  position: relative;
-}
-.il-maincontrol-menu-slate.disengaged {
-  display: none;
-}
-.il-maincontrol-menu-plank {
-  border-bottom: 0px solid #eeeeee;
-  background: #f2f2f2;
-  display: flex;
-  flex-direction: column;
-  font-size: 90%;
-  list-style: none;
-  margin: 0 0 2px 0;
-  padding: 10px 20px;
-}
-.il-maincontrol-menu-plank:first-child {
-  border-top: 0px solid #eeeeee;
-}
-.il-maincontrol-menu-slate-content {
-  display: grid;
-}
-.il-maincontrol-menu-slate-close button,
-.il-maincontrol-menu-slate-back button {
-  background-color: transparent;
-}
-.il-maincontrol-menu-slate-back {
-  display: none;
-}
-.il-maincontrol-menu-slate-back.active {
-  display: block;
-}
-.il-maincontrol-menu-slate-back button {
-  width: 100%;
-  text-align: left;
-  padding: 30px 0 10px 20px;
-}
-.il-maincontrol-menu-slate-close {
-  width: 100%;
-  border-bottom: 1px solid #eee;
-  border-top: 1px solid #eee;
-  height: 50px;
-  margin-top: auto;
-  bottom: 0;
-  position: sticky;
-}
-.il-maincontrol-menu-slate-close .bulky-label {
-  display: none;
-}
-.il-maincontrol-menu-slate-close .btn-bulky {
-  background-color: #fff;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  text-align: right;
-}
-.il-maincontrol-menu-slate-close .btn-bulky .glyph {
-  padding-right: 20px;
-}
-.il-maincontrol-menu-slate-close .btn-bulky.engaged {
-  background-color: #fff;
-  border: 0;
-}
-.il-maincontrol-menu-slate-close .btn-bulky:active,
-.il-maincontrol-menu-slate-close .btn-bulky:focus {
-  outline: none;
-}
 /*
-height of areas outside sidebar -
-important for calculating the scrollable area inside sidebar slates
+height of areas outside mainbar -
+important for calculating the scrollable area inside mainbar slates
 */
 .inner-top-shadow {
   box-shadow: inset 0 5px 9px -5px #cccccc;
@@ -9265,7 +9194,7 @@ grid-based layout
   grid-gap: 0px;
   grid-template-columns: 80px 1fr;
   grid-template-rows: 75px 1fr 75px;
-  grid-template-areas: "header header" "sidebar content" "footer footer";
+  grid-template-areas: "header header" "mainbar content" "footer footer";
   height: 100%;
   overflow: hidden;
   width: 100%;
@@ -9273,10 +9202,10 @@ grid-based layout
 .il-layout-page.with-engaged-slates {
   grid-template-columns: 480px 1fr;
 }
-.il-layout-page.with-engaged-slates .il-layout-page-sidebar {
+.il-layout-page.with-engaged-slates .il-maincontrols-mainbar {
   width: 480px;
 }
-.il-layout-page.with-engaged-slates .il-layout-page-sidebar .il-sidebar-slates {
+.il-layout-page.with-engaged-slates .il-maincontrols-mainbar .il-mainbar-slates {
   display: flex;
   flex-direction: column;
   height: calc(100vh -  150px);
@@ -9299,92 +9228,16 @@ header {
   width: 100%;
   z-index: 2;
 }
-.il-layout-page-metabar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-.il-logo {
-  justify-self: start;
-}
-.il-logo img {
-  height: 45px;
-  width: 45px;
-}
-.il-notification-center {
-  display: flex;
-}
-.il-notification-center .il-notification-item,
-.il-notification-center .il-logout {
-  padding-left: 10px;
-}
-/* Sidebar */
+/* mainbar */
 nav {
   z-index: 1;
 }
-.il-layout-page-sidebar {
+.il-maincontrols-mainbar {
   background: #fff;
   display: flex;
-  grid-area: sidebar;
+  grid-area: mainbar;
   height: 100%;
   width: 80px;
-}
-.il-sidebar-tool-triggers {
-  display: none;
-}
-.il-sidebar-tool-triggers.engaged {
-  display: block;
-}
-.il-sidebar-triggers .btn-bulky,
-.il-sidebar-tool-triggers .btn-bulky {
-  height: 80px;
-  width: 80px;
-  justify-content: center;
-  font-size: 70%;
-  padding: 0;
-  display: inline-flex;
-  flex-flow: column wrap;
-  align-items: center;
-}
-.il-sidebar-tool-removal {
-  height: 20px;
-  text-align: right;
-}
-.il-sidebar-triggers {
-  box-shadow: 1px 0 1px #cccccc;
-  background: #4a4a4a;
-  position: relative;
-  width: 80px;
-  z-index: 1;
-}
-.il-sidebar-triggers .btn-bulky {
-  width: 100%;
-  border: 0;
-  background: #4a4a4a;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-}
-.il-sidebar-triggers .btn-bulky.engaged {
-  /*
-			background-color: @bg-sidebar-engaged;
-			background-color: @il-glyph-highlighted-hover-color;
-			background-color: @brand-primary;
-			background-color: @il-secondary-container-bg;
-			*/
-  background-color: #cecece;
-  color: #4a4a4a;
-}
-.il-sidebar-triggers .btn-bulky:focus {
-  outline: none;
-}
-.il-sidebar-triggers.engaged {
-  background: #ffffff;
-}
-.il-sidebar-slates {
-  box-shadow: 1px 0 1px #cccccc;
-  display: none;
-  width: 400px;
 }
 /*
 main-tag is important for screenreader
@@ -9405,6 +9258,127 @@ footer {
   background-color: #4c6586;
   grid-area: footer;
   z-index: 2;
+}
+.il-maincontrols-slate.engaged {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+.il-maincontrols-slate.disengaged {
+  display: none;
+}
+.il-maincontrols-slate-content {
+  display: grid;
+}
+.il-maincontrols-slate-close button,
+.il-maincontrols-slate-back button {
+  background-color: transparent;
+}
+.il-maincontrols-slate-back {
+  display: none;
+}
+.il-maincontrols-slate-back.active {
+  display: block;
+}
+.il-maincontrols-slate-back button {
+  width: 100%;
+  text-align: left;
+  padding: 30px 0 10px 20px;
+}
+.il-maincontrols-slate-close {
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  border-top: 1px solid #eee;
+  height: 50px;
+  margin-top: auto;
+  bottom: 0;
+  position: sticky;
+}
+.il-maincontrols-slate-close .bulky-label {
+  display: none;
+}
+.il-maincontrols-slate-close .btn-bulky {
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  text-align: right;
+}
+.il-maincontrols-slate-close .btn-bulky .glyph {
+  padding-right: 20px;
+}
+.il-maincontrols-slate-close .btn-bulky.engaged {
+  background-color: #fff;
+  border: 0;
+}
+.il-maincontrols-slate-close .btn-bulky:active,
+.il-maincontrols-slate-close .btn-bulky:focus {
+  outline: none;
+}
+.il-maincontrols-metabar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.il-maincontrols-metabar .il-logo {
+  justify-self: start;
+}
+.il-maincontrols-metabar .il-logo img {
+  height: 45px;
+  width: 45px;
+}
+.il-maincontrols-metabar .il-metabar-entries {
+  display: flex;
+}
+.il-maincontrols-metabar .il-metabar-entries .metabar-entry,
+.il-maincontrols-metabar .il-metabar-entries .il-logout {
+  padding-left: 10px;
+}
+.il-mainbar-triggers {
+  box-shadow: 1px 0 1px #cccccc;
+  background: #4a4a4a;
+  position: relative;
+  width: 80px;
+  z-index: 1;
+}
+.il-mainbar-triggers .btn-bulky {
+  height: 80px;
+  width: 80px;
+  justify-content: center;
+  font-size: 70%;
+  padding: 0;
+  display: inline-flex;
+  flex-flow: column wrap;
+  align-items: center;
+  width: 100%;
+  border: 0;
+  background: #4a4a4a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+.il-mainbar-triggers .btn-bulky.engaged {
+  /*
+			background-color: @bg-mainbar-engaged;
+			background-color: @il-glyph-highlighted-hover-color;
+			background-color: @brand-primary;
+			background-color: @il-secondary-container-bg;
+			*/
+  background-color: #cecece;
+  color: #4a4a4a;
+}
+.il-mainbar-triggers .btn-bulky:focus {
+  outline: none;
+}
+.il-mainbar-triggers.engaged {
+  background: #ffffff;
+}
+.il-mainbar-slates {
+  box-shadow: 1px 0 1px #cccccc;
+  width: 400px;
+  display: none;
 }
 /*		Color scheme
 		Dark BLue: #0f2152;

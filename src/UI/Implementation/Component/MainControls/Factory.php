@@ -1,12 +1,14 @@
 <?php
-/* Copyright (c) 2017 Nils Haagen <nils.haagen@concepts-and-training.de> Extended GPL, see docs/LICENSE */
+/* Copyright (c) 2018 Nils Haagen <nils.haagen@concepts-and-training.de> Extended GPL, see docs/LICENSE */
 
 namespace ILIAS\UI\Implementation\Component\MainControls;
 
-use ILIAS\UI\Component\MainControls as MC;
+use ILIAS\UI\Component\MainControls as IMainControls;
+use ILIAS\UI\Component\Image\Image;
 use ILIAS\UI\Implementation\Component\SignalGeneratorInterface;
 
-class Factory implements MC\Factory {
+class Factory implements IMainControls\Factory
+{
 	/**
 	 * @var SignalGeneratorInterface
 	 */
@@ -15,20 +17,33 @@ class Factory implements MC\Factory {
 	/**
 	 * @param SignalGeneratorInterface $signal_generator
 	 */
-	public function __construct(SignalGeneratorInterface $signal_generator) {
+	public function __construct(SignalGeneratorInterface $signal_generator)
+	{
 		$this->signal_generator = $signal_generator;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function menu(){
-		return new Menu\Factory($this->signal_generator);
+	public function metabar(Image $logo): IMainControls\Metabar
+	{
+		return new Metabar($this->signal_generator, $logo);
 	}
+
 	/**
 	 * @inheritdoc
 	 */
-	public function prompts(){
-		return new Prompts\Factory($this->signal_generator);
+	public function mainbar(): IMainControls\Mainbar
+	{
+		return new Mainbar($this->signal_generator);
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function slate(): IMainControls\Slate\Factory
+	{
+		return new Slate\Factory($this->signal_generator);
+	}
+
 }
