@@ -14,6 +14,11 @@ use ILIAS\UI\Component\MainControls\Slate\Slate;
 use ILIAS\UI\Implementation\Render\ilTemplateWrapper as UITemplateWrapper;
 
 class Renderer extends AbstractComponentRenderer {
+
+	const BLOCK_MAINBAR_ENTRIES = 'trigger_item';
+	const BLOCK_MAINBAR_TOOLS = 'tool_trigger_item';
+	const BLOCK_METABAR_ENTRIES = 'meta_element';
+
 	/**
 	 * @inheritdoc
 	 */
@@ -47,7 +52,7 @@ class Renderer extends AbstractComponentRenderer {
 		//"regular" entries
 		$this->renderTriggerButtonsAndSlates(
 			$tpl, $default_renderer, $entry_signal,
-			'trigger_item',
+			static::BLOCK_MAINBAR_ENTRIES,
 			$component->getEntries(),
 			$active
 		);
@@ -59,7 +64,7 @@ class Renderer extends AbstractComponentRenderer {
 			$btn_tools = $f->button()
 				->bulky($icon->withSize('large'), $component->getToolsLabel(), '#')
 				->withOnClick($tools_signal)
-				->withEngagedState($tools_active);
+				->withEngagedState(false); //if a tool-entry is active, onLoadCode will "click" the button
 
 			$btn_removetool = $f->button()->close()
 				->withOnClick($tool_removal_signal);
@@ -74,15 +79,10 @@ class Renderer extends AbstractComponentRenderer {
 
 			$this->renderTriggerButtonsAndSlates(
 				$tpl, $default_renderer, $entry_signal,
-				'tool_trigger_item',
+				static::BLOCK_MAINBAR_TOOLS,
 				$tools,
 				$active
 			);
-/*
-			if($tools_active) {
-				$tpl->touchBlock('tools_trigger_initially_active');
-			}
-*/
 		}
 
 		$component = $component->withOnLoadCode(
@@ -99,6 +99,14 @@ class Renderer extends AbstractComponentRenderer {
 			}
 		);
 
+		if($active) {
+			$component = $component->withAdditionalOnLoadCode(
+				function($id) {
+					return "il.UI.maincontrols.mainbar.initActive('{$id}');";
+				}
+			);
+		}
+
 		$id = $this->bindJavaScript($component);
 		$tpl->setVariable('ID', $id);
 
@@ -114,15 +122,22 @@ class Renderer extends AbstractComponentRenderer {
 		string $active = null
 	) {
 		foreach ($entries as $id=>$entry) {
+
 			$engaged = (string)$id === $active;
 
 			if($entry instanceof Slate) {
 				$f = $this->getUIFactory();
-
+				$secondary_signal = $entry->getToggleSignal();
+				if($block === static::BLOCK_MAINBAR_TOOLS) {
+					$secondary_signal = $entry->getShowSignal();
+				}
 				$button = $f->button()->bulky($entry->getSymbol(), $entry->getName(), '#')
 					->withOnClick($entry_signal)
-					->appendOnClick($entry->getToggleSignal());
+					->appendOnClick($secondary_signal)
+					->withEngagedState($engaged);
+
 				$slate = $entry;
+				$slate = $slate->withEngaged(false); //init disengaged, onLoadCode will "click" the button
 
 			} else {
 				$button = $entry;
@@ -134,16 +149,12 @@ class Renderer extends AbstractComponentRenderer {
 			$tpl->parseCurrentBlock();
 
 			if($slate) {
-				/*
-				$slate = $slate->withActive($engaged) //show?
-				*/
 				$tpl->setCurrentBlock("slate_item");
 				$tpl->setVariable("SLATE", $default_renderer->render($slate));
 				$tpl->parseCurrentBlock();
 			}
 		}
 	}
-
 
 	protected function renderMetabar(Metabar $component, RendererInterface $default_renderer) {
 		$tpl = $this->getTemplate("tpl.metabar.html", true, true);
@@ -154,28 +165,13 @@ class Renderer extends AbstractComponentRenderer {
 		$active ='';
 		$this->renderTriggerButtonsAndSlates(
 			$tpl, $default_renderer, $entry_signal,
-			'meta_element',
+			static::BLOCK_METABAR_ENTRIES,
 			$component->getEntries(),
 			$active
 		);
 
-		/*
-		foreach ($component->getElements() as $element) {
-			$tpl->setCurrentBlock('meta_element');
-			$tpl->setVariable("ELEMENT", $default_renderer->render($element));
-			$tpl->parseCurrentBlock();
-		}
-		*/
-
-		/*
-		$f = $this->getUIFactory();
-		$logout_glyph = $f->glyph()->logout(ILIAS_HTTP_PATH .'/logout.php');
-		$tpl->setVariable("LOGOUT", $default_renderer->render($logout_glyph));
-		*/
-
 		return $tpl->get();
 	}
-
 
 	/**
 	 * @inheritdoc
@@ -193,7 +189,6 @@ class Renderer extends AbstractComponentRenderer {
 			MetaBar::class,
 			Mainbar::class
 		);
-
 	}
 
 }

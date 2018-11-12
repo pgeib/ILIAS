@@ -25,19 +25,24 @@ interface Slate extends Component, JavaScriptBindable
 	public function getSymbol();
 
 	/**
-	 * Signal, that toggles the slate when triggered.
+	 * Signal that toggles the slate when triggered.
 	 */
 	public function getToggleSignal(): Signal;
 
 	/**
-	 * Signal, that is triggered when the slate is being closed
+	 * Signal that enagages the slate when tiriggered.
 	 */
-	public function getOnShowSignal(): Signal;
+	public function getShowSignal(): Signal;
 
 	/**
-	 * Signal, that is triggered when the slate is being closed
+	 * Configures the slate to be rendered as engaged (or not).
 	 */
-	public function getOnCloseSignal(): Signal;
+	public function withEngaged(bool $state): Slate;
+
+	/**
+	 * Should the slate be rendered as engaged?
+	 */
+	public function getEngaged(): bool;
 
 	/**
 	 * @return Component[]

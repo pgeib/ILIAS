@@ -9380,6 +9380,12 @@ footer {
   width: 400px;
   display: none;
 }
+.il-mainbar-tools-entries {
+  display: none;
+}
+.il-mainbar-tools-entries.engaged {
+  display: block;
+}
 /*		Color scheme
 		Dark BLue: #0f2152;
 		Mid Blue: #4c6586;

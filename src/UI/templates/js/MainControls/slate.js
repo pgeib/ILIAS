@@ -14,6 +14,11 @@ il.UI.maincontrols = il.UI.maincontrols || {};
 			toggle(slate);
 		};
 
+		var onShowSignal = function(event, signalData, id) {
+			var slate = $('#' + id);
+			engage(slate);
+		};
+
 		var toggle = function(slate) {
 			_isEngaged(slate) ? disengage(slate) : engage(slate);
 		};
@@ -38,9 +43,11 @@ il.UI.maincontrols = il.UI.maincontrols || {};
 
 		return {
 			onToggleSignal: onToggleSignal,
+			onShowSignal: onShowSignal,
 			engage : engage,
 			disengage : disengage,
-			_cls_single_slate
+			_cls_single_slate,
+			_cls_engaged
 		}
 
 	})($);

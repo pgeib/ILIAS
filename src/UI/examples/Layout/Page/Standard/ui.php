@@ -31,7 +31,8 @@ if ($_GET['new_ui'] == '1') {
 	$metabar = buildMetabar($f);
 
 	$mainbar = buildMainbar($f)
-		->withActive("e2");
+		->withActive("tool1");
+		//->withActive("example2");
 
 
 	$page = $f->layout()->page()->standard(

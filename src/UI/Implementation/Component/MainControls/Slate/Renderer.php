@@ -42,14 +42,23 @@ class Renderer extends AbstractComponentRenderer
 		}
 
 		$tpl->setVariable('CONTENTS', $default_renderer->render($contents));
+		if($component->getEngaged()) {
+			//touch block active
+		}
 
 		$toggle_signal = $component->getToggleSignal();
+		$show_signal = $component->getShowSignal();
 		$component = $component->withOnLoadCode(function($id) use ($toggle_signal, $show_signal) {
 			return "
 				$(document).on('{$toggle_signal}', function(event, signalData) {
 					il.UI.maincontrols.slate.onToggleSignal(event, signalData, '{$id}');
 					return false;
 				});
+				$(document).on('{$show_signal}', function(event, signalData) {
+					il.UI.maincontrols.slate.onShowSignal(event, signalData, '{$id}');
+					return false;
+				});
+
 			";
 		});
 		$id = $this->bindJavaScript($component);

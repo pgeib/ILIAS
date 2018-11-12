@@ -38,13 +38,12 @@ abstract class Slate implements ISlate\Slate
 	/**
 	 * @var Signal
 	 */
-	protected $on_show_signal;
+	protected $show_signal;
 
 	/**
-	 * @var Signal
+	 * @var bool
 	 */
-	protected $on_close_signal;
-
+	protected $engaged = false;
 
 	/**
 	 * @param string 	$name 	name of the slatem, also used as label
@@ -72,8 +71,7 @@ abstract class Slate implements ISlate\Slate
 	protected function initSignals()
 	{
 		$this->toggle_signal = $this->signal_generator->create();
-		$this->on_show_signal = $this->signal_generator->create();
-		$this->on_close_signal = $this->signal_generator->create();
+		$this->show_signal = $this->signal_generator->create();
 	}
 
 	/**
@@ -103,17 +101,26 @@ abstract class Slate implements ISlate\Slate
 	/**
 	 * @inheritdoc
 	 */
-	public function getOnShowSignal(): Signal
+	public function getShowSignal(): Signal
 	{
-		return $this->on_show_signal;
+		return $this->show_signal;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getOnCloseSignal(): Signal
+	public function withEngaged(bool $state): ISlate\Slate
 	{
-		return $this->on_close_signal;
+		$clone = clone $this;
+		$this->engaged = $state;
+		return $clone;
+	}
+	/**
+	 * @inheritdoc
+	 */
+	public function getEngaged(): bool
+	{
+		return $this->engaged;
 	}
 
 	/**
