@@ -781,9 +781,6 @@ interface Factory {
 	 *        ViewControls are used to change the visualisation of, or rather within,
 	 *        components.
 	 *
-	 * context:
-	 *    - MainControls are used in Layout-Components.
-	 *
 	 * rules:
 	 *   usage:
 	 *     1: MainControls MUST NOT change persistent data in any way.

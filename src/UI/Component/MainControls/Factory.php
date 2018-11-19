@@ -36,7 +36,7 @@ interface Factory {
 	 *     summarized under a "more..."-Button. The logo remains.
 	 *
 	 *     Elements are rendered as Bulky Buttons.
-	 *	   Prompts in the Metabar will be marked with counters for new/existing
+	 *     Prompts in the Metabar will be marked with counters for new/existing
 	 *     notifications.
 	 *
 	 *   effect: >
@@ -46,6 +46,9 @@ interface Factory {
 	 *     Also, Buttons in the Metabar may trigger navigation or activate
 	 *     Tools in the Sidebar, like the Help. In this case, the buttons are
 	 *     not stateful.
+	 *
+	 * context:
+	 *    - The Metabar is used in the Standard Page.
 	 *
 	 * rules:
 	 *   usage:
@@ -115,7 +118,7 @@ interface Factory {
 	 *     the content.
 	 *     The Slate's height equals that of the Mainbar; also, its position
 	 *     will remain static when the page is scrolled.
-	 *     A "close slate"-button is rendered underneath the slate, that will
+	 *     A "close slate"-button is rendered underneath the slate; it will
 	 *     close all visible Slates and reset the states of all mainbar-entries.
 	 *
 	 *     When a Tool (such as the help), whose contents are displayed in a Slate,
@@ -151,6 +154,9 @@ interface Factory {
 	 *     Modal: >
 	 *       Forms with the intention of modifying the content are placed in modals
 	 *       or in the content part of the page.
+	 *
+	 * context:
+	 *    - The Mainbar is used in the Standard Page.
 	 *
 	 * rules:
 	 *   usage:
@@ -189,7 +195,7 @@ interface Factory {
 	 *   purpose: >
 	 *     A Slate is a collection of Components that serve a specific and singular
 	 *     purpose in their entirety.
-	 *     It MUST be possible to subsume this purpose in one Icon/Glyph or one word,
+	 *     It MUST be possible to subsume this purpose in one Icon/Glyph and one word,
 	 *     for Slates will act as elaboration on one specific concept in ILIAS.
 	 *     Accordingly, Slates depend on a triggering Component controlling their
 	 *     visibility.
@@ -205,6 +211,12 @@ interface Factory {
 	 *     Examples: A Help-Screen, where the user can read a certain text and also
 	 *     search available topics via a text-input, or a drill-down navigation,
 	 *     where all siblings of the current level are shown next to a "back"-button.
+	 *
+	 *     A special case of Slate is the Prompt: while in a common Slate the
+	 *     general direction of communiction is user->system (e.g. navigation),
+	 *     the Prompt is used for communication from the system to the user.
+	 *     These can be, e.g, alerts concerning new mails or the (changed)
+	 *     online status of another learner.
 	 *
 	 *   composition: >
 	 *     Slates may hold a variety of components. These can be navigational
@@ -225,10 +237,6 @@ interface Factory {
 	 *
 	 *     Popover: >
 	 *       Item..
-	 *
-	 * context:
-     *     - Slates are used in the Mainbar.
-     *     - Slates are used in the Metabar.
 	 *
 	 *
 	 * rules:

@@ -11,16 +11,6 @@ use \ILIAS\UI\Component as C;
  */
 class MainControlsFactoryTest extends AbstractFactoryTest {
 
-	public $kitchensink_info_settings = array
-		(
-			"prompts" => array(
-					"context" => false,
-					"rules" => false //2do
-			),
-			"menu" => array(
-					"context" => false,
-					"rules" => false //2do
-			)
-	);
+	public $kitchensink_info_settings = [];
 	public $factory_title = 'ILIAS\\UI\\Component\\MainControls\\Factory';
 }
