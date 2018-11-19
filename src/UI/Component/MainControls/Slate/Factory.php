@@ -7,13 +7,11 @@ namespace ILIAS\UI\Component\MainControls\Slate;
  */
 interface Factory
 {
-
-
 	/**
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     The Legacy Slate used to wrap content into a slate where there is
+	 *     The Legacy Slate is used to wrap content into a slate when there is
 	 *     no other possibility (yet).
 	 *     In general, this should not be used and may vanish with the
 	 *     progress of specific slates.
@@ -74,12 +72,14 @@ interface Factory
 	 *     The Combined Slate bundles any number of Slates into one.
 	 *
 	 *   composition: >
-	 *     The Search Slate consists of more Slates.
+	 *     The Combined Slate consists of more Slates. The symbol and name
+	 *     of the contained Slates are turned into a Bulky Button to
+	 *     control opening and closing the contained Slate.
 	 *
 	 *   effect: >
-	 *      TODO
-	 *
-	 *
+	 *      Opening a Combined Slate will display its contained Slates with an
+	 *      operating Bulky Button for closing/expanding.
+ 	 *
 	 * context:
      *     - TODO
 	 *
@@ -101,40 +101,29 @@ interface Factory
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     The Notification Center concentrates the visualization of
+	 *     The Notification Slate is a Prompt that concentrates all
 	 *     system notifications into one expandable glyph.
-	 *     This unification removes the multitude of dedicated notification-icons
-	 *     in favor of visual cleanliness as well as providing a designated
-	 *     location for further extensions.
+	 *     It sums up the counters of contained Prompts and Glyphs.
 	 *
 	 *   composition: >
-	 *      The Notification Center is visualized as a glyph with a counter.
-	 *      Clicked, a pop-over list with the notifying services and their
-	 *      respective counter-glyphs is expanded.
-	 *      The entries each consist of the services' respective glyph, counter
-	 *      and title.
+	 *      The Notification Slate's symbol (=glyph) has a counter;
+	 *      its value is the sum of all contained counter-values.
+	 *      The expanded Notification Slate will list contained Elements
+	 *      with their respective symbols, counters and names.
 	 *
 	 *   effect: >
-	 *      All notifications, regardless of their origin, are summed up in
-	 *      the counter of the Notification Center's glyph.
-	 *      When clicked, a list is shown with all notifying services.
-	 *      Entries as well can be clicked; the user is then directed to the
-	 *      view of the service or the popovers content is changed to offer
-	 *      direct interaction.
-	 *
-	 *   rivals:
-	 *     Awareness Tool: >
-	 *        2do
-	 *
+	 *      Opening the Notification Slate will display a list of contained
+	 *      Prompts and Glyphs. Those, again, can be clicked and will
+	 *      then expand (Prompts) or carry out the configured action (Glyphs).
  	 *
 	 * context:
-      *     - The Notification is used in the Metabar only.
+     *     - The Notification is used in the Metabar only.
 	 *
 	 *
 	 * rules:
 	 *   usage:
 	 *     1: The Notification MUST be unique for the page.
-	 *     2: The Notification MUST be in the metabar.
+	 *     2: The Notification MUST be in the Metabar.
 	 *
 	 * ----
 	 *
@@ -149,28 +138,65 @@ interface Factory
 	 *     X
 	 *
 	 *   composition: >
-	 *      X
+	 *      The Awareness Slate features Public User Slates and a Text Input to
+	 *      filter the entries.
+	 *      As the Awareness Slate is a Prompt, its Glyph will bear a counter
+	 *      indicating the number of users currently online.
 	 *
 	 *   effect: >
-	 *      X
-	 *
-	 *   rivals:
-	 *     Notification: >
-	 *        The Notification Center is for permament notes, such as mails in
-	 *        the inbox. Also, the contents are limited to more counter-glyphs
-	 *        which will change the context when operated.
+	 *      When expanded, the list of Public User Slates is shown under the
+	 *      filter input. By typing into the filter input, the list of User Slates
+	 *      is filtered for users, whose login matches the typed string.
 	 *
 	 * context:
-      *     - The Awarenes Tool is used in the Metabar only.
+     *     - The Awareness Slate is used in the Metabar only.
 	 *
 	 * rules:
 	 *   usage:
-	 *     1: There MUST be but one Awareness Tool on the page.
-	 *     2: The Awareness Tool MUST be in the metabar.
+	 *     1: There MUST be but one Awareness Slate on the page.
+	 *     2: The Awareness Slate MUST be in the Metabar.
+	 *   style:
+	 *     1: The Slate's Symbol MUST be the User Glyph.
 	 *---
 	 *
 	 * @return  \ILIAS\UI\Component\MainControls\Slate\Awareness
 	 */
 	public function awareness(string $name, $symbol): Awareness;
+
+
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *     X
+	 *
+	 *   composition: >
+	 *      An Icon (the user's avatar) and links to
+	 *      -mail
+	 *      -user workspace
+	 *      -chat
+	 *
+	 *   effect: >
+	 *      X
+	 *
+	 *   rivals:
+	 *     Personal User Slate: >
+	 *        "My Settings, My Profile, and so on."
+	 *
+	 * context:
+     *     - The Collaboration Slate is used as entrty in the Awarenes Slate.
+	 *
+	 * rules:
+	 *   usage:
+	 *     1: X
+
+	 *---
+	 *
+	 * @return  \ILIAS\UI\Component\MainControls\Slate\PublicUser
+	 * @return  \ILIAS\UI\Component\MainControls\Slate\Collaboration
+	 */
+	//public function publicUser(string $name, $symbol): PublicUser;
+	//public function collaboration(string $name, $symbol): Collaboration;
+
 
 }

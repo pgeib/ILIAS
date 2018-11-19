@@ -13,21 +13,9 @@ class LayoutFactoryTest extends AbstractFactoryTest {
 
 	public $kitchensink_info_settings = array
 		(
-			"metabar" => array(
-					"context" => false,
-					"rules" => false //2do
-			),
-			"sidebar" => array(
-					"context" => false,
-					"rules" => false //2do
-			),
-			"sidebarEntry" => array(
-					"context" => false,
-					"rules" => false //2do
-			),
 			"page" => array(
 					"context" => false,
-					"rules" => false //2do
+					"rules" => false
 			)
 	);
 	public $factory_title = 'ILIAS\\UI\\Component\\Layout\\Factory';
