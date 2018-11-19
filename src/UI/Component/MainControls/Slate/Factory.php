@@ -101,7 +101,7 @@ interface Factory
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     The Notification Slate concentrates the visualization of
+	 *     The Notification Slate is a Prompt that concentrates all
 	 *     system notifications into one expandable glyph.
 	 *     It sums up the counters of contained Prompts and Glyphs.
 	 *
@@ -138,26 +138,65 @@ interface Factory
 	 *     X
 	 *
 	 *   composition: >
-	 *      X
+	 *      The Awareness Slate features Public User Slates and a Text Input to
+	 *      filter the entries.
+	 *      As the Awareness Slate is a Prompt, its Glyph will bear a counter
+	 *      indicating the number of users currently online.
 	 *
 	 *   effect: >
-	 *      X
-	 *
-	 *   rivals:
-	 *     Notification: >
-	 *        The Notification Slate
+	 *      When expanded, the list of Public User Slates is shown under the
+	 *      filter input. By typing into the filter input, the list of User Slates
+	 *      is filtered for users, whose login matches the typed string.
 	 *
 	 * context:
-      *     - The Awarenes Slate is used in the Metabar only.
+     *     - The Awareness Slate is used in the Metabar only.
 	 *
 	 * rules:
 	 *   usage:
 	 *     1: There MUST be but one Awareness Slate on the page.
-	 *     2: The Awareness Slate MUST be in the metabar.
+	 *     2: The Awareness Slate MUST be in the Metabar.
+	 *   style:
+	 *     1: The Slate's Symbol MUST be the User Glyph.
 	 *---
 	 *
 	 * @return  \ILIAS\UI\Component\MainControls\Slate\Awareness
 	 */
 	public function awareness(string $name, $symbol): Awareness;
+
+
+	/**
+	 * ---
+	 * description:
+	 *   purpose: >
+	 *     X
+	 *
+	 *   composition: >
+	 *      An Icon (the user's avatar) and links to
+	 *      -mail
+	 *      -user workspace
+	 *      -chat
+	 *
+	 *   effect: >
+	 *      X
+	 *
+	 *   rivals:
+	 *     Personal User Slate: >
+	 *        "My Settings, My Profile, and so on."
+	 *
+	 * context:
+     *     - The Collaboration Slate is used as entrty in the Awarenes Slate.
+	 *
+	 * rules:
+	 *   usage:
+	 *     1: X
+
+	 *---
+	 *
+	 * @return  \ILIAS\UI\Component\MainControls\Slate\PublicUser
+	 * @return  \ILIAS\UI\Component\MainControls\Slate\Collaboration
+	 */
+	//public function publicUser(string $name, $symbol): PublicUser;
+	//public function collaboration(string $name, $symbol): Collaboration;
+
 
 }

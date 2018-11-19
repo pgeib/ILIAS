@@ -10,7 +10,8 @@ function buildAwareness($f) {
 
 	return $f->maincontrols()->slate()
 		->awareness('awareness', $f->glyph()->user())
-		//->withCounter(2) //novelty counter only, thus internalized
+		//->withNoveltyCounter(1)
+		//->withstatusCounter(8)
 		;
 }
 
