@@ -9,5 +9,11 @@ namespace ILIAS\UI\Component\MainControls\Slate;
  */
 interface Awareness extends Prompt
 {
+	/**
+	 * Sets the contents of the Awareness Slate.
+	 *
+	 * @param Component[] $contents
+	 */
+	public function withContents(array $contents): Awareness;
 
 }

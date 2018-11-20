@@ -46,7 +46,7 @@ abstract class Slate implements ISlate\Slate
 	protected $engaged = false;
 
 	/**
-	 * @param string 	$name 	name of the slatem, also used as label
+	 * @param string 	$name 	name of the slate, also used as label
 	 * @param Icon|Glyph 	$symbol
 	 */
 	public function __construct(

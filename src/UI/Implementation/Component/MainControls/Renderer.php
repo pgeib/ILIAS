@@ -170,6 +170,18 @@ class Renderer extends AbstractComponentRenderer {
 			$active
 		);
 
+		$component = $component->withOnLoadCode(
+			function($id) use ($entry_signal) {
+				return "
+					il.UI.maincontrols.metabar.registerSignals(
+						'{$id}',
+						'{$entry_signal}'
+					);
+				";
+			}
+		);
+		$id = $this->bindJavaScript($component);
+		$tpl->setVariable('ID', $id);
 		return $tpl->get();
 	}
 
@@ -179,6 +191,7 @@ class Renderer extends AbstractComponentRenderer {
 	public function registerResources(\ILIAS\UI\Implementation\Render\ResourceRegistry $registry) {
 		parent::registerResources($registry);
 		$registry->register('./src/UI/templates/js/MainControls/mainbar.js');
+		$registry->register('./src/UI/templates/js/MainControls/metabar.js');
 	}
 
 	/**

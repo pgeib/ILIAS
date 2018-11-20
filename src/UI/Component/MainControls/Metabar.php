@@ -3,30 +3,31 @@
 
 namespace ILIAS\UI\Component\MainControls;
 
-use \ILIAS\UI\Component as C;
+use ILIAS\UI\Component\Component;
+use ILIAS\UI\Component\Signal;
+use ILIAS\UI\Component\Image\Image;
+use ILIAS\UI\Component\JavaScriptBindable;
 
 /**
  * This describes the Metabar.
  */
-interface Metabar extends C\Component {
-
-	/**
-	 *  @return 	\ILIAS\UI\Component\Image\Image
-	 */
-	public function getLogo();
+interface Metabar extends Component, JavaScriptBindable
+{
+	public function getLogo(): Image;
 
 	/**
 	 * Append an entry.
 	 *
 	 * @param string $id
-	 * @param Clickable|Slate $entry
+	 * @param Bulky|Slate $entry
 	 * @throws InvalidArgumentException 	if $id is already taken
 	 */
 	public function withEntry(string $id, $entry): Metabar;
 
 	/**
-	 * @return array <string, Clickable|Slate>
+	 * @return array <string, Bulky|Slate>
 	 */
 	public function getEntries(): array;
 
+	public function getEntryClickSignal(): Signal;
 }

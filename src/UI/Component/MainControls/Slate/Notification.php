@@ -9,5 +9,11 @@ namespace ILIAS\UI\Component\MainControls\Slate;
  */
 interface Notification extends Prompt
 {
-
+	/**
+	 * Adds a prompt to the Notification Slate.
+	 *
+	 * @param string $id
+	 * @param Bulky|Prompt $entry
+	 */
+	public function withPrompt(string $id, $entry): Notification;
 }

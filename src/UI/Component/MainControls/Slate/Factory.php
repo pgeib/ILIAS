@@ -21,7 +21,10 @@ interface Factory
 	 *
 	 * rules:
 	 *   usage:
-	 *     1: Legacy Slates SHOULD NOT be used at all.
+	 *     1: >
+	 *       This component MUST only be used to ensure backwards compatibility
+	 *       with existing UI elements in ILIAS. It SHOULD only contain Elements
+	 *       which cannot be generated using other UI Components.
 	 *
 	 * ----
 	 *
