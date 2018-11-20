@@ -9,10 +9,9 @@ function buildAwareness($f) {
 	);
 
 	return $f->maincontrols()->slate()
-		->awareness('awareness', $f->glyph()->user())
-		//->withNoveltyCounter(1)
-		//->withstatusCounter(8)
-		;
+		->awareness('awareness')
+		->withContents($contents)
+		->withUpdatedStatusCounter(3);
 }
 
 function awareness() {

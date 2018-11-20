@@ -7,6 +7,8 @@ namespace ILIAS\UI\Implementation\Component\MainControls\Slate;
 use ILIAS\UI\Component\MainControls\Slate as ISlate;
 use ILIAS\UI\Component\Glyph\Glyph;
 use ILIAS\UI\Implementation\Component\ComponentHelper;
+use ILIAS\UI\Implementation\Component\SignalGeneratorInterface;
+
 
 /**
  * Notification
@@ -19,6 +21,19 @@ class Notification extends Prompt implements ISlate\Notification
 	 * @var array <string, Glyph|Prompt>
 	 */
 	protected $entries = [];
+
+
+	public function __construct(
+		SignalGeneratorInterface $signal_generator,
+		string $name
+	) {
+		global $DIC;
+		$ui_factory = $DIC['ui.factory'];
+		$symbol = $ui_factory->glyph()->notification();
+
+		parent::__construct($signal_generator, $name, $symbol);
+
+	}
 
 	/**
 	 * @inheritdoc

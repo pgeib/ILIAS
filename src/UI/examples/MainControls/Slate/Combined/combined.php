@@ -16,8 +16,8 @@ function combined() {
 	$slate = $f->maincontrols()->slate()
 		->combined('combined_example', $f->glyph()->briefcase())
 		->withEntry($slate1)
-		->withEntry($slate2)
-		->withEntry($button);
+		->withEntry($button)
+		->withEntry($slate2);
 
 
 	$triggerer = $f->button()->bulky(

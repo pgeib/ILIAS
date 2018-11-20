@@ -44,9 +44,6 @@ class Renderer extends AbstractComponentRenderer
 		}
 
 		$tpl->setVariable('CONTENTS', $default_renderer->render($contents));
-		if($component->getEngaged()) {
-			//touch block active
-		}
 
 		$toggle_signal = $component->getToggleSignal();
 		$show_signal = $component->getShowSignal();
@@ -86,7 +83,6 @@ class Renderer extends AbstractComponentRenderer
 			ISlate\Legacy::class,
 			ISlate\Combined::class,
 			ISlate\Search::class,
-
 			ISlate\Awareness::class,
 			ISlate\Notification::class
 		);
