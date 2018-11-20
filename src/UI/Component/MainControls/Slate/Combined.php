@@ -9,5 +9,8 @@ namespace ILIAS\UI\Component\MainControls\Slate;
  */
 interface Combined extends Slate
 {
-	public function withSlate(Slate $slate): Combined;
+	/**
+	 * @param Slate|Bulky $entry
+	 */
+	public function withEntry($entry): Combined;
 }

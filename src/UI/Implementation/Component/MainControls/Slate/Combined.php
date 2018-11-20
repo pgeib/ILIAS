@@ -5,6 +5,7 @@
 namespace ILIAS\UI\Implementation\Component\MainControls\Slate;
 
 use ILIAS\UI\Component\MainControls\Slate as ISlate;
+use ILIAS\UI\Component\Button\Bulky as IBulky;
 use ILIAS\UI\Implementation\Component\SignalGeneratorInterface;
 
 /**
@@ -13,7 +14,7 @@ use ILIAS\UI\Implementation\Component\SignalGeneratorInterface;
 class Combined extends Slate implements ISlate\Combined
 {
 	/**
-	 * @var Slate[]
+	 * @var array<Slate|Bulky>
 	 */
 	protected $contents = [];
 
@@ -26,10 +27,18 @@ class Combined extends Slate implements ISlate\Combined
 		parent::__construct($signal_generator, $name, $symbol);
 	}
 
-	public function withSlate(ISlate\Slate $slate): ISlate\Combined
+	/**
+	 * @inheritdoc
+	 */
+	public function withEntry($entry): ISlate\Combined
 	{
+
+		$classes = [IBulky::class, ISlate\Slate::class];
+		$check = [$entry];
+		$this->checkArgListElements("Slate or Bulky-Button", $check, $classes);
+
 		$clone = clone $this;
-		$clone->contents[] = $slate;
+		$clone->contents[] = $entry;
 		return $clone;
 	}
 

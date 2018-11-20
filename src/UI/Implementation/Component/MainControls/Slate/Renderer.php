@@ -30,12 +30,14 @@ class Renderer extends AbstractComponentRenderer
 			//render triggers for the content-slates
 			$f = $this->getUIFactory();
 			$contents = [];
-			foreach ($component->getContents() as $slate) {
-				//build the triggerer
-				$triggerer = $f->button()->bulky($slate->getSymbol(), $slate->getName(), '#')
-					->withOnClick($slate->getToggleSignal());
-				$contents[] = $triggerer;
-				$contents[] = $slate;
+			foreach ($component->getContents() as $entry) {
+				if($entry instanceof ISlate\Slate) {
+					//build the triggerer
+					$triggerer = $f->button()->bulky($entry->getSymbol(), $entry->getName(), '#')
+						->withOnClick($entry->getToggleSignal());
+					$contents[] = $triggerer;
+				}
+				$contents[] = $entry;
 			}
 		} else {
 			$contents = $component->getContents();

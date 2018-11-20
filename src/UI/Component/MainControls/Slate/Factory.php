@@ -69,16 +69,20 @@ interface Factory
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     The Combined Slate bundles any number of Slates into one.
+	 *     The Combined Slate bundles related controls; these can also be further
+	 *     Slates.
+	 *     Combined Slates are used when a specific purpose is being subdivided
+	 *     into further aspects.
 	 *
 	 *   composition: >
-	 *     The Combined Slate consists of more Slates. The symbol and name
-	 *     of the contained Slates are turned into a Bulky Button to
-	 *     control opening and closing the contained Slate.
+	 *     The Combined Slate consists of more Slates and/or Bulky Buttons.
+	 *     The symbol and name of contained Slates are turned into a Bulky Button
+	 *     to control opening and closing the contained Slate.
 	 *
 	 *   effect: >
 	 *      Opening a Combined Slate will display its contained Slates with an
 	 *      operating Bulky Button for closing/expanding.
+	 *      Clicking on a Button not connected to a Slate will carry out its action.
  	 *
 	 * context:
      *     - TODO
