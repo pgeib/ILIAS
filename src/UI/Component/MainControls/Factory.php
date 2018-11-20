@@ -49,8 +49,11 @@ interface Factory {
 	 *
 	 *   rivals:
 	 *     Mainbar: >
-	 *       The direction of communication for the Metabar is "system to user",
-	 *       while the direction is "user to system" for the Mainbar.
+	 *       The Mainbar offers navigational strategies, while the Metabar
+	 *       foremost provides notifications to the user.
+	 *       The (general) direction of communication for the Metabar is
+	 *       "system to user", while the direction is "user to system" for
+	 *       elements of the Mainbar.
 	 *
 	 * context:
 	 *    - The Metabar is used in the Standard Page.

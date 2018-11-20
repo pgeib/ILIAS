@@ -64,7 +64,7 @@ interface Factory
 	 */
 	public function search(string $name): Search;
 
-		/**
+	/**
 	 * ---
 	 * description:
 	 *   purpose: >
@@ -83,15 +83,6 @@ interface Factory
 	 *      operating Bulky Button for closing/expanding.
 	 *      Clicking on a Button not connected to a Slate will carry out its action.
  	 *
-	 * context:
-     *     - TODO
-	 *
-	 * rules:
-	 *   usage:
-	 *     1: TODO
-	 *   style:
-	 *     1: TODO
-	 *
 	 * ----
 	 *
 	 * @param string $name
@@ -106,7 +97,7 @@ interface Factory
 	 *   purpose: >
 	 *     The Notification Slate is a Prompt that concentrates all
 	 *     system notifications into one expandable glyph.
-	 *     It sums up the counters of contained Prompts and Glyphs.
+	 *     It sums up the counters of contained Prompts and Bulky Buttons' Glyphs.
 	 *
 	 *   composition: >
 	 *      The Notification Slate's symbol (=glyph) has a counter;
@@ -121,7 +112,6 @@ interface Factory
  	 *
 	 * context:
      *     - The Notification is used in the Metabar only.
-	 *
 	 *
 	 * rules:
 	 *   usage:
@@ -140,7 +130,8 @@ interface Factory
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     X
+	 *     The Awareness Slate provides collaborative features and possibilities
+	 *     to contact other users.
 	 *
 	 *   composition: >
 	 *      The Awareness Slate features (Public User Slates) and a Text Input to
@@ -162,6 +153,7 @@ interface Factory
 	 *     2: The Awareness Slate MUST be in the Metabar.
 	 *   style:
 	 *     1: The Slate's Symbol MUST be the User Glyph.
+	 *
 	 *---
 	 *
 	 * @return  \ILIAS\UI\Component\MainControls\Slate\Awareness

@@ -2,11 +2,12 @@
 
 function buildNotification($f)
 {
-	$mails = $f->glyph()->mail('#')
+	$mail_glyph = $f->glyph()->mail('#')
 		->withCounter($f->counter()->status(3));
+	$mails = $f->button()->bulky($mail_glyph, 'Mails', '#');
 
 	$notification = $f->maincontrols()->slate()
-		->notification('notification', $f->glyph()->notification())
+		->notification('notification')
 		->withPrompt('mails', $mails)
 		;
 
