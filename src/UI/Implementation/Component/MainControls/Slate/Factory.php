@@ -24,9 +24,9 @@ class Factory implements ISlate\Factory
 		return new Legacy($this->signal_generator, $name, $symbol, $contents);
 	}
 
-	public function search(string $name, $symbol): ISlate\Search
+	public function search(string $name): ISlate\Search
 	{
-		return new Search($this->signal_generator, $name, $symbol);
+		return new Search($this->signal_generator, $name);
 	}
 
 	public function combined(string $name, $symbol): ISlate\Combined
@@ -34,13 +34,13 @@ class Factory implements ISlate\Factory
 		return new Combined($this->signal_generator, $name, $symbol);
 	}
 
-	public function notification(string $name, $symbol): ISlate\Notification
+	public function notification(string $name): ISlate\Notification
 	{
-		return new Notification($this->signal_generator, $name, $symbol);
+		return new Notification($this->signal_generator, $name);
 	}
 
-	public function awareness(string $name, $symbol): ISlate\Awareness
+	public function awareness(string $name): ISlate\Awareness
 	{
-		return new Awareness($this->signal_generator, $name, $symbol);
+		return new Awareness($this->signal_generator, $name);
 	}
 }

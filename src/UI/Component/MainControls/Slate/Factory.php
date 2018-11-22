@@ -53,42 +53,36 @@ interface Factory
 	 *
 	 * rules:
 	 *   usage:
-	 *     1: TODO
+	 *     1: There MUST be only one Search Slate per page.
 	 *   style:
 	 *     1: The symbol for this slate MUST be the Search Glyph
 	 *
 	 * ----
 	 *
 	 * @param string $name
-	 * @param \ILIAS\UI\Component\Icon\Icon | \ILIAS\UI\Component\Glyph\Glyph $symbol
 	 * @return \ILIAS\UI\Component\MainControls\Slate\Search
 	 */
-	public function search(string $name, $symbol): Search;
+	public function search(string $name): Search;
 
-		/**
+	/**
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     The Combined Slate bundles any number of Slates into one.
+	 *     The Combined Slate bundles related controls; these can also be further
+	 *     Slates.
+	 *     Combined Slates are used when a specific purpose is being subdivided
+	 *     into further aspects.
 	 *
 	 *   composition: >
-	 *     The Combined Slate consists of more Slates. The symbol and name
-	 *     of the contained Slates are turned into a Bulky Button to
-	 *     control opening and closing the contained Slate.
+	 *     The Combined Slate consists of more Slates and/or Bulky Buttons.
+	 *     The symbol and name of contained Slates are turned into a Bulky Button
+	 *     to control opening and closing the contained Slate.
 	 *
 	 *   effect: >
 	 *      Opening a Combined Slate will display its contained Slates with an
 	 *      operating Bulky Button for closing/expanding.
+	 *      Clicking on a Button not connected to a Slate will carry out its action.
  	 *
-	 * context:
-     *     - TODO
-	 *
-	 * rules:
-	 *   usage:
-	 *     1: TODO
-	 *   style:
-	 *     1: TODO
-	 *
 	 * ----
 	 *
 	 * @param string $name
@@ -103,7 +97,7 @@ interface Factory
 	 *   purpose: >
 	 *     The Notification Slate is a Prompt that concentrates all
 	 *     system notifications into one expandable glyph.
-	 *     It sums up the counters of contained Prompts and Glyphs.
+	 *     It sums up the counters of contained Prompts and Bulky Buttons' Glyphs.
 	 *
 	 *   composition: >
 	 *      The Notification Slate's symbol (=glyph) has a counter;
@@ -119,33 +113,35 @@ interface Factory
 	 * context:
      *     - The Notification is used in the Metabar only.
 	 *
-	 *
 	 * rules:
 	 *   usage:
 	 *     1: The Notification MUST be unique for the page.
 	 *     2: The Notification MUST be in the Metabar.
+	 *   style:
+	 *     1: The symbol for this slate MUST be the Notification Glyph
 	 *
 	 * ----
 	 *
 	 * @return  \ILIAS\UI\Component\MainControls\Slate\Notification
 	 */
-	public function notification(string $name, $symbol): Notification;
+	public function notification(string $name): Notification;
 
 	/**
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     X
+	 *     The Awareness Slate provides collaborative features and possibilities
+	 *     to contact other users.
 	 *
 	 *   composition: >
-	 *      The Awareness Slate features Public User Slates and a Text Input to
+	 *      The Awareness Slate features (Public User Slates) and a Text Input to
 	 *      filter the entries.
 	 *      As the Awareness Slate is a Prompt, its Glyph will bear a counter
 	 *      indicating the number of users currently online.
 	 *
 	 *   effect: >
-	 *      When expanded, the list of Public User Slates is shown under the
-	 *      filter input. By typing into the filter input, the list of User Slates
+	 *      When expanded, the list of (Public User Slates) is shown under the
+	 *      filter input. By typing into the filter input, the list of (User Slates)
 	 *      is filtered for users, whose login matches the typed string.
 	 *
 	 * context:
@@ -157,46 +153,11 @@ interface Factory
 	 *     2: The Awareness Slate MUST be in the Metabar.
 	 *   style:
 	 *     1: The Slate's Symbol MUST be the User Glyph.
+	 *
 	 *---
 	 *
 	 * @return  \ILIAS\UI\Component\MainControls\Slate\Awareness
 	 */
-	public function awareness(string $name, $symbol): Awareness;
-
-
-	/**
-	 * ---
-	 * description:
-	 *   purpose: >
-	 *     X
-	 *
-	 *   composition: >
-	 *      An Icon (the user's avatar) and links to
-	 *      -mail
-	 *      -user workspace
-	 *      -chat
-	 *
-	 *   effect: >
-	 *      X
-	 *
-	 *   rivals:
-	 *     Personal User Slate: >
-	 *        "My Settings, My Profile, and so on."
-	 *
-	 * context:
-     *     - The Collaboration Slate is used as entrty in the Awarenes Slate.
-	 *
-	 * rules:
-	 *   usage:
-	 *     1: X
-
-	 *---
-	 *
-	 * @return  \ILIAS\UI\Component\MainControls\Slate\PublicUser
-	 * @return  \ILIAS\UI\Component\MainControls\Slate\Collaboration
-	 */
-	//public function publicUser(string $name, $symbol): PublicUser;
-	//public function collaboration(string $name, $symbol): Collaboration;
-
+	public function awareness(string $name): Awareness;
 
 }

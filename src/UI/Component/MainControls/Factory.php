@@ -47,6 +47,14 @@ interface Factory {
 	 *     Tools in the Sidebar, like the Help. In this case, the buttons are
 	 *     not stateful.
 	 *
+	 *   rivals:
+	 *     Mainbar: >
+	 *       The Mainbar offers navigational strategies, while the Metabar
+	 *       foremost provides notifications to the user.
+	 *       The (general) direction of communication for the Metabar is
+	 *       "system to user", while the direction is "user to system" for
+	 *       elements of the Mainbar.
+	 *
 	 * context:
 	 *    - The Metabar is used in the Standard Page.
 	 *
@@ -134,7 +142,7 @@ interface Factory {
 	 *       learning progress. Those remain in the Tab Bar.
 	 *
 	 *     Content Actions: >
-	 *       Adding new items, the actions-menu (with comments, notes and tags),
+	 *       "New item"-actions, the actions-menu (with comments, notes and tags),
 	 *       moving, linking or deleting objects and the like are NOT part of
 	 *       the Mainbar.
 	 *
@@ -144,16 +152,13 @@ interface Factory {
 	 *       The Mainbar may reference those tools as well, but rather in form
 	 *       of a link than a widget.
 	 *
-	 *     Notification: >
+	 *     Metabar: >
 	 *       Notifications from the system to the user, e.g. new Mail, are placed
-	 *       in the Notification Center.
+	 *       in Elements of the Metabar.
 	 *       The direction of communication for the Mainbar is "user to system",
-	 *       while the direction is "system to user" with Notifications.
+	 *       while the direction is "system to user" with elements of the Metabar.
 	 *       However, navigation from both components can lead to the same page.
 	 *
-	 *     Modal: >
-	 *       Forms with the intention of modifying the content are placed in modals
-	 *       or in the content part of the page.
 	 *
 	 * context:
 	 *    - The Mainbar is used in the Standard Page.
@@ -227,16 +232,14 @@ interface Factory {
      *
 	 *   rivals:
 	 *     Panel: >
-	 *       Panel...
+	 *       Panels are used for content.
 	 *
 	 *     Modal: >
-	 *       Modal...
-	 *
-	 *     Item: >
-	 *       Item...
+	 *       The Modal forces users to focus on a task, the slate offers possibilities.
 	 *
 	 *     Popover: >
-	 *       Item..
+	 *       Popovers provide additional information or actions in direct context
+	 *       to specific elements. Popovers do not have a fixed position on the page.
 	 *
 	 *
 	 * rules:

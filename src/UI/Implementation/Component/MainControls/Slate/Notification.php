@@ -5,8 +5,10 @@
 namespace ILIAS\UI\Implementation\Component\MainControls\Slate;
 
 use ILIAS\UI\Component\MainControls\Slate as ISlate;
-use ILIAS\UI\Component\Glyph\Glyph;
+use ILIAS\UI\Component\Button\Bulky;
 use ILIAS\UI\Implementation\Component\ComponentHelper;
+use ILIAS\UI\Implementation\Component\SignalGeneratorInterface;
+
 
 /**
  * Notification
@@ -16,17 +18,30 @@ class Notification extends Prompt implements ISlate\Notification
 	use ComponentHelper;
 
 	/**
-	 * @var array <string, Glyph|Prompt>
+	 * @var array <string, Bulky|Prompt>
 	 */
 	protected $entries = [];
+
+
+	public function __construct(
+		SignalGeneratorInterface $signal_generator,
+		string $name
+	) {
+		global $DIC;
+		$ui_factory = $DIC['ui.factory'];
+		$symbol = $ui_factory->glyph()->notification();
+
+		parent::__construct($signal_generator, $name, $symbol);
+
+	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function withPrompt(string $id, $entry) {
-		$classes = [Glyph::class, IPrompt\Prompt::class];
+		$classes = [Bulky::class, IPrompt\Prompt::class];
 		$check = [$entry];
-		$this->checkArgListElements("Glyph or Prompt", $check, $classes);
+		$this->checkArgListElements("Bulky-Button or Prompt", $check, $classes);
 		$this->checkEntryId($id, false);
 
 		$clone = clone $this;

@@ -24,13 +24,13 @@ class Search extends Slate implements ISlate\Search
 
 	public function __construct(
 		SignalGeneratorInterface $signal_generator,
-		string $name,
-		$symbol
+		string $name
 	) {
-		parent::__construct($signal_generator, $name, $symbol);
-
 		global $DIC;
 		$this->ui_factory = $DIC['ui.factory'];
+		$symbol = $this->ui_factory->glyph()->search();
+
+		parent::__construct($signal_generator, $name, $symbol);
 		$this->initContents();
 	}
 

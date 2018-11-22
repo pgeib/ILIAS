@@ -27,9 +27,7 @@ if ($_GET['new_ui'] == '1') {
 	$breadcrumbs = $f->breadcrumbs($crumbs);
 
 	$content = pagedemoContent($f);
-
 	$metabar = buildMetabar($f);
-
 	$mainbar = buildMainbar($f)
 		->withActive("tool1");
 		//->withActive("example2");

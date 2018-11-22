@@ -5,8 +5,7 @@ function search()
 	$f = $DIC->ui()->factory();
 	$renderer = $DIC->ui()->renderer();
 
-	$icon = $f->glyph()->search();
-	$slate = $f->maincontrols()->slate()->search('search', $icon);
+	$slate = $f->maincontrols()->slate()->search('search');
 
 	$triggerer = $f->button()->bulky(
 		$slate->getSymbol(),

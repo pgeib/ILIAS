@@ -3,12 +3,13 @@
 
 namespace ILIAS\UI\Component\MainControls;
 
-use \ILIAS\UI\Component as C;
+use ILIAS\UI\Component as C;
+use ILIAS\UI\Component\JavaScriptBindable;
 
 /**
  * This describes the Metabar.
  */
-interface Metabar extends C\Component {
+interface Metabar extends C\Component, JavaScriptBindable {
 
 	/**
 	 *  @return 	\ILIAS\UI\Component\Image\Image

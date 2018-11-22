@@ -5,7 +5,8 @@
 namespace ILIAS\UI\Implementation\Component\MainControls\Slate;
 
 use ILIAS\UI\Component\MainControls\Slate as ISlate;
-use ILIAS\UI\Implementation\Component\ComponentHelper;
+use ILIAS\UI\Implementation\Component\SignalGeneratorInterface;
+
 
 /**
  * Awareness
@@ -13,16 +14,28 @@ use ILIAS\UI\Implementation\Component\ComponentHelper;
 
 class Awareness extends Prompt implements ISlate\Awareness
 {
-	use ComponentHelper;
-
 	/**
 	 * @var ILIAS\UI\Component[]
 	 */
 	private $contents = array();
+
 	/**
 	 * @var int
 	 */
 	private $count;
+
+
+	public function __construct(
+		SignalGeneratorInterface $signal_generator,
+		string $name
+	) {
+		global $DIC;
+		$ui_factory = $DIC['ui.factory'];
+		$symbol = $ui_factory->glyph()->user();
+
+		parent::__construct($signal_generator, $name, $symbol);
+
+	}
 
 
 	/**
@@ -30,7 +43,7 @@ class Awareness extends Prompt implements ISlate\Awareness
 	 */
 	public function getContents(): array
 	{
-		return [];
+		return $this->contents;
 	}
 
 	/**
@@ -42,21 +55,7 @@ class Awareness extends Prompt implements ISlate\Awareness
 		return $clone;
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getCounter() {
-		return $this->count;
-	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function withCounter($count) {
-		$clone = clone $this;
-		$clone->count = $count;
-		return $clone;
-	}
 
 
 }
