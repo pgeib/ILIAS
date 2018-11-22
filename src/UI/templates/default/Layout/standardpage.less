@@ -109,8 +109,10 @@ grid-based layout
 
 /* Metabar */
 header {
-	grid-column: 1 / 2;
+	grid-column-start: 1;
+	grid-column-end: 3;
 	grid-row: 1;
+;
 	// grid-area: header;
 }
 
@@ -130,8 +132,8 @@ header {
 
 /* breadcrumbs */
 .breadcrumbs {
-	grid-area: breadcrumbs;
-	grid-column:  1 / 2;
+	grid-column-start: 1;
+	grid-column-end: 3;
 	grid-row: 2;
 }
 
@@ -174,8 +176,8 @@ main {
 /* Footer */
 footer {
 	background-color: @brand-primary;
-	// grid-area: footer;
-	grid-column: 1 / 2;
+	grid-column-start: 1;
+	grid-column-end: 3;
 	grid-row: 4;
 	z-index: 2;
 }
