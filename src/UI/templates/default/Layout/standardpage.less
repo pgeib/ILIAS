@@ -80,11 +80,14 @@ grid-based layout
 	display: grid;
 	grid-gap: 0px;
     grid-template-columns: 80px 1fr;
-    grid-template-rows: @height-header 1fr @height-footer;
-    grid-template-areas:
+    grid-template-rows: @height-header 25px 1fr @height-footer;
+    /* // not supported in IE, use track-line instead
+	grid-template-areas:
     "header header"
+	"breadcrumbs breadcrumbs"
     "mainbar content"
-    "footer footer"; // not supported IE
+    "footer footer";
+	*/
     height: 100%;
 	overflow: hidden;
 	width: 100%;
@@ -106,7 +109,9 @@ grid-based layout
 
 /* Metabar */
 header {
-	grid-area: header;
+	grid-column: 1/2;
+	grid-row: 1;
+	// grid-area: header;
 }
 
 .header-inner {
@@ -123,6 +128,12 @@ header {
 	z-index: 2;
 }
 
+/* breadcrumbs */
+.breadcrumbs {
+	grid-area: breadcrumbs;
+	grid-column: 1/2;
+	grid-row: 2;
+}
 
 /* mainbar */
 
@@ -133,7 +144,9 @@ nav {
 .il-maincontrols-mainbar {
 	background: #fff;
 	display: flex;
-	grid-area: mainbar;
+	// grid-area: mainbar;
+	grid-column: 1;
+	grid-row: 3;
 	height: 100%;
 	width: @trigger-width;
 }
@@ -151,7 +164,9 @@ main {
 
 .il-layout-page-content {
 	display: grid;
-	grid-area: content;
+	// grid-area: content;
+	grid-column: 2;
+	grid-row: 3;
 	overflow: auto;
 	padding: 20px;
 }
@@ -159,6 +174,8 @@ main {
 /* Footer */
 footer {
 	background-color: @brand-primary;
-	grid-area: footer;
+	// grid-area: footer;
+	grid-column: 1/2;
+	grid-row: 4;
 	z-index: 2;
 }
