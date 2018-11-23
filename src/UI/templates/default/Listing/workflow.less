@@ -84,12 +84,17 @@
 	//active
 	.active {
 		&:before {
-			margin: @workflow-icon-size/4 0 0 0;
+			margin: 0;
 			width: @workflow-icon-size*1.5;
 			height: @workflow-icon-size*1.5;
 		}
+		&.completed-successfully:before,
+		&.completed-unsuccessfully:before {
+	    line-height: 2em;
+			background-color: @brand-primary;
+		}
 		.text {
-			padding-left: @workflow-icon-size*2;
+			padding-left: @workflow-icon-size*1.5;
 			.il-workflow-step-label,
 			.il-workflow-step-label .btn.btn-link {
 				color: @brand-primary;

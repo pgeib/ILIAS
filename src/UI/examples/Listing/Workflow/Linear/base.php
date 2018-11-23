@@ -34,13 +34,30 @@ function base() {
 		$f->step('step 12', 'not available anymore, successfully completed')
 			->withAvailability($step::NOT_ANYMORE)->withStatus($step::SUCCESSFULLY),
 		$f->step('step 13', 'not available anymore, unsuccessfully completed')
-			->withAvailability($step::NOT_ANYMORE)->withStatus($step::UNSUCCESSFULLY),
+			->withAvailability($step::NOT_ANYMORE)->withStatus($step::UNSUCCESSFULLY)
 	];
 
 	//setup linear workflow
 	$wf = $f->linear('Linear Workflow', $steps)
 		->withActive(4);
 
+	//special states
+	$steps = [
+		$f->step('step 1', 'active, successfully completed')
+			->withAvailability($step::AVAILABLE)->withStatus($step::SUCCESSFULLY),
+		$f->step('step 1', 'active, successfully completed')
+			->withAvailability($step::AVAILABLE)->withStatus($step::UNSUCCESSFULLY)
+	];
+	$wfs = $f->linear('Special', $steps);
+
+	$wf2 = $wfs->withActive(0);
+	$wf3 = $wfs->withActive(1);
+
+
 	//render
-	return $renderer->render($wf);
+	return $renderer->render([
+		$wf,
+		$wf2,
+		$wf3
+	]);
 }
