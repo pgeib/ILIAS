@@ -759,14 +759,14 @@ interface Factory {
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *       Layout components are page-elements used for the overall construction of
-	 *       the user interface. They are units closed in itself and give access
-	 *       to the system in a way that a Layout Component provides the user with
-	 *       all and any means for a certain purpose. In ultimo, the page itself
-	 *       is included here.
-	 *       Since Layout Components carry - due to their nature - certain structural
+	 *       Layout components are compontents used for the overall construction of
+	 *       the user interface. They assign places to certain components and thus
+	 *       provide a learnable structure where similar things are found in similar
+	 *       locations throughout the system.In ultimo, the page itself is included here.
+	 *
+	 *       Since Layout components carry - due to their nature - certain structural
 	 *       decisions, they are also about the "where" of elements as opposed to
-	 *       the "what" in most other components.
+	 *       the "what" in many other components.
 	 *
 	 * ---
 	 *
