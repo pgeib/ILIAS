@@ -1,6 +1,7 @@
 // variables
 @height-header: 75px;
 @height-footer: 75px;
+@height-breadcrumbs: 33px;
 
 /*
 height of areas outside mainbar -
@@ -80,7 +81,7 @@ grid-based layout
 	display: grid;
 	grid-gap: 0px;
     grid-template-columns: 80px 1fr;
-    grid-template-rows: @height-header 25px 1fr @height-footer;
+    grid-template-rows: @height-header @height-breadcrumbs 1fr @height-footer;
     /* // not supported in IE, use track-line instead
 	grid-template-areas:
     "header header"
@@ -112,8 +113,6 @@ header {
 	grid-column-start: 1;
 	grid-column-end: 3;
 	grid-row: 1;
-;
-	// grid-area: header;
 }
 
 .header-inner {
@@ -148,9 +147,31 @@ nav {
 .il-maincontrols-mainbar {
 	background: #fff;
 	display: flex;
+	flex-direction: column;
 	// grid-area: mainbar;
 	height: 100%;
 	width: @trigger-width;
+}
+
+// tools section
+.il-mainbar-tools {
+    display: flex;
+    flex-direction: row;
+}
+
+.il-mainbar-tools-button button {
+	height:@trigger-height;
+	width: @trigger-width;
+}
+
+.il-mainbar-tools-entries {
+	button {
+		height:@trigger-height;
+		width: @trigger-width;
+	}
+	&.engaged {
+		display: flex;
+	}
 }
 
 
