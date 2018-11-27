@@ -778,19 +778,19 @@ interface Factory {
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *       MainControls are components that are "always there", depending only
-	 *       on overall configuration or roles of the user, not depending on
-	 *       context.
-	 *       MainControls provide global navigation and information.
+	 *       Main Controls are components that are always usable, depending only
+	 *       on overall configuration or roles of the user, not depending on the
+	 *       current content. Main Controls provide global navigation in the app
+	 *       and information about the app.
 	 *
 	 *   rivals:
-	 *     ViewControls: >
-	 *        ViewControls are used to change the visualisation of, or rather within,
-	 *        components.
+	 *     View Controls: >
+	 *       View Controls are used to change the visualisation of some set of
+	 *       data within a component.
 	 *
 	 * rules:
 	 *   usage:
-	 *     1: MainControls MUST NOT change persistent data in any way.
+	 *     1: Main Controls MUST NOT change the state of entities in the system.
 	 *
 	 * ---
 	 *
