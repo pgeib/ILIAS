@@ -759,14 +759,14 @@ interface Factory {
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *       Layout components are page-elements used for the overall construction of
-	 *       the user interface. They are units closed in itself and give access
-	 *       to the system in a way that a Layout Component provides the user with
-	 *       all and any means for a certain purpose. In ultimo, the page itself
-	 *       is included here.
-	 *       Since Layout Components carry - due to their nature - certain structural
+	 *       Layout components are compontents used for the overall construction of
+	 *       the user interface. They assign places to certain components and thus
+	 *       provide a learnable structure where similar things are found in similar
+	 *       locations throughout the system.In ultimo, the page itself is included here.
+	 *
+	 *       Since Layout components carry - due to their nature - certain structural
 	 *       decisions, they are also about the "where" of elements as opposed to
-	 *       the "what" in most other components.
+	 *       the "what" in many other components.
 	 *
 	 * ---
 	 *
@@ -778,19 +778,19 @@ interface Factory {
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *       MainControls are components that are "always there", depending only
-	 *       on overall configuration or roles of the user, not depending on
-	 *       context.
-	 *       MainControls provide global navigation and information.
+	 *       Main Controls are components that are always usable, depending only
+	 *       on overall configuration or roles of the user, not depending on the
+	 *       current content. Main Controls provide global navigation in the app
+	 *       and information about the app.
 	 *
 	 *   rivals:
-	 *     ViewControls: >
-	 *        ViewControls are used to change the visualisation of, or rather within,
-	 *        components.
+	 *     View Controls: >
+	 *       View Controls are used to change the visualisation of some set of
+	 *       data within a component.
 	 *
 	 * rules:
 	 *   usage:
-	 *     1: MainControls MUST NOT change persistent data in any way.
+	 *     1: Main Controls MUST NOT change the state of entities in the system.
 	 *
 	 * ---
 	 *
