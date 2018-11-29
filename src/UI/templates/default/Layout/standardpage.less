@@ -38,7 +38,7 @@ important for calculating the scrollable area inside mainbar slates
 	box-shadow: @shadow-bottom;
 }
 
-/* IE10+ not supported */
+/* IE10+ not supported
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
 	.il-layout-page {
 		&:before {
@@ -51,9 +51,9 @@ important for calculating the scrollable area inside mainbar slates
 		.layout-page-content {
 			display:none;
 		}
-
 	}
 }
+*/
 
 
 * {
@@ -76,11 +76,12 @@ section {
 grid-based layout
 *********************
 */
-
+// main grid without slates
 .il-layout-page {
+	background: @body-bg; /* MOVE */
 	display: grid;
 	grid-gap: 0px;
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: @trigger-width 1fr;
     grid-template-rows: @height-header @height-breadcrumbs 1fr @height-footer;
     /* // not supported in IE, use track-line instead
 	grid-template-areas:
@@ -92,21 +93,32 @@ grid-based layout
     height: 100%;
 	overflow: hidden;
 	width: 100%;
+	.il-maincontrols-mainbar {
+		.il-mainbar-close-slates {
+			display: none;
+		}
+	}
 	&.with-engaged-slates {
 		grid-template-columns: @slate-width + @trigger-width 1fr;
 		.il-maincontrols-mainbar {
 			width: @slate-width + @trigger-width;
+			transition: all .3s;
 			// slate
 			.il-mainbar-slates {
 				display: flex;
 				flex-direction: column;
-				// height: ~"calc(100vh - 150px)";
-				height: calc(~"100vh - " @height-header-footer);
+				// height: calc(~"100vh - " @height-header-footer);
 				overflow-y: auto;
+			}
+			// slate remove
+			.il-mainbar-close-slates {
+				display: block;
 			}
 		}
 	}
 }
+
+
 
 /* Metabar */
 header {
@@ -116,7 +128,7 @@ header {
 }
 
 .header-inner {
-	.shadow-bottom;
+	.shadow-bottom();
 	align-items: center;
     background: #fff;
     display: flex;
@@ -131,32 +143,51 @@ header {
 
 /* breadcrumbs */
 .breadcrumbs {
+	.shadow-bottom();
 	grid-column-start: 1;
 	grid-column-end: 3;
 	grid-row: 2;
+	ul.breadcrumb {
+		background-color: #fff; /* MOVE */
+	}
 }
 
 /* mainbar */
-
 nav {
 	grid-column: 1;
 	grid-row: 3;
 	z-index: 1;
 }
 
+// Subgrid mainbar
 .il-maincontrols-mainbar {
 	background: #fff;
-	display: flex;
-	flex-direction: column;
-	// grid-area: mainbar;
+	display: grid;
 	height: 100%;
+	grid-template-columns: @trigger-width @slate-width;
+	// grid-template-rows: 1fr 40px;
 	width: @trigger-width;
+	&.engaged {
+
+	}
+}
+
+// mainbar
+.il-mainbar {
+	background-color: @bg-mainbar;
+	.shadow-right();
 }
 
 // tools section
-.il-mainbar-tools {
+.il-mainbar-tools-button {
     display: flex;
     flex-direction: row;
+	/*
+	grid-column-start: 1;
+	grid-column-end: 1;
+	grid-row-start: 1;
+	grid-row-end: 2;
+	*/
 }
 
 .il-mainbar-tools-button button {
@@ -171,6 +202,47 @@ nav {
 	}
 	&.engaged {
 		display: flex;
+		flex-direction: row;
+	}
+}
+
+// mainbar triggers
+.il-mainbar-triggers {
+	/*
+	display: flex;
+	flex-direction: column;
+	grid-column-start: 1;
+	grid-column-end: 2;
+	grid-row-start: 1;
+	grid-row-end: 3;
+	*/
+}
+
+// mainbar slates
+.il-mainbar-slates {
+	/*
+	grid-column-start: 2;
+	grid-column-end: 3;
+	grid-row-start: 1;
+	grid-row-end: 2;
+	*/
+}
+
+// mainbar close slates
+.il-mainbar-close-slates {
+	/*
+	grid-column-start: 2;
+	grid-column-end: 3;
+	grid-row-start: 2;
+	grid-row-end: 3;
+	*/
+}
+
+// remove tools
+.il-mainbar-remove-tool {
+	display: none;
+	.il-mainbar-tools-entries.engaged & {
+		display: block;
 	}
 }
 
