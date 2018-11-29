@@ -20,7 +20,6 @@ class Renderer extends AbstractComponentRenderer {
 		if ($component instanceof Component\Layout\Page\Standard) {
 			return $this->renderPage($component, $default_renderer);
 		}
-
 	}
 
 	protected function renderPage(Component\Layout\Page\Standard $component, RendererInterface $default_renderer) {

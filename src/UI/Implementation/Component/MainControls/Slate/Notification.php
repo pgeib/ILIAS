@@ -38,7 +38,8 @@ class Notification extends Prompt implements ISlate\Notification
 	/**
 	 * @inheritdoc
 	 */
-	public function withPrompt(string $id, $entry) {
+	public function withPrompt(string $id, $entry): ISlate\Notification
+	{
 		$classes = [Bulky::class, IPrompt\Prompt::class];
 		$check = [$entry];
 		$this->checkArgListElements("Bulky-Button or Prompt", $check, $classes);
@@ -49,6 +50,9 @@ class Notification extends Prompt implements ISlate\Notification
 		return $clone;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getContents(): array
 	{
 		return array_values($this->entries);

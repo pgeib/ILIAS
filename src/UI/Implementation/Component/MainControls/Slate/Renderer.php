@@ -19,7 +19,6 @@ class Renderer extends AbstractComponentRenderer
 		return $this->renderSlate($component, $default_renderer);
 	}
 
-
 	protected function renderSlate(
 		ISlate\Slate $component,
 		RendererInterface $default_renderer
@@ -79,7 +78,6 @@ class Renderer extends AbstractComponentRenderer
 	 */
 	protected function getComponentInterfaceName() {
 		return array(
-			//ISlate\Slate::class,
 			ISlate\Legacy::class,
 			ISlate\Combined::class,
 			ISlate\Search::class,

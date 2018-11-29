@@ -37,7 +37,6 @@ class Awareness extends Prompt implements ISlate\Awareness
 
 	}
 
-
 	/**
 	 * @inheritdoc
 	 */
@@ -49,13 +48,11 @@ class Awareness extends Prompt implements ISlate\Awareness
 	/**
 	 * @inheritdoc
 	 */
-	public function withContents($contents) {
+	public function withContents(array $contents): ISlate\Awareness
+	{
 		$clone = clone $this;
 		$clone->contents = $contents;
 		return $clone;
 	}
-
-
-
 
 }

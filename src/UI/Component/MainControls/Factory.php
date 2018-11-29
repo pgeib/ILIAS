@@ -18,49 +18,48 @@ interface Factory {
 	 *     should permamently be in sight of the user.
 	 *     The Metabar shall, first of all, host Prompts, i.e. Notifications
 	 *     from the System to the User, but may also accomodate components and
-	 *     links deemed important, like help or search.
-	 *     Contents of the bar are never modified, but may depend on
-	 *     (user-) configuration.
+	 *     links deemed important, like help or search. The content of the bar
+	 *     does not change wen navigating the system, but may depend on a
+	 *     configuration.
 	 *
 	 *   composition: >
-	 *     The Metabar is rendered horizontally at the very top of the page.
-	 *     It is always visible and available (except in exam/kiosk mode)
-	 *     as a static screen element and is unaffected by scrolling.
+	 *     The Metabar is rendered horizontally at the very top of the page. It
+	 *     is always visible and available (except in some specialized view mode
+	 *     like an exam mode) as a static screen element and is unaffected by
+	 *     scrolling.
 	 *
 	 *     The Metabar always features the logo on the left hand side, while
-	 *     further elements are placed on the right hand side.
-	 *     Currently, these are "Search", "Help", "Notifications" and "Awareness".
+	 *     further elements are placed on the right hand side. Currently, these
+	 *     are "Search", "Help", "Notifications", "Awareness" and "User"
 	 *
 	 *     Especially in mobile context, the total width of all entries may exceed
 	 *     the availble width of the screen. In this case, all entries are
-	 *     summarized under a "more..."-Button. The logo remains.
+	 *     summarized under a "..."-Button. The logo remains.
 	 *
-	 *     Elements are rendered as Bulky Buttons.
-	 *     Prompts in the Metabar will be marked with counters for new/existing
-	 *     notifications.
+	 *     Elements are rendered as Bulky Buttons. Prompts in the Metabar may be
+	 *     marked with counters for new/existing notifications.
 	 *
 	 *   effect: >
-	 *     Entries in the Metabar may open a Slate when clicked. They will be
-	 *     set to "engaged" accordingly, and bear the aria-pressed attribute.
-	 *     There will be only one engaged Button/Slate at a time.
-	 *     Also, Buttons in the Metabar may trigger navigation or activate
-	 *     Tools in the Sidebar, like the Help. In this case, the buttons are
-	 *     not stateful.
+	 *     Entries in the Metabar may open a Slate when clicked. They will be set
+	 *     to "engaged" accordingly, and bear the aria-pressed attribute. There
+	 *     will be only one engaged Button/Slate at a time. Also, Buttons in the
+	 *     Metabar may trigger navigation or activate Tools in the Mainbar, like
+	 *     the Help. In this case, the buttons are not stateful.
 	 *
 	 *   rivals:
 	 *     Mainbar: >
-	 *       The Mainbar offers navigational strategies, while the Metabar
-	 *       foremost provides notifications to the user.
-	 *       The (general) direction of communication for the Metabar is
-	 *       "system to user", while the direction is "user to system" for
-	 *       elements of the Mainbar.
+	 *       The Mainbar offers navigational strategies, while the Metabar foremost
+	 *       provides notifications to the user and offer controls that are deemed
+	 *       important.
+	 *       The (general) direction of communication for the Metabar is "system to
+	 *       user", while the direction is "user to system" for elements of the Mainbar.
 	 *
 	 * context:
 	 *    - The Metabar is used in the Standard Page.
 	 *
 	 * rules:
 	 *   usage:
-	 *     1: The Metabar is unique for the page - there MUST be but one.
+	 *     1: The Metabar is unique for the page - there MUST be at most one.
 	 *     2: Elements in the Metabar MUST NOT vary according to context.
 	 *     3: New elements in the Metabar MUST be approved by JF.
 	 *
@@ -76,22 +75,22 @@ interface Factory {
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     The Mainbar is a unique page section that bundles access to
-	 *     content-based navigational strategies (like the repository tree)
-	 *     as well as navigation to services unrelated to the actual content,
-	 *     like the user's profile or administrative settings.
+	 *     The Mainbar is a unique page section that bundles access to content-
+	 *     based navigational strategies (like the repository tree) as well as
+	 *     navigation to services unrelated to the actual content, like the
+	 *     administrative settings.
 	 *
 	 *     Since the controls necessary for theses purposes might be quite complex,
-	 *     they are summed up in an easy to grasp Icon or Glyph in conjunction
-	 *     with a short text.
-	 *     Theses reductions form the entries for the mainbar; the Mainbar
-	 *     thus is the primary list of navigational options for the user and
-	 *     the usual starting point for issuing commands from the user to the system.
+	 *     they are summed up in an easy to grasp Icon or Glyph in conjunction with
+	 *     a short text. Theses reductions form the entries for the mainbar, which
+	 *     thus is the primary list of navigational options for the user and the
+	 *     usual starting point for the user to explore the system.
 	 *
-	 *     The entries of the bar are never modified by changing context,
-	 *     but may vary according to e.g. the current user's permissions or
-	 *     settings of the installation. An exception to this is the invocation
-	 *     of Tools from the Metabar, e.g. the Help.
+	 *     There are entries in the bar that are never modified by changing context,
+	 *     but may vary according to e.g. the current user's permissions or settings
+	 *     of the installation. There also is the tools-section of entries in the bar
+	 *     that is used to show tools that are opened on request of the user, e.g. the
+	 *     help, or depending on requirements of the content, e.g. a local navigation.
 	 *
 	 *   composition: >
 	 *     The Mainbar holds Slates and Bulky Buttons.
@@ -99,41 +98,42 @@ interface Factory {
 	 *     In a desktop environment, a vertical bar is rendered on the left side
 	 *     of the screen covering the full height (minus header- and footer area).
 	 *     Entries are aligned vertically.
+	 *
 	 *     In a mobile context, the bar will be rendered horizontally on the bottom.
 	 *
 	 *     When the entries of a Mainbar exceed the available height (mobile: width),
-	 *     remaining buttons will be collected in a "more..."-Button.
+	 *     remaining buttons will be collected in a "..."-Button.
 	 *
-	 *     The Mainbar is always visible and available (except in exam/kiosk mode)
-	 *     as a static screen element unaffected by scrolling.
+	 *     The Mainbar is always visible and available (except in specialized views
+	 *     like the exam mode) as a static screen element unaffected by scrolling.
      *
 	 *   effect: >
-     *     Clicking an entry will carry out its configured action; with slates,
-	 *     this means expanding the slate.
+     *     Clicking an entry will carry out its configured action. For slates, this
+	 *     is expanding the slate, while for links an according page opens.
 	 *
 	 *     Buttons in the Mainbar are stateful, i.e. they have a pressed-status
 	 *     that can either be toggled by clicking the same button again or by
-	 *     clicking a different button. This does not apply to Buttons triggering
-	 *     navigation.
+	 *     clicking a different button. This does not apply to Buttons that direcly
+	 *     change the page.
 	 *
-	 *     Opening a slate by clicking an entry will close all other slates
-	 *     in the Mainbar.
-	 *     In desktop-environments, Slates open on the right hand of the Mainbar,
-	 *     between bar and content, thus "pushing" the content to the right, if
-	 *     there is enough room.
-	 *     If the content's width would fall below its defined minimum, the
-	 *     expanded Slate is opened above (like in overlay, not "on top of")
-	 *     the content.
-	 *     The Slate's height equals that of the Mainbar; also, its position
-	 *     will remain static when the page is scrolled.
-	 *     A "close slate"-button is rendered underneath the slate; it will
-	 *     close all visible Slates and reset the states of all mainbar-entries.
+	 *     Opening a slate by clicking an entry will close all other slates in the
+	 *     Mainbar. On desktop, slates open on the right hand of the Mainbar, between
+	 *     bar and content, thus "pushing" the content to the right, if there is not
+	 *     enough room.
 	 *
-	 *     When a Tool (such as the help), whose contents are displayed in a Slate,
-	 *     is being triggered, a special entry is rendered as first element of
-	 *     the Mainbar, making the available/invoked tool(s) accessible.
-	 *     Tools can be closed, i.e. removed from the Mainbar, via a Close Button.
-	 *     When the last Tool is closed, the Tools-Entry is removed as well.
+	 *     If the content's width would fall below its defined minimum, the expanded
+	 *     slate is opened above (like in overlay, not "on top of") the content.
+	 *
+	 *     The slates height equals that of the Mainbar. Also, their position will
+	 *     remain static when the page is scrolled. A button to close a slate is
+	 *     rendered underneath the slate. It will  close all visible Slates and reset
+	 *     the states of all mainbar-entries.
+	 *
+	 *     When a tool (such as the help), whose contents are displayed in a slate,
+	 *     is being triggered, a special entry is rendered as first element of the
+	 *     Mainbar, making the available/invoked tool(s) accessible. Tools can be
+	 *     closed, i.e. removed from the Mainbar, via a Close Button. When the last
+	 *     Tool is closed, the tools-section is removed as well.
 	 *
 	 *   rivals:
 	 *     Tab Bar: >
@@ -154,18 +154,17 @@ interface Factory {
 	 *
 	 *     Metabar: >
 	 *       Notifications from the system to the user, e.g. new Mail, are placed
-	 *       in Elements of the Metabar.
-	 *       The direction of communication for the Mainbar is "user to system",
-	 *       while the direction is "system to user" with elements of the Metabar.
-	 *       However, navigation from both components can lead to the same page.
-	 *
+	 *       in Elements of the Metabar. The general direction of communication for
+	 *       the Mainbar is "user to system", while the direction is "system to user"
+	 *       with elements of the Metabar. However, navigation from both components
+	 *       can lead to the same page.
 	 *
 	 * context:
 	 *    - The Mainbar is used in the Standard Page.
 	 *
 	 * rules:
 	 *   usage:
-	 *     1: There SHOULD be a Mainbar on the page. Kiosk-Mode is the only exception.
+	 *     1: There SHOULD be a Mainbar on the page.
 	 *     2: If there is a Mainbar, it MUST be unique for the page.
 	 *
 	 *   composition:
@@ -181,10 +180,9 @@ interface Factory {
 	 *
 	 *   interaction:
 	 *     1: >
-	 *        Operating elements in the bar MUST either lead to further
-	 *        navigational options within the bar (open a slate)
-	 *        OR actually invoke navigation, i.e. change the location/content
-	 *        of the current page.
+	 *        Operating elements in the bar MUST either lead to further navigational
+	 *        options within the bar (open a slate) OR actually invoke navigation, i.e.
+	 *        change the location/content of the current page.
 	 *     2: Elements in the bar MUST NOT open a modal or window.
 	 *
 	 * ----
@@ -199,35 +197,34 @@ interface Factory {
 	 * description:
 	 *   purpose: >
 	 *     A Slate is a collection of Components that serve a specific and singular
-	 *     purpose in their entirety.
-	 *     It MUST be possible to subsume this purpose in one Icon/Glyph and one word,
-	 *     for Slates will act as elaboration on one specific concept in ILIAS.
-	 *     Accordingly, Slates depend on a triggering Component controlling their
-	 *     visibility.
-	 *     Slates are not part of the content and will reside next to or over it,
-	 *     and they have a fixed place in the page.
-	 *     Slates will open and close without changing the current context.
+	 *     purpose in their entirety. The purpose can be subsummed in one Icon/Glyph
+	 *     and one word, for Slates will act as elaboration on one specific concept
+	 *     in ILIAS.
 	 *
-	 *     In contrast to purely receptive Components, Slates ususally provide
-	 *     a form of interaction, whereas this interaction may trigger a navigation
-	 *     or alter the contents of the slate itself.
-	 *     However, the usage of a Slate MUST NOT modify persistent content in any way.
+	 *     Accordingly, Slates depend on a component that toggle their visibility.
 	 *
-	 *     Examples: A Help-Screen, where the user can read a certain text and also
-	 *     search available topics via a text-input, or a drill-down navigation,
-	 *     where all siblings of the current level are shown next to a "back"-button.
+	 *     Slates are not part of the content and will reside next to or over it. They
+	 *     will open and close without changing the current context.
 	 *
-	 *     A special case of Slate is the Prompt: while in a common Slate the
-	 *     general direction of communiction is user->system (e.g. navigation),
-	 *     the Prompt is used for communication from the system to the user.
-	 *     These can be, e.g, alerts concerning new mails or the (changed)
-	 *     online status of another learner.
+	 *     In contrast to purely receptive components, Slates usually provide a form
+	 *     of interaction, whereas this interaction may trigger a navigation or alter
+	 *     the contents of the slate itself. However, slates are not meant to modify
+	 *     state of entities in the system in anyway.
+	 *
+	 *     E.g.: A Help-Screen, where the user can read a certain text and also search
+	 *     available topics via a text-input, or a drill-down navigation, where all
+	 *     siblings of the current level are shown next to a "back"-button.
+	 *
+	 *     A special case of Slate is the Prompt: while in a common Slate the general
+	 *     direction of communiction is user to system, a Prompt is used for communication
+	 *     from the system to the user. These can be, e.g, alerts concerning new mails
+	 *     or a change in the online status of another learner.
 	 *
 	 *   composition: >
-	 *     Slates may hold a variety of components. These can be navigational
-	 *     entries, text and images or even other slates.
-	 *     When content-length exceeds the Slate's height, the contents will
-	 *     start scrolling vertically with a scrollbar on the right.
+	 *     Slates may hold a variety of components. These can be navigational entries,
+	 *     text and images or even other slates. When content-length exceeds the Slate's
+	 *     height, the contents will start scrolling vertically with a scrollbar on the
+	 *     right.
 	 *
      *
 	 *   rivals:
@@ -243,10 +240,13 @@ interface Factory {
 	 *
 	 *
 	 * rules:
+	 *   wording:
+	 *     1: It MUST be possible to subsume a slates purpose in one Icon/Glyph and one word.
+	 *
 	 *   usage:
 	 *     1: Slates MUST NOT be used standalone, i.e. without a controlling Component.
 	 *     2: There MUST be only one Slate visible at the same time per triggering Component.
-	 *     3: Elements in the Slate MUST NOT modify content.
+	 *     3: Elements in the Slate MUST NOT modify entities in the system.
 	 *     4: Slates MUST be closeable/expandable without changing context.
 	 *
 	 *   style:
@@ -259,8 +259,8 @@ interface Factory {
 	 *   accessibility:
 	 *     1: The Slate MUST be closeable by only using the keyboard
 	 *     2: >
-	 *        Actions or navigational elements offered inside a Slate
-	 *        MUST be accessible by only using the keyboard
+	 *        Actions or navigational elements offered inside a Slate MUST be accessible
+	 *        by only using the keyboard
 	 *     3: A Slate MUST set the aria-hidden attribute.
 	 *
 	 * ----

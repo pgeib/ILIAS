@@ -10,13 +10,11 @@ use ILIAS\UI\Component\Component;
 use ILIAS\UI\Component\Icon\Icon;
 use ILIAS\UI\Component\Glyph\Glyph;
 
-
 /**
  * This describes a Slate
  */
 interface Slate extends Component, JavaScriptBindable
 {
-
 	public function getName(): string;
 
 	/**

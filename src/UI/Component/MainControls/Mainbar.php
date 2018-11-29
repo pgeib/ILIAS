@@ -60,7 +60,6 @@ interface Mainbar extends \ILIAS\UI\Component\Component, JavaScriptBindable
 
 	public function getToolsLabel(): string;
 
-
 	public function getEntryClickSignal(): Signal;
 
 	public function getToolsClickSignal(): Signal;

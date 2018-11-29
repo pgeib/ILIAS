@@ -9,7 +9,7 @@ use ILIAS\UI\Factory;
 use ILIAS\UI\Component\Counter\Counter;
 
 /**
- * Prompt
+ * Prompts are notifications from the system to the user.
  */
 abstract class Prompt extends Slate implements ISlate\Prompt
 {
