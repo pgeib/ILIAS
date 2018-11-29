@@ -16056,6 +16056,12 @@ fixes width-issue when option-texts within select boxes are too long
     font-size: .95rem;
   }
 }
+/* TMS-1886 long title line-breaking */
+.ilNewObjectSelector .dropdown-menu li > a {
+  white-space: normal;
+  text-indent: -30px;
+  padding-left: 40px;
+}
 /*
 *******************
 no display items
