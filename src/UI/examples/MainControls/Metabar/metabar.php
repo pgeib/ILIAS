@@ -14,8 +14,6 @@ function buildMetabar($f)
 	require_once('src/UI/examples/MainControls/Slate/Notification/notification.php');
 	require_once('src/UI/examples/MainControls/Slate/Awareness/awareness.php');
 
-	$logo = $f->image()
-		->responsive("src/UI/examples/Image/HeaderIconLarge.svg", "ILIAS");
 
 	$search = $f->maincontrols()->slate()
 		->search('search', $f->glyph()->search());
@@ -28,7 +26,7 @@ function buildMetabar($f)
 
 	$awareness = buildAwareness($f);
 
-	$metabar = $f->mainControls()->metabar($logo)
+	$metabar = $f->mainControls()->metabar()
 		->withEntry('search', $search)
 		->withEntry('help', $help)
 		->withEntry('notifications', $notifications)
