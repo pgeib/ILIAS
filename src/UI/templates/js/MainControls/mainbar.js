@@ -96,6 +96,7 @@ il.UI.maincontrols = il.UI.maincontrols || {};
 				_setToolsActive(false);
 				_disengageButton(btn);
 			} else {
+				_disengageAllButtons();
 				_setPageSlatesActive(true);
 				_setToolsActive(true);
 				_engageButton(btn);
