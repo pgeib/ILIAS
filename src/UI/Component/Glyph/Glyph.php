@@ -47,7 +47,6 @@ interface Glyph extends \ILIAS\UI\Component\Component, \ILIAS\UI\Component\JavaS
 	const SEARCH = "search";
 	const HELP = "help";
 
-
 	/**
 	 * Get the type of the glyph.
 	 *
