@@ -804,7 +804,7 @@ interface Factory {
 	 * ---
 	 * description:
 	 *   purpose: >
-     *      The Apply Glyph is used to indicate the possibilty of applying changes which the user has made
+	 *      The Apply Glyph is used to indicate the possibilty of applying changes which the user has made
 	 *      within a control, i.e. a filter.
 	 *   composition: >
 	 *      The Apply Glyph uses the glyphicon-ok.
@@ -874,7 +874,7 @@ interface Factory {
 	 *   effect: >
 	 *       Clicking this glyph will open a search dialog.
 	 *       Since the context for the Search Glyph primarily is the Metabar,
-	 *       the according search dialog will be opened as Tool in the Sidebar.
+	 *       the according search dialog will be opened as Tool in the Mainbar.
 	 *
 	 * context:
 	 *    - The Search Glyph appears in the Metabar.

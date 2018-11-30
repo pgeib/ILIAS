@@ -266,7 +266,6 @@ class Renderer extends AbstractComponentRenderer {
 		}
 	}
 
-
 	protected function additionalRenderBulky(Component\Button\Button $component, RendererInterface $default_renderer, $tpl) {
 		$renderer = $default_renderer->withAdditionalContext($component);
 		$tpl->setVariable("ICON_OR_GLYPH", $renderer->render($component->getIconOrGlyph()));

@@ -85,7 +85,10 @@ interface Factory
 	 *      Opening a Combined Slate will display its contained Slates with an
 	 *      operating Bulky Button for closing/expanding.
 	 *      Clicking on a Button not connected to a Slate will carry out its action.
- 	 *
+	 *
+	 * context:
+	 *     - The Combined Slate is used in the Mainbar.
+	 *
 	 * ----
 	 *
 	 * @param string $name

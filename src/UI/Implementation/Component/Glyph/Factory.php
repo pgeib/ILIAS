@@ -231,12 +231,14 @@ class Factory implements G\Factory {
 	public function logout($action = null) {
 		return new Glyph(G\Glyph::LOGOUT, "log-out", $action);
 	}
+
 	/**
 	 * @inheritdoc
 	 */
 	public function search($action = null) {
 		return new Glyph(G\Glyph::SEARCH, "search", $action);
 	}
+
 	/**
 	 * @inheritdoc
 	 */
