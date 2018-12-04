@@ -127,18 +127,25 @@ header {
 	grid-row: 1;
 }
 
+// head-container with logo and metabar
 .header-inner {
 	.shadow-bottom();
-	align-items: center;
+    align-items: center;
     background: #fff;
     display: flex;
     flex-direction: row;
-	grid-area: header;
-	height: @height-header;
-	padding: 0 15px;
-	position: fixed;
-	width: 100%;
-	z-index: 2;
+    height: 75px;
+    padding: 0 15px;
+    position: fixed;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+}
+
+// logo-container
+.il-logo {
+    width: 40px;
 }
 
 /* breadcrumbs */
