@@ -31,7 +31,7 @@ function getSomeEntries($f)
 	$tools = [];
 
 	//add a slate
-	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
 	$slate = $f->maincontrols()->slate()->legacy('Legacy', $symbol, 'legacy content');
 	$entries['example1'] = $slate;
 
@@ -48,7 +48,7 @@ function getSomeEntries($f)
 		->withEntry($slate3_2)
 		->withEntry($button->withLabel('Button 3.3'));
 
-	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-cockpit.svg', '');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-cockpit.svg', '')->withSize('medium');
 	$slate = $f->maincontrols()->slate()->combined('Combined', $symbol)
 		->withEntry($button)
 		->withEntry($button->withLabel('Button 2'))
@@ -62,19 +62,19 @@ function getSomeEntries($f)
 	$entries['example2'] = $slate;
 
 	//add a button
-	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-more.svg', '');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-more.svg', '')->withSize('medium');
 	$entries['extra'] = $f->button()->bulky($symbol,'Extra', '#');
 
 	//add tool(slate)
-	$symbol = $f->icon()->standard('', 'Tool 1')->withAbbreviation('T1');
+	$symbol = $f->icon()->standard('', 'Tool 1')->withAbbreviation('T1')->withSize('medium');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 1', $symbol, 'tool 1');
 	$tools['tool1'] = $slate;
 
-	$symbol = $f->icon()->standard('', 'Tool 2')->withAbbreviation('T2');
+	$symbol = $f->icon()->standard('', 'Tool 2')->withAbbreviation('T2')->withSize('medium');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 2', $symbol, 'tool 2');
 	$tools['tool2'] = $slate;
 
-	$symbol = $f->icon()->standard('', 'Tool 3')->withAbbreviation('T3');
+	$symbol = $f->icon()->standard('', 'Tool 3')->withAbbreviation('T3')->withSize('medium');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 3', $symbol, 'tool 3');
 	$tools['tool3'] = $slate;
 
