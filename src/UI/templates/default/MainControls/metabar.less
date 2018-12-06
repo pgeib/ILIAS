@@ -3,10 +3,27 @@
     justify-content: space-between;
     align-items: center;
 	.il-metabar-entries {
+		align-items: center;
 		display: flex;
-		.metabar-entry,
+		height: @height-header;
+		.il-metabar-entry,
 		.il-logout {
 			padding-left: 10px;
+		}
+	}
+}
+
+.il-metabar-entry {
+	.il-counter-status {
+		margin-top: 0;
+	}
+	.btn-bulky {
+		background-color: transparent;
+		& > div > .bulky-label {
+			display: none; // not display labels
+		}
+		.glyph {
+			font-size: 2rem;
 		}
 	}
 }
