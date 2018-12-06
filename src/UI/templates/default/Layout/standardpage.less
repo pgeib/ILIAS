@@ -38,6 +38,10 @@ important for calculating the scrollable area inside mainbar slates
 	box-shadow: @shadow-bottom;
 }
 
+// paddings
+@padding-content: 20px;
+
+
 /* IE10+ not supported
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
 	.il-layout-page {
@@ -157,6 +161,7 @@ header {
 	.shadow-bottom();
 	ul.breadcrumb {
 		background-color: #fff; /* MOVE */
+		padding-left: @trigger-width + @padding-content;
 	}
 }
 
