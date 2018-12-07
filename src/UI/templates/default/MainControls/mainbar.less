@@ -38,7 +38,7 @@
 	}
 
 	&.engaged {
-		background: #ffffff;
+		background: @bg-maincontrols;
 	}
 }
 
@@ -63,6 +63,14 @@
 	display:none;
 	&.engaged {
 		display: block;
+	}
+	.btn-bulky {
+		background-color: lighten(@brand-primary, 25%);
+		color: @mainbar-btn-color;
+		&.engaged {
+			background-color: @bg-maincontrols;
+			color: @mainbar-btn-color-engaged;
+		}
 	}
 }
 

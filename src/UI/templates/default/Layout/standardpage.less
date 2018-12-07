@@ -11,7 +11,12 @@ important for calculating the scrollable area inside mainbar slates
 
 @trigger-height: 80px;
 @trigger-width: 80px;
+@mainbar-btn-height: 80px;
+@mainbar-btn-width: 80px;
 @trigger-border: 1px solid rgba(255, 255, 255, .5);
+@mainbar-btn-color: #fff;
+@mainbar-btn-color-engaged: #4a4a4a;
+
 @slate-width: 400px;
 @bg-maincontrols: #fff;
 @bg-mainbar: #4a4a4a;
@@ -92,7 +97,7 @@ grid-based layout
 	background: @body-bg; /* MOVE */
 	display: grid;
 	grid-gap: 0px;
-    grid-template-columns: @trigger-width 1fr;
+    grid-template-columns: @mainbar-btn-width 1fr;
     grid-template-rows: @height-header @height-breadcrumbs 1fr @height-footer;
     /* // not supported in IE, use track-line instead
 	grid-template-areas:
@@ -110,9 +115,9 @@ grid-based layout
 		}
 	}
 	&.with-engaged-slates {
-		grid-template-columns: @slate-width + @trigger-width 1fr;
+		grid-template-columns: @slate-width + @mainbar-btn-width 1fr;
 		.il-maincontrols-mainbar {
-			width: @slate-width + @trigger-width;
+			width: @slate-width + @mainbar-btn-width;
 			transition: all .3s;
 			// slate
 			.il-mainbar-slates {
@@ -171,7 +176,7 @@ header {
 	z-index: 999;
 	.shadow-bottom();
 	ul.breadcrumb {
-		padding-left: @trigger-width + @padding-content;
+		padding-left: @mainbar-btn-width + @padding-content;
 	}
 }
 
@@ -187,9 +192,9 @@ nav.il-maincontrols {
 	background-color: @bg-maincontrols;
 	display: grid;
 	height: 100%;
-	grid-template-columns: @trigger-width @slate-width;
+	grid-template-columns: @mainbar-btn-width @slate-width;
 	// grid-template-rows: 1fr 40px;
-	width: @trigger-width;
+	width: @mainbar-btn-width;
 	&.engaged {
 
 	}
@@ -214,14 +219,14 @@ nav.il-maincontrols {
 }
 
 .il-mainbar-tools-button button {
-	height:@trigger-height;
-	width: @trigger-width;
+	height:@mainbar-btn-height;
+	width: @mainbar-btn-width;
 }
 
 .il-mainbar-tools-entries {
 	button {
-		height:@trigger-height;
-		width: @trigger-width;
+		height:@mainbar-btn-height;
+		width: @mainbar-btn-width;
 	}
 	&.engaged {
 		display: flex;
