@@ -66,15 +66,15 @@ function getSomeEntries($f)
 	$entries['extra'] = $f->button()->bulky($symbol,'Extra', '#');
 
 	//add tool(slate)
-	$symbol = $f->icon()->standard('', 'Tool 1')->withAbbreviation('T1')->withSize('medium');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-cockpit.svg', '')->withSize('medium');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 1', $symbol, 'tool 1');
 	$tools['tool1'] = $slate;
 
-	$symbol = $f->icon()->standard('', 'Tool 2')->withAbbreviation('T2')->withSize('medium');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 2', $symbol, 'tool 2');
 	$tools['tool2'] = $slate;
 
-	$symbol = $f->icon()->standard('', 'Tool 3')->withAbbreviation('T3')->withSize('medium');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 3', $symbol, 'tool 3');
 	$tools['tool3'] = $slate;
 
