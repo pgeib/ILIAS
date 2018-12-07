@@ -26,8 +26,11 @@
 			background-color: @brand-primary;
 			background-color: @il-secondary-container-bg;
 			*/
-			background-color: fade(@brand-primary, 50%); /* MOVE */
+			background-color: @bg-mainbar-engaged;
 			color: @bg-mainbar;
+			img {
+				filter: invert(50%);
+			}
 		}
 		&:focus {
 			outline: none;
@@ -46,9 +49,27 @@
 	display: none;
 }
 
+.il-mainbar-tools-button {
+	.btn-bulky,
+	.btn-bulky.engaged {
+		background-color: lighten(@brand-primary, 45%);
+		img {
+			filter: invert(60%);
+		}
+	}
+}
+
 .il-mainbar-tools-entries {
 	display:none;
 	&.engaged {
 		display: block;
+	}
+}
+
+.il-mainbar-remove-tool {
+	.close {
+	    font-size: 5rem;
+	    font-weight: 300;
+	    color: @brand-primary;
 	}
 }
