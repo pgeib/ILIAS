@@ -13,8 +13,11 @@ important for calculating the scrollable area inside mainbar slates
 @trigger-width: 80px;
 @trigger-border: 1px solid rgba(255, 255, 255, .5);
 @slate-width: 400px;
+@bg-maincontrols: #fff;
 @bg-mainbar: #4a4a4a;
 @bg-mainbar-engaged: #fff;
+@bg-header: #fff;
+@bg-breadcrumbs: #fff;
 @logo-height: 45px;
 @logo-width: 45px;
 
@@ -139,7 +142,7 @@ header {
 // head-container with logo and metabar
 .header-inner {
     align-items: center;
-    background: #fff;
+    background: @bg-header;
     display: flex;
     flex-direction: row;
     height: @height-header;
@@ -158,13 +161,13 @@ header {
 
 /* breadcrumbs */
 .breadcrumbs {
+	background-color: @bg-breadcrumbs;
 	grid-column-start: 1;
 	grid-column-end: 3;
 	grid-row: 2;
 	z-index: 999;
 	.shadow-bottom();
 	ul.breadcrumb {
-		background-color: #fff; /* MOVE */
 		padding-left: @trigger-width + @padding-content;
 	}
 }
@@ -178,7 +181,7 @@ nav {
 
 // Subgrid mainbar
 .il-maincontrols-mainbar {
-	background: #fff;
+	background-color: @bg-maincontrols;
 	display: grid;
 	height: 100%;
 	grid-template-columns: @trigger-width @slate-width;
