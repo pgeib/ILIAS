@@ -11,7 +11,7 @@ important for calculating the scrollable area inside mainbar slates
 
 @mainbar-btn-height: 80px;
 @mainbar-btn-width: 80px;
-@mainbar-btn-border: 1px solid rgba(255, 255, 255, .5);
+@mainbar-btn-border: 1px solid #ddd;
 @mainbar-btn-color: #fff;
 @mainbar-btn-color-engaged: #4a4a4a;
 
@@ -21,8 +21,11 @@ important for calculating the scrollable area inside mainbar slates
 @bg-mainbar-engaged: #fff;
 @bg-header: #fff;
 @bg-breadcrumbs: #fff;
+
 @logo-height: 45px;
 @logo-width: 45px;
+
+@close-slate-btn-height: 45px;
 
 // shadows
 @shadow-color: #ccc;
@@ -122,11 +125,14 @@ grid-based layout
 				display: flex;
 				flex-direction: column;
 				// height: calc(~"100vh - " @height-header-footer);
-				overflow-y: auto;
+				.il-maincontrols-slate {
+					overflow-y: auto;
+				}
 			}
 			// slate remove
 			.il-mainbar-close-slates {
-				display: block;
+				display: flex;
+				height: @close-slate-btn-height;
 			}
 		}
 	}

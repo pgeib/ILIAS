@@ -77,9 +77,18 @@
 }
 
 .il-mainbar-close-slates {
+	align-items: center;
 	.btn-bulky {
 		background-color: transparent;
 		border-top: @mainbar-btn-border;
+		display: flex;
+		flex-direction: row;
+		height: @close-slate-btn-height;
+		justify-content: flex-end;
+		align-items: center;
+		.bulky-label {
+			display: none;
+		}
 	}
 }
 
