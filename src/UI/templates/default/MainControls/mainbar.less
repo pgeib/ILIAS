@@ -3,11 +3,11 @@
 .il-mainbar-triggers {
 	background: @bg-mainbar;
 	position: relative;
-	width: @trigger-width;
+	width: @mainbar-btn-width;
 	z-index: 1;
 	.btn-bulky {
-		height: @trigger-height;
-		width: @trigger-height;
+		height: @mainbar-btn-height;
+		width: @mainbar-btn-height;
 		justify-content: center;
 		font-size: 1rem;
 		padding: 0;
@@ -17,7 +17,7 @@
 		width: 100%;
 		border: 0;
 		background: @bg-mainbar;
-		border-bottom: @trigger-border;
+		border-bottom: @mainbar-btn-border;
 		color: @bg-mainbar-engaged;
 		&.engaged {
 			/*
@@ -53,6 +53,8 @@
 	.btn-bulky,
 	.btn-bulky.engaged {
 		background-color: lighten(@brand-primary, 45%);
+		border: 0;
+		color: @mainbar-btn-color-engaged;
 		img {
 			filter: invert(60%);
 		}
@@ -71,6 +73,13 @@
 			background-color: @bg-maincontrols;
 			color: @mainbar-btn-color-engaged;
 		}
+	}
+}
+
+.il-mainbar-close-slates {
+	.btn-bulky {
+		background-color: transparent;
+		border-top: @mainbar-btn-border;
 	}
 }
 
