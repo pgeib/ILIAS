@@ -27,6 +27,9 @@ important for calculating the scrollable area inside mainbar slates
 
 @close-slate-btn-height: 45px;
 
+
+// border
+@light-border: #ddd;
 // shadows
 @shadow-color: #ccc;
 @inner-top-shadow: inset 0 5px 9px -5px @shadow-color;
@@ -149,7 +152,7 @@ header {
 // head-container with logo and metabar
 .header-inner {
     align-items: center;
-    background: @bg-header;
+    background: @bg-header; /* style move */
     display: flex;
     flex-direction: row;
     height: @height-header;
@@ -169,14 +172,15 @@ header {
 /* breadcrumbs */
 .breadcrumbs {
 	align-items: center;
-	background-color: @bg-breadcrumbs;
+	background-color: @bg-breadcrumbs; /* style move */
+	border-top: 1px solid @light-border; /* style move */
 	display: flex;
 	flex-direction: row;
 	grid-column-start: 1;
 	grid-column-end: 3;
 	grid-row: 2;
 	z-index: 997;
-	.shadow-bottom();
+	.shadow-bottom(); /* style move */
 	ul.breadcrumb {
 		padding-left: @mainbar-btn-width + @padding-content;
 	}
