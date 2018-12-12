@@ -129,7 +129,9 @@ grid-based layout
 			/* transition: all .3s; */
 			// slate
 			.il-mainbar-slates {
+				display: -ms-flexbox;
 				display: flex;
+				-ms-flex-direction: column;
 				flex-direction: column;
 				// height: calc(~"100vh - " @height-header-footer);
 				.il-maincontrols-slate {
@@ -138,6 +140,7 @@ grid-based layout
 			}
 			// show slate remove btn
 			.il-mainbar-close-slates {
+				display: -ms-flexbox;
 				display: flex;
 			}
 		}
@@ -157,16 +160,19 @@ header {
 
 // head-container with logo and metabar
 .header-inner {
+	-ms-flex-align: center;
     align-items: center;
     background: @bg-header; /* style move */
+	display: -ms-flexbox;
     display: flex;
+	-ms-flex-direction: row;
     flex-direction: row;
     height: @height-header;
     padding: 0 15px;
     position: fixed;
     width: 100%;
+	-ms-flex-pack: justify;
     justify-content: space-between;
-    align-items: center;
 	// .shadow-bottom();
 }
 
@@ -177,10 +183,13 @@ header {
 
 /* breadcrumbs */
 .breadcrumbs {
+	-ms-flex-align: center;
 	align-items: center;
 	background-color: @bg-breadcrumbs; /* style move */
 	border-top: 1px solid @light-border; /* style move */
+	display: -ms-flexbox;
 	display: flex;
+	-ms-flex-direction: row;
 	flex-direction: row;
 	-ms-grid-column: 1;
 	-ms-grid-column-span: 2;
@@ -226,7 +235,9 @@ nav.il-maincontrols {
 
 // tools section
 .il-mainbar-tools-button {
+	display: -ms-flexbox;
     display: flex;
+	-ms-flex-direction: row;
     flex-direction: row;
 }
 
@@ -241,7 +252,9 @@ nav.il-maincontrols {
 		width: @mainbar-btn-width;
 	}
 	&.engaged {
+		display: -ms-flexbox;
 		display: flex;
+		-ms-flex-direction: row;
 		flex-direction: row;
 	}
 }
