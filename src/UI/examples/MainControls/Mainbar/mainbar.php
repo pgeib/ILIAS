@@ -32,7 +32,8 @@ function getSomeEntries($f)
 
 	//add a slate
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
-	$slate = $f->maincontrols()->slate()->legacy('Legacy', $symbol, 'legacy content');
+	$symbol2 = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
+	$slate = $f->maincontrols()->slate()->legacy('Legacy', $symbol, 'legacy content bal');
 	$entries['example1'] = $slate;
 
 	//a slate with buttons and more slates
@@ -40,7 +41,7 @@ function getSomeEntries($f)
 	$button = $f->button()->bulky($icon, 'Button 1', '#');
 
 	$slate1 = $f->maincontrols()->slate()->legacy('Legacy 1', $symbol, 'legacy content1');
-	$slate2 = $f->maincontrols()->slate()->legacy('Legacy 2', $symbol, 'legacy content 2');
+	$slate2 = $f->maincontrols()->slate()->legacy('Legacy 2', $symbol2, 'legacy content 2');
 	$slate3_1 = $f->maincontrols()->slate()->legacy('Legacy 3.1', $symbol, 'legacy content 3.1');
 	$slate3_2 = $f->maincontrols()->slate()->legacy('Legacy 3.2', $symbol, 'legacy content 3.2');
 	$slate3 = $f->maincontrols()->slate()->combined('SubSlates', $symbol)
