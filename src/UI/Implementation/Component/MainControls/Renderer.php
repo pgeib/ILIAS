@@ -119,7 +119,8 @@ class Renderer extends AbstractComponentRenderer {
 		Signal $entry_signal,
 		string $block,
 		array $entries,
-		string $active = null
+		string $active = null,
+		bool $slate_is_contained_in_entry = false
 	) {
 		foreach ($entries as $id=>$entry) {
 
@@ -146,9 +147,12 @@ class Renderer extends AbstractComponentRenderer {
 
 			$tpl->setCurrentBlock($block);
 			$tpl->setVariable("BUTTON", $default_renderer->render($button));
+			if($slate && $slate_is_contained_in_entry) {
+				$tpl->setVariable("SLATE", $default_renderer->render($slate));
+			}
 			$tpl->parseCurrentBlock();
 
-			if($slate) {
+			if($slate && $slate_is_contained_in_entry === false) {
 				$tpl->setCurrentBlock("slate_item");
 				$tpl->setVariable("SLATE", $default_renderer->render($slate));
 				$tpl->parseCurrentBlock();
@@ -165,7 +169,8 @@ class Renderer extends AbstractComponentRenderer {
 			$tpl, $default_renderer, $entry_signal,
 			static::BLOCK_METABAR_ENTRIES,
 			$component->getEntries(),
-			$active
+			$active,
+			true
 		);
 
 		$component = $component->withOnLoadCode(
