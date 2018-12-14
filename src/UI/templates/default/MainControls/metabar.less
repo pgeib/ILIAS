@@ -20,19 +20,46 @@
 	}
 	.btn-bulky {
 		background-color: transparent;
+		height: @height-metabar-entry;
+		min-width: @width-metabar-entry;
 		& > div > .bulky-label {
 			display: none; // not display labels
+		}
+		&.engaged,
+		&.engaged:focus {
+			.shadow-right;
+			background-color: @bg-metabar-slates;
+			border: none;
+			color: initial;
+			outline-color: transparent;
 		}
 		.glyphicon {
 			color: @glyph-color;
 			font-size: @glyph-size;
 		}
 	}
+	.glyphicon {
+	    font-family: 'il-icons';
+	    width: @glyph-size;
+	}
+	.glyphicon-bell:before {
+	    content: "\e858";
+	}
+	.glyphicon-question-sign:before {
+	    content: "\e87d";
+	}
+	.glyphicon-search:before {
+	    content: "\e86f";
+	}
+	.glyphicon-user:before {
+	    content: "\e82a";
+	}
 }
 
 .il-metabar-slates {
-    background: @bg-metabar-slates;
-	min-width: 150px;
+	.shadow-right;
+    background-color: @bg-metabar-slates;
+	min-width: 250px;
 	position: absolute;
 	right: 0;
 }

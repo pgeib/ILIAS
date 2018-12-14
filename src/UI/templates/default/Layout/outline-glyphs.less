@@ -33,14 +33,24 @@ glyphicon-cog<!-- END settings -->
 <!-- BEGIN search --> glyphicon-search<!-- END search -->
 */
 
-// override all glyphicon classes with outline icons!
+// override all glyphicon classes with outline icon-font!
 
-/*
+/* temporarily overrides only for metabar in metabar.less
 .glyphicon {
     display: block;
+    font-family: 'il-icons';
     width: @glyph-size;
 }
+.glyphicon-bell {
+    content: "\e858";
+}
 .glyphicon-question-sign {
-    backgound-image url("...");
+    content: "\e87d";
+}
+.glyphicon-search {
+    content: "\e86f";
+}
+.glyphicon-user {
+    content: "\e82a";
 }
 */
