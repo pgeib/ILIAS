@@ -18,13 +18,15 @@
 	.il-counter-status {
 		margin-top: 0;
 	}
+	// no display labels in metabar level 1
+	> .btn-bulky > div > .bulky-label {
+		display: none;
+	}
 	.btn-bulky {
 		background-color: transparent;
 		height: @height-metabar-entry;
 		min-width: @width-metabar-entry;
-		& > div > .bulky-label {
-			display: none; // not display labels
-		}
+
 		&.engaged,
 		&.engaged:focus {
 			.shadow-right;
@@ -44,6 +46,12 @@
 	}
 	.glyphicon-bell:before {
 	    content: "\e858";
+	}
+	.glyphicon-comment:before {
+	    content: "\e83f";
+	}
+	.glyphicon-envelope:before {
+	    content: "\e818";
 	}
 	.glyphicon-question-sign:before {
 	    content: "\e87d";
