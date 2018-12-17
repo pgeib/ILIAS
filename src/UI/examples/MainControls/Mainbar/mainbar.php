@@ -30,7 +30,7 @@ function getSomeEntries($f)
 	//a slate with buttons and more slates
 	$icon = $f->icon()->standard('', '')->withSize('medium')->withAbbreviation('X');
 	$button = $f->button()->bulky($icon, 'Button 1', '#');
-	$slate1 = $f->maincontrols()->slate()->legacy('Short Legacy', $symbol, 'legacy content');
+	$slate1 = $f->maincontrols()->slate()->legacy('Short Legacy', $symbol, '<h2>legacy content</h2>');
 	$slate2 = $f->maincontrols()->slate()->legacy('Long Legacy', $symbol, loremIpsum());
 	$slate3_1 = $f->maincontrols()->slate()->legacy('Legacy 3.1', $symbol, 'legacy content 3.1');
 	$slate3_2 = $f->maincontrols()->slate()->legacy('Legacy 3.2 - long', $symbol, loremIpsum(9));
@@ -55,10 +55,10 @@ function getSomeEntries($f)
 	$entries['extra'] = $f->button()->bulky($symbol,'Extra', '#');
 	//add tool(slate)
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-cockpit.svg', '')->withSize('medium');
-	$slate = $f->maincontrols()->slate()->legacy('Tool 1', $symbol, 'tool 1');
+	$slate = $f->maincontrols()->slate()->legacy('Tool 1', $symbol, '<h2>tool 1</h2><p>Some Text for Tool 1 entry</p>');
 	$tools['tool1'] = $slate;
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
-	$slate = $f->maincontrols()->slate()->legacy('Tool 2', $symbol, 'tool 2');
+	$slate = $f->maincontrols()->slate()->legacy('Tool 2', $symbol, '<h2>tool 2</h2><p>Some Text for Tool 1 entry</p>');
 	$tools['tool2'] = $slate;
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 3', $symbol, loremIpsum());
