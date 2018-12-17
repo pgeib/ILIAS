@@ -1,11 +1,11 @@
 <?php
 function buildAwareness($f) {
 	$contents = array(
-		$f->legacy('<b>AwarenessTool</b>'),
+		$f->legacy('<h3>AwarenessTool</h3>'),
 		$f->divider()->horizontal(),
-		$f->legacy('something that wants your attention'),
+		$f->legacy('<p>something that wants your attention</p>'),
 		$f->divider()->horizontal(),
-		$f->legacy('something else that wants your attention')
+		$f->legacy('<p>something else that wants your attention</p>')
 	);
 
 	return $f->maincontrols()->slate()
