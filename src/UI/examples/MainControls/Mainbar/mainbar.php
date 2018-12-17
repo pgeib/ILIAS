@@ -61,7 +61,7 @@ function getSomeEntries($f)
 	$slate = $f->maincontrols()->slate()->legacy('Tool 2', $symbol, 'tool 2');
 	$tools['tool2'] = $slate;
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
-	$slate = $f->maincontrols()->slate()->legacy('Tool 3', $symbol, 'tool 3');
+	$slate = $f->maincontrols()->slate()->legacy('Tool 3', $symbol, loremIpsum());
 	$tools['tool3'] = $slate;
 	return [$entries, $tools];
 }
