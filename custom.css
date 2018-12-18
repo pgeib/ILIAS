@@ -15675,13 +15675,19 @@ Presentation Table Styling
   color: #777;
   position: relative;
 }
+.il-table-presentation-viewcontrols .il-viewcontrol-quickfilter.engaged button.btn-default {
+  border-bottom: 2px solid #4c6586;
+}
 .il-table-presentation-viewcontrols div.il-viewcontrol-pagination {
   display: block;
   text-align: center;
   margin-top: 15px;
 }
 .il-table-presentation-viewcontrols div.il-viewcontrol-pagination .dropdown-menu {
-  min-width: auto;
+  min-width: 100%;
+}
+.il-table-presentation-viewcontrols div.il-viewcontrol-pagination .dropdown-menu .btn {
+  text-align: center;
 }
 .il-table-presentation-viewcontrols div.il-viewcontrol-pagination .rocker .glyphicon-chevron-left:before {
   content: "\e90a";
