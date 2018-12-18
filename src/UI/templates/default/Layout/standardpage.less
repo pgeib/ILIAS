@@ -109,8 +109,8 @@ grid-based layout
 	grid-gap: 0px;
 	-ms-grid-columns: @mainbar-btn-width 1fr;
     grid-template-columns: @mainbar-btn-width 1fr;
-	-ms-grid-rows: @height-header @height-breadcrumbs 1fr @height-footer;
-    grid-template-rows: @height-header @height-breadcrumbs 1fr @height-footer;
+	-ms-grid-rows: @height-header @height-breadcrumbs 1fr;
+    grid-template-rows: @height-header @height-breadcrumbs 1fr;
     /* // not supported in IE, use track-line instead
 	grid-template-areas:
     "header header"
@@ -317,16 +317,4 @@ main {
 	grid-row: 3;
 	overflow: auto;
 	padding: 20px;
-}
-
-/* Footer */
-footer {
-	background-color: @brand-primary;
-	-ms-grid-column: 1;
-	-ms-grid-column-span: 2;
-	-ms-grid-row: 4;
-	grid-column-start: 1;
-	grid-column-end: 3;
-	grid-row: 4;
-	z-index: 999;
 }
