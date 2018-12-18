@@ -190,8 +190,8 @@ header {
 .breadcrumbs {
 	-ms-flex-align: center;
 	align-items: center;
-	background-color: @bg-breadcrumbs; /* style move */
-	border-top: 1px solid @light-border; /* style move */
+	background-color: @bg-breadcrumbs; /* move style */
+	border-top: 1px solid @light-border; /* move style */
 	display: -ms-flexbox;
 	display: flex;
 	-ms-flex-direction: row;
@@ -203,9 +203,13 @@ header {
 	grid-column-end: 3;
 	grid-row: 2;
 	z-index: 997;
-	.shadow-bottom(); /* style move */
+	.shadow-bottom(); /* move style */
 	ul.breadcrumb {
 		padding-left: @mainbar-btn-width + @padding-content;
+		&>li+li:before {
+			content: " \e876"; /* move style */
+			font-family: "il-icons"; /* move style */
+		}
 	}
 }
 
