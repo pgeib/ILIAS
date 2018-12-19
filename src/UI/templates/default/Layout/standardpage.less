@@ -6,11 +6,7 @@
 @height-metabar-entry: @height-header;
 @width-metabar-entry: @height-header;
 
-/*
-height of areas outside mainbar -
-important for calculating the scrollable area inside mainbar slates
-*/
-@height-header-footer: ((@height-header + @height-footer)*1);
+@height-header-footer: ((@height-header + @height-footer)*1); // should be obsolete
 
 @mainbar-btn-height: 80px;
 @mainbar-btn-width: 80px;
@@ -25,6 +21,7 @@ important for calculating the scrollable area inside mainbar slates
 @bg-mainbar-engaged: #fff;
 @bg-header: #fff;
 @bg-breadcrumbs: #fff;
+@breadcrumb-divider-color: #bbb;
 @bg-metabar-slates: #fafafa;
 
 @logo-height: 45px;
@@ -60,7 +57,7 @@ important for calculating the scrollable area inside mainbar slates
 }
 
 // paddings
-@padding-content: 20px;
+@padding-content: 20px; // use BS variable
 
 
 /* IE10+ not supported
@@ -205,9 +202,10 @@ header {
 	z-index: 997;
 	.shadow-bottom(); /* move style */
 	ul.breadcrumb {
-		padding-left: @mainbar-btn-width + @padding-content;
+		padding-left: @mainbar-btn-width + @padding-content; // move style
 		&>li+li:before {
 			content: " \e876"; /* move style */
+			color: @breadcrumb-divider-color;
 			font-family: "il-icons"; /* move style */
 		}
 	}
