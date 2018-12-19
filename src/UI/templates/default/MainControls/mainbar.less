@@ -1,7 +1,7 @@
-
 // mainbar triggers
 .il-mainbar-triggers {
 	background: @bg-mainbar;
+	display: flex;
 	position: relative;
 	width: @mainbar-btn-width;
 	z-index: 1;
@@ -9,7 +9,7 @@
 		height: @mainbar-btn-height;
 		width: @mainbar-btn-height;
 		justify-content: center;
-		font-size: 1rem;
+		font-size: .9rem;
 		padding: 0;
 		display: inline-flex;
 		flex-flow: column wrap;
@@ -19,13 +19,10 @@
 		background: @bg-mainbar;
 		border-bottom: @mainbar-btn-border;
 		color: @bg-mainbar-engaged;
+		img {
+			filter: invert(100%);
+		}
 		&.engaged {
-			/*
-			background-color: @bg-mainbar-engaged;
-			background-color: @il-glyph-highlighted-hover-color;
-			background-color: @brand-primary;
-			background-color: @il-secondary-container-bg;
-			*/
 			background-color: @bg-mainbar-engaged;
 			color: @bg-mainbar;
 			img {
@@ -35,8 +32,12 @@
 		&:focus {
 			outline: none;
 		}
+		.bulky-label {
+			white-space: normal;
+			margin-top: 5px;
+    		display: block;
+		}
 	}
-
 	&.engaged {
 		background: @bg-maincontrols;
 	}
@@ -99,7 +100,7 @@
 		}
 		.glyph {
 			&:before {
-				content:" \e875";
+				content:" \e605";
 				display: block;
 				font-family: "il-icons"; // should be defined more general at .glyphicon
 				font-size: 2.1rem;

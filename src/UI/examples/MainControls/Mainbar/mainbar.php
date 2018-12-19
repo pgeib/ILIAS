@@ -24,11 +24,11 @@ function getSomeEntries($f)
 	$entries = [];
 	$tools = [];
 	//add a slate
-	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
-	$slate = $f->maincontrols()->slate()->legacy('Legacy', $symbol, loremIpsum());
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/layers.svg', '')->withSize('small');
+	$slate = $f->maincontrols()->slate()->legacy('Repository', $symbol, loremIpsum());
 	$entries['example1'] = $slate;
 	//a slate with buttons and more slates
-	$icon = $f->icon()->standard('', '')->withSize('medium')->withAbbreviation('X');
+	$icon = $f->icon()->standard('', '')->withSize('small')->withAbbreviation('X');
 	$button = $f->button()->bulky($icon, 'Button 1', '#');
 	$slate1 = $f->maincontrols()->slate()->legacy('Short Legacy', $symbol, '<h2>legacy content</h2>');
 	$slate2 = $f->maincontrols()->slate()->legacy('Long Legacy', $symbol, loremIpsum());
@@ -38,8 +38,8 @@ function getSomeEntries($f)
 		->withEntry($slate3_1)
 		->withEntry($slate3_2)
 		->withEntry($button->withLabel('Button 3.3'));
-	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-cockpit.svg', '')->withSize('medium');
-	$slate = $f->maincontrols()->slate()->combined('Combined', $symbol)
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/user.svg', '')->withSize('small');
+	$slate = $f->maincontrols()->slate()->combined('Personal Desktop', $symbol)
 		->withEntry($button)
 		->withEntry($button->withLabel('Button 2'))
 		->withEntry($button->withLabel('Button 3'))
@@ -51,16 +51,16 @@ function getSomeEntries($f)
 	;
 	$entries['example2'] = $slate;
 	//add a button
-	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-more.svg', '')->withSize('medium');
-	$entries['extra'] = $f->button()->bulky($symbol,'Extra', '#');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/options.svg', '')->withSize('small');
+	$entries['extra'] = $f->button()->bulky($symbol,'More', '#');
 	//add tool(slate)
-	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-cockpit.svg', '')->withSize('medium');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/question.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 1', $symbol, '<h2>tool 1</h2><p>Some Text for Tool 1 entry</p>');
 	$tools['tool1'] = $slate;
-	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/pencil.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 2', $symbol, '<h2>tool 2</h2><p>Some Text for Tool 1 entry</p>');
 	$tools['tool2'] = $slate;
-	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-navigation.svg', '')->withSize('medium');
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/notebook.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 3', $symbol, loremIpsum());
 	$tools['tool3'] = $slate;
 	return [$entries, $tools];
