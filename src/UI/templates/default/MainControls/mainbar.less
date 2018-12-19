@@ -1,3 +1,15 @@
+// mainbar
+.il-maincontrols-mainbar {
+	.btn-bulky {
+		font-size: @mainbar-label-size;
+	}
+	.bulky-label {
+		white-space: normal;
+	    margin-top: 5px;
+	    display: block;
+	}
+}
+
 // mainbar triggers
 .il-mainbar-triggers {
 	background: @bg-mainbar;
@@ -9,7 +21,6 @@
 		height: @mainbar-btn-height;
 		width: @mainbar-btn-height;
 		justify-content: center;
-		font-size: .9rem;
 		padding: 0;
 		display: inline-flex;
 		flex-flow: column wrap;
@@ -71,6 +82,9 @@
 	.btn-bulky {
 		background-color: lighten(@brand-primary, 25%);
 		color: @mainbar-btn-color;
+		.icon {
+			filter: invert(100%);
+		}
 		&.engaged {
 			background-color: @bg-maincontrols;
 			border: 0;

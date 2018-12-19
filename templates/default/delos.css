@@ -9564,6 +9564,14 @@ glyphicon-cog<!-- END settings -->
   position: absolute;
   right: 0;
 }
+.il-maincontrols-mainbar .btn-bulky {
+  font-size: 0.85rem;
+}
+.il-maincontrols-mainbar .bulky-label {
+  white-space: normal;
+  margin-top: 5px;
+  display: block;
+}
 .il-mainbar-triggers {
   background: #4a4a4a;
   display: flex;
@@ -9575,7 +9583,6 @@ glyphicon-cog<!-- END settings -->
   height: 80px;
   width: 80px;
   justify-content: center;
-  font-size: .9rem;
   padding: 0;
   display: inline-flex;
   flex-flow: column wrap;
@@ -9632,6 +9639,9 @@ glyphicon-cog<!-- END settings -->
 .il-mainbar-tools-entries .btn-bulky {
   background-color: #91a5c1;
   color: #fff;
+}
+.il-mainbar-tools-entries .btn-bulky .icon {
+  filter: invert(100%);
 }
 .il-mainbar-tools-entries .btn-bulky.engaged {
   background-color: #fff;
