@@ -14,21 +14,21 @@ interface Factory {
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     The Metabar is a unique page section to accomodate elements that
+	 *     The Meta Bar is a unique page section to accomodate elements that
 	 *     should permamently be in sight of the user.
-	 *     The Metabar shall, first of all, host Prompts, i.e. Notifications
-	 *     from the System to the User, but may also accomodate components and
+	 *     The Meta Bar shall, first of all, host Prompts, i.e. notifications
+	 *     from the System to the user, but may also accomodate components and
 	 *     links deemed important, like help or search. The content of the bar
-	 *     does not change wen navigating the system, but may depend on a
+	 *     does not change when navigating the system, but may depend on a
 	 *     configuration.
 	 *
 	 *   composition: >
-	 *     The Metabar is rendered horizontally at the very top of the page. It
+	 *     The Meta Bar is rendered horizontally at the very top of the page. It
 	 *     is always visible and available (except in some specialized view modes
 	 *     like an kiosk mode) as a static screen element and is unaffected by
 	 *     scrolling.
 	 *
-	 *     Elements in the Metabar are always placed on the right hand side.
+	 *     Elements in the Meta Bar are always placed on the right hand side.
 	 *     Currently, these are "Search", "Help", "Notifications", "Awareness"
 	 *     and "User".
 	 *
@@ -36,53 +36,57 @@ interface Factory {
 	 *     the availble width of the screen. In this case, all entries are
 	 *     summarized under a "..."-Button.
 	 *
-	 *     Elements are rendered as Bulky Buttons. Prompts in the Metabar may be
+	 *     Elements are rendered as Bulky Buttons. Prompts in the Meta Bar may be
 	 *     marked with counters for new/existing notifications.
 	 *
 	 *   effect: >
-	 *     Entries in the Metabar may open a Slate when clicked. They will be set
+	 *     Entries in the Meta Bar may open a Slate when clicked. They will be set
 	 *     to "engaged" accordingly, and bear the aria-pressed attribute. There
 	 *     will be only one engaged Button/Slate at a time. Also, Buttons in the
-	 *     Metabar may trigger navigation or activate Tools in the Mainbar, like
+	 *     Meta Bar may trigger navigation or activate tools in the Main Bar, like
 	 *     the Help. In this case, the buttons are not stateful.
 	 *
 	 *   rivals:
-	 *     Mainbar: >
-	 *       The Mainbar offers navigational strategies, while the Metabar foremost
-	 *       provides notifications to the user and offer controls that are deemed
+	 *     Main Bar: >
+	 *       The Main Bar offers navigational strategies, while the Meta Bar foremost
+	 *       provides notifications to the user and offers controls that are deemed
 	 *       important.
-	 *       The (general) direction of communication for the Metabar is "system to
-	 *       user", while the direction is "user to system" for elements of the Mainbar.
+	 *       The (general) direction of communication for the Meta Bar is "system to
+	 *       user", while the direction is "user to system" for elements of the Main Bar.
 	 *
 	 * context:
-	 *    - The Metabar is used in the Standard Page.
+	 *    - The Meta Bar is used in the Standard Page.
 	 *
 	 * rules:
 	 *   usage:
-	 *     1: The Metabar is unique for the page - there MUST be at most one.
-	 *     2: Elements in the Metabar MUST NOT vary according to context.
-	 *     3: New elements in the Metabar MUST be approved by JF.
+	 *     1: The Meta Bar is unique for the page - there MUST be at most one.
+	 *     2: Elements in the Meta Bar MUST NOT vary according to context.
+	 *     3: New elements in the Meta Bar MUST be approved by JF.
+	 *     4: >
+	 *       Since mainly items that pitch the user are placed in the Meta Bar,
+	 *       you SHOULD only propose items for this section that have the nature
+	 *       of informing the user.
 	 *
 	 *   style:
 	 *     1: The bar MUST have a fixed height.
 	 * ----
 	 *
-	 * @return  \ILIAS\UI\Component\MainControls\Metabar
+	 * @return  \ILIAS\UI\Component\MainControls\MetaBar
 	 */
-	public function metabar(): Metabar;
+	public function metabar(): MetaBar;
 
 	/**
 	 * ---
 	 * description:
 	 *   purpose: >
-	 *     The Mainbar is a unique page section that bundles access to content-
+	 *     The Main Bar is a unique page section that bundles access to content-
 	 *     based navigational strategies (like the repository tree) as well as
 	 *     navigation to services unrelated to the actual content, like the
 	 *     administrative settings.
 	 *
 	 *     Since the controls necessary for theses purposes might be quite complex,
 	 *     they are summed up in an easy to grasp Icon or Glyph in conjunction with
-	 *     a short text. Theses reductions form the entries for the mainbar, which
+	 *     a short text. Theses reductions form the entries for the Main Bar, which
 	 *     thus is the primary list of navigational options for the user and the
 	 *     usual starting point for the user to explore the system.
 	 *
@@ -92,8 +96,18 @@ interface Factory {
 	 *     that is used to show tools that are opened on request of the user, e.g. the
 	 *     help, or depending on requirements of the content, e.g. a local navigation.
 	 *
+	 *     However, content actions, like  "new item"-actions, the actions-menu (with
+	 *     comments, notes and tags), moving, linking or deleting objects and the like
+	 *     are NOT part of the Main Bar.
+	 *
+	 *     Also, there should be a differentiation between elements of the Main Bar
+	 *     and elements of e.g., the Personal Dekstop: The Personal Desktop provides
+	 *     access to services and tools and displays further information at first
+	 *     glance (e.g. the calendar). The Main Bar may reference those tools as well,
+	 *     but rather in form of a link than a widget.
+	 *
 	 *   composition: >
-	 *     The Mainbar holds Slates and Bulky Buttons.
+	 *     The Main Bar holds Slates and Bulky Buttons.
 	 *
 	 *     In a desktop environment, a vertical bar is rendered on the left side
 	 *     of the screen covering the full height (minus header- and footer area).
@@ -101,80 +115,79 @@ interface Factory {
 	 *
 	 *     In a mobile context, the bar will be rendered horizontally on the bottom.
 	 *
-	 *     When the entries of a Mainbar exceed the available height (mobile: width),
+	 *     When the entries of a Main Bar exceed the available height (mobile: width),
 	 *     remaining buttons will be collected in a "..."-Button.
 	 *
-	 *     The Mainbar is always visible and available (except in specialized views
+	 *     The Main Bar is always visible and available (except in specialized views
 	 *     like the exam mode) as a static screen element unaffected by scrolling.
 	 *
 	 *   effect: >
 	 *     Clicking an entry will carry out its configured action. For slates, this
-	 *     is expanding the slate, while for Bulky Buttons this might be just
-	 *     changing the page, e.g.
+	 *     is expanding the slate, while for Bulky Buttons this might be, e.g., just
+	 *     changing the page.
 	 *
-	 *     Buttons in the Mainbar are stateful, i.e. they have a pressed-status
+	 *     Buttons in the Main Bar are stateful, i.e. they have a pressed-status
 	 *     that can either be toggled by clicking the same button again or by
-	 *     clicking a different button. This does not apply to Buttons that direcly
-	 *     change the page.
+	 *     clicking a different button. This does not apply to Buttons directly
+	 *     changing the context.
 	 *
 	 *     Opening a slate by clicking an entry will close all other slates in the
-	 *     Mainbar. On desktop, slates open on the right hand of the Mainbar, between
+	 *     Main Bar. On desktop, slates open on the right hand of the Main Bar, between
 	 *     bar and content, thus "pushing" the content to the right, if there is not
 	 *     enough room.
 	 *
 	 *     If the content's width would fall below its defined minimum, the expanded
 	 *     slate is opened above (like in overlay, not "on top of") the content.
 	 *
-	 *     The slates height equals that of the Mainbar. Also, their position will
+	 *     The slates height equals that of the Main Bar. Also, their position will
 	 *     remain fixed when the page is scrolled. A button to close a slate is
 	 *     rendered underneath the slate. It will close all visible Slates and reset
-	 *     the states of all mainbar-entries.
+	 *     the states of all Main Bar-entries.
 	 *
 	 *     When a tool (such as the help), whose contents are displayed in a slate,
 	 *     is being triggered, a special entry is rendered as first element of the
-	 *     Mainbar, making the available/invoked tool(s) accessible. Tools can be
-	 *     closed, i.e. removed from the Mainbar, via a Close Button. When the last
+	 *     Main Bar, making the available/invoked tool(s) accessible. Tools can be
+	 *     closed, i.e. removed from the Main Bar, via a Close Button. When the last
 	 *     Tool is closed, the tools-section is removed as well.
 	 *
 	 *   rivals:
 	 *     Tab Bar: >
-	 *       The Mainbar (and its components) shall not be used to substitute
+	 *       The Main Bar (and its components) shall not be used to substitute
 	 *       functionality available at objects, such as settings, members or
 	 *       learning progress. Those remain in the Tab Bar.
 	 *
-	 *     Content Actions: >
-	 *       "New item"-actions, the actions-menu (with comments, notes and tags),
-	 *       moving, linking or deleting objects and the like are NOT part of
-	 *       the Mainbar.
-	 *
-	 *     Personal Desktop: >
-	 *       The Personal Desktop provides access to services and tools and
-	 *       displays further information at first glance (e.g. the calendar).
-	 *       The Mainbar may reference those tools as well, but rather in form
-	 *       of a link than a widget.
-	 *
-	 *     Metabar: >
+	 *     Meta Bar: >
 	 *       Notifications from the system to the user, e.g. new Mail, are placed
-	 *       in Elements of the Metabar. The general direction of communication for
-	 *       the Mainbar is "user to system", while the direction is "system to user"
-	 *       with elements of the Metabar. However, navigation from both components
+	 *       in Elements of the Meta Bar. The general direction of communication for
+	 *       the Main Bar is "user to system", while the direction is "system to user"
+	 *       with elements of the Meta Bar. However, navigation from both components
 	 *       can lead to the same page.
 	 *
 	 * context:
-	 *    - The Mainbar is used in the Standard Page.
+	 *    - The Main Bar is used in the Standard Page.
 	 *
 	 * rules:
 	 *   usage:
-	 *     1: There SHOULD be a Mainbar on the page.
-	 *     2: If there is a Mainbar, it MUST be unique for the page.
+	 *     1: There SHOULD be a Main Bar on the page.
+	 *     2: If there is a Main Bar, it MUST be unique for the page.
+	 *     3: >
+	 *       Entries and Tools in the Main Bar, or for that matter, their respective
+	 *       slate-contents, MUST NOT be used to reflect the outcome of a user's
+	 *       action, e.g., display a success-message.
+	 *     4: >
+	 *       Contents of the slates, both in Entries and Tools, MUST NOT be used
+	 *       to provide information of a content object if that information
+	 *       cannot be found in the content itself. They MUST NOT be used as
+	 *       a "second screen" to the content-part of the Page.
 	 *
 	 *   composition:
 	 *     1: The bar MUST NOT contain items other than Bulky Buttons or Slates.
 	 *     2: The bar MUST contain at least one Entry.
 	 *     3: The bar SHOULD NOT contain more than five Entries.
-	 *     4: >
-	 *       Entries in the Mainbar MUST NOT be enhanced with counters or
-	 *       other notifications drawing the user's attention.
+	 *     4: The bar SHOULD NOT contain more than five Tool-Entries.
+	 *     5: >
+	 *       Entries and Tools in the Main Bar MUST NOT be enhanced with counters
+	 *       or other notifications drawing the user's attention.
 	 *
 	 *   style:
 	 *     1: The bar MUST have a fixed width (desktop).
@@ -188,9 +201,9 @@ interface Factory {
 	 *
 	 * ----
 	 *
-	 * @return  \ILIAS\UI\Component\MainControls\Mainbar
+	 * @return  \ILIAS\UI\Component\MainControls\MainBar
 	 */
-	public function mainbar(): Mainbar;
+	public function mainbar(): MainBar;
 
 
 	/**
@@ -199,18 +212,17 @@ interface Factory {
 	 *   purpose: >
 	 *     A Slate is a collection of Components that serve a specific and singular
 	 *     purpose in their entirety. The purpose can be subsummed in one Icon/Glyph
-	 *     and one word, for Slates will act as elaboration on one specific concept
-	 *     in ILIAS.
-	 *
-	 *     Accordingly, Slates depend on a component that toggle their visibility.
+	 *     and a very short label, for Slates will act as elaboration on one specific
+	 *     concept in ILIAS.
 	 *
 	 *     Slates are not part of the content and will reside next to or over it. They
 	 *     will open and close without changing the current context.
+	 *     Accordingly, Slates depend on a component that toggles their visibility.
 	 *
 	 *     In contrast to purely receptive components, Slates usually provide a form
 	 *     of interaction, whereas this interaction may trigger a navigation or alter
 	 *     the contents of the slate itself. However, slates are not meant to modify
-	 *     state of entities in the system in anyway.
+	 *     states of entities in the system in any way.
 	 *
 	 *     E.g.: A Help-Screen, where the user can read a certain text and also search
 	 *     available topics via a text-input, or a drill-down navigation, where all
@@ -248,13 +260,16 @@ interface Factory {
 	 *     2: There MUST be only one Slate visible at the same time per triggering Component.
 	 *     3: Elements in the Slate MUST NOT modify entities in the system.
 	 *     4: Slates MUST be closeable/expandable without changing context.
+	 *     5: >
+	 *        Slates MUST NOT be used to provide additional information of content-objects
+	 *        that cannot be found anywhere else.
 	 *
 	 *   style:
 	 *     1: Slates MUST have a fixed width.
 	 *     2: Slates MUST NOT use horizontal scrollbars.
 	 *     3: Slates SHOULD NOT use vertical scrollbars.
 	 *     4: Slates MUST visually relate to their triggering Component.
-	 *     4: Slates SHOULD NOT be affected by scrolling the page.
+	 *     5: Slates SHOULD NOT be affected by scrolling the page.
 	 *
 	 *   accessibility:
 	 *     1: The Slate MUST be closeable by only using the keyboard
