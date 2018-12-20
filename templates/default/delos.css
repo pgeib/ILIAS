@@ -9372,6 +9372,12 @@ main {
   overflow: auto;
   padding: 20px;
 }
+/* Footer */
+footer {
+  background-color: #4c6586;
+  grid-area: footer;
+  z-index: 2;
+}
 /*
 glyphicon-cog<!-- END settings -->
 <!-- BEGIN collapse --> glyphicon-triangle-bottom<!-- END collapse -->
@@ -9627,7 +9633,7 @@ glyphicon-cog<!-- END settings -->
 }
 .il-mainbar-tools-button .btn-bulky img,
 .il-mainbar-tools-button .btn-bulky.engaged img {
-  filter: invert(60%);
+  filter: invert(35%);
 }
 .il-mainbar-tools-entries {
   display: none;

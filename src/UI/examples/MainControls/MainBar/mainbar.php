@@ -11,7 +11,7 @@ function mainbar()
 function buildMainbar($f)
 {
 	$tools_btn = $f->button()->bulky(
-		$f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-more.svg', ''),
+		$f->icon()->custom('./src/UI/examples/Layout/Page/Standard/grid.svg', ''),
 		'Tools',
 		'#'
 	);
