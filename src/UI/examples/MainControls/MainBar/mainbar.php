@@ -10,8 +10,15 @@ function mainbar()
 
 function buildMainbar($f)
 {
+	$tools_btn = $f->button()->bulky(
+		$f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-more.svg', ''),
+		'Tools',
+		'#'
+	);
+	$mainbar = $f->mainControls()->mainbar()
+		->withToolsButton($tools_btn);
+
 	list($entries, $tools) = getSomeEntries($f);
-	$mainbar = $f->mainControls()->mainbar();
 	foreach ($entries as $id=>$entry) {
 		$mainbar = $mainbar->withAdditionalEntry($id, $entry);
 	}
