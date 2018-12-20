@@ -11,9 +11,9 @@ use ILIAS\UI\Component\JavaScriptBindable;
 
 
 /**
- * This describes the Mainbar
+ * This describes the MainBar
  */
-interface Mainbar extends \ILIAS\UI\Component\Component, JavaScriptBindable
+interface MainBar extends \ILIAS\UI\Component\Component, JavaScriptBindable
 {
 	/**
 	 * Append an entry.
@@ -22,7 +22,7 @@ interface Mainbar extends \ILIAS\UI\Component\Component, JavaScriptBindable
 	 * @param Button\Bulky|Slate $entry
 	 * @throws InvalidArgumentException 	if $id is already taken
 	 */
-	public function withEntry(string $id, $entry): Mainbar;
+	public function withAdditionalEntry(string $id, $entry): MainBar;
 
 	/**
 	 * @return array <string, Button\Bulky|Slate>
@@ -36,7 +36,7 @@ interface Mainbar extends \ILIAS\UI\Component\Component, JavaScriptBindable
 	 * @param Button\Bulky|Slate $entry
 	 * @throws InvalidArgumentException 	if $id is already taken
 	 */
-	public function withToolEntry(string $id, $entry): Mainbar;
+	public function withAdditionalToolEntry(string $id, $entry): MainBar;
 
 	/**
 	 * @return array <string, Button\Bulky|Slate>
@@ -46,7 +46,7 @@ interface Mainbar extends \ILIAS\UI\Component\Component, JavaScriptBindable
 	/**
 	 * @throws InvalidArgumentException 	if $active is not an element-identifier in entries
 	 */
-	public function withActive(string $active): Mainbar;
+	public function withActive(string $active): MainBar;
 
 	/**
 	 * @return string|null
@@ -54,18 +54,33 @@ interface Mainbar extends \ILIAS\UI\Component\Component, JavaScriptBindable
 	public function getActive();
 
 	/**
-	 * Label for the tools-trigger.
+	 * This sets the label for the tools-trigger.
 	 */
-	public function withToolsLabel(string $label): Mainbar;
+	public function withToolsLabel(string $label): MainBar;
 
+	/**
+	 * This returns the label of the tools-trigger.
+	 */
 	public function getToolsLabel(): string;
 
+	/**
+	 * Get the signal that is triggered when any entry in the bar is clicked.
+	 */
 	public function getEntryClickSignal(): Signal;
 
+	/**
+	 * Get the signal that is triggered when any entry in the tools-button is clicked.
+	 */
 	public function getToolsClickSignal(): Signal;
 
+	/**
+	 * Get the signal that is used for removing a tool.
+	 */
 	public function getToolsRemovalSignal(): Signal;
 
+	/**
+	 * This signal disengages all slates when triggered.
+	 */
 	public function getDisengageAllSignal(): Signal;
 
 }

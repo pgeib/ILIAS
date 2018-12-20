@@ -7,26 +7,31 @@ function mainbar()
 	$mainbar = buildMainbar($f);
 	return $renderer->render($mainbar);
 }
+
 function buildMainbar($f)
 {
 	list($entries, $tools) = getSomeEntries($f);
 	$mainbar = $f->mainControls()->mainbar();
 	foreach ($entries as $id=>$entry) {
-		$mainbar = $mainbar->withEntry($id, $entry);
+		$mainbar = $mainbar->withAdditionalEntry($id, $entry);
 	}
 	foreach ($tools as $id=>$entry) {
-		$mainbar = $mainbar->withToolEntry($id, $entry);
+		$mainbar = $mainbar->withAdditionalToolEntry($id, $entry);
 	}
+
 	return $mainbar;
 }
+
 function getSomeEntries($f)
 {
 	$entries = [];
 	$tools = [];
+
 	//add a slate
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/layers.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->legacy('Repository', $symbol, loremIpsum());
 	$entries['example1'] = $slate;
+
 	//a slate with buttons and more slates
 	$icon = $f->icon()->standard('', '')->withSize('small')->withAbbreviation('X');
 	$button = $f->button()->bulky($icon, 'Button 1', '#');
@@ -35,21 +40,22 @@ function getSomeEntries($f)
 	$slate3_1 = $f->maincontrols()->slate()->legacy('Legacy 3.1', $symbol, 'legacy content 3.1');
 	$slate3_2 = $f->maincontrols()->slate()->legacy('Legacy 3.2 - long', $symbol, loremIpsum(9));
 	$slate3 = $f->maincontrols()->slate()->combined('Slate with Sub-Slates', $symbol)
-		->withEntry($slate3_1)
-		->withEntry($slate3_2)
-		->withEntry($button->withLabel('Button 3.3'));
+		->withAdditionalEntry($slate3_1)
+		->withAdditionalEntry($slate3_2)
+		->withAdditionalEntry($button->withLabel('Button 3.3'));
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/user.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->combined('Personal Desktop', $symbol)
-		->withEntry($button)
-		->withEntry($button->withLabel('Button 2'))
-		->withEntry($button->withLabel('Button 3'))
-		->withEntry($slate1)
-		->withEntry($slate2)
-		->withEntry($button->withLabel('Button 4'))
-		->withEntry($slate3)
-		->withEntry($button->withLabel('Button 5'))
+		->withAdditionalEntry($button)
+		->withAdditionalEntry($button->withLabel('Button 2'))
+		->withAdditionalEntry($button->withLabel('Button 3'))
+		->withAdditionalEntry($slate1)
+		->withAdditionalEntry($slate2)
+		->withAdditionalEntry($button->withLabel('Button 4'))
+		->withAdditionalEntry($slate3)
+		->withAdditionalEntry($button->withLabel('Button 5'))
 	;
 	$entries['example2'] = $slate;
+
 	//add a button
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/options.svg', '')->withSize('small');
 	$entries['extra'] = $f->button()->bulky($symbol,'More', '#');
@@ -63,8 +69,10 @@ function getSomeEntries($f)
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/notebook.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->legacy('Tool 3', $symbol, loremIpsum());
 	$tools['tool3'] = $slate;
+
 	return [$entries, $tools];
 }
+
 function loremIpsum():string {
 	return <<<EOT
 	<h2>Lorem ipsum</h2>

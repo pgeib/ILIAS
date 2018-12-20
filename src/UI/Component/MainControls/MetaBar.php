@@ -8,9 +8,9 @@ use ILIAS\UI\Component\Signal;
 use ILIAS\UI\Component\JavaScriptBindable;
 
 /**
- * This describes the Metabar.
+ * This describes the MetaBar.
  */
-interface Metabar extends Component, JavaScriptBindable
+interface MetaBar extends Component, JavaScriptBindable
 {
 	/**
 	 * Append an entry.
@@ -19,12 +19,15 @@ interface Metabar extends Component, JavaScriptBindable
 	 * @param Bulky|Slate $entry
 	 * @throws InvalidArgumentException 	if $id is already taken
 	 */
-	public function withEntry(string $id, $entry): Metabar;
+	public function withEntry(string $id, $entry): MetaBar;
 
 	/**
 	 * @return array <string, Bulky|Slate>
 	 */
 	public function getEntries(): array;
 
+	/**
+	 * The Signal is triggered when any Enntry is being clicked.
+	 */
 	public function getEntryClickSignal(): Signal;
 }

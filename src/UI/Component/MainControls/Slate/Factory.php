@@ -12,9 +12,8 @@ interface Factory
 	 * description:
 	 *   purpose: >
 	 *     The Legacy Slate is used to wrap content into a slate when there is
-	 *     no other possibility (yet).
-	 *     In general, this should not be used and may vanish with the
-	 *     progress of specific slates.
+	 *     no other possibility (yet). In general, this should not be used and
+	 *     may vanish with the progress of specific slates.
 	 *
 	 *   composition: >
 	 *     The Legacy Slate will take any HTML-string and render it.
@@ -22,9 +21,8 @@ interface Factory
 	 * rules:
 	 *   usage:
 	 *     1: >
-	 *       This component MUST only be used to ensure backwards compatibility
-	 *       with existing UI elements in ILIAS. It SHOULD only contain Elements
-	 *       which cannot be generated using other UI Components.
+	 *       This component MUST NOT be used to display elements that can be
+	 *       generated using other UI Components.
 	 *
 	 * ----
 	 *
@@ -72,9 +70,8 @@ interface Factory
 	 * description:
 	 *   purpose: >
 	 *     The Combined Slate bundles related controls; these can also be further
-	 *     Slates.
-	 *     Combined Slates are used when a specific purpose is being subdivided
-	 *     into further aspects.
+	 *     Slates. Combined Slates are used when a specific purpose is being
+	 *     subdivided into further aspects.
 	 *
 	 *   composition: >
 	 *     The Combined Slate consists of more Slates and/or Bulky Buttons.
@@ -82,12 +79,12 @@ interface Factory
 	 *     to control opening and closing the contained Slate.
 	 *
 	 *   effect: >
-	 *      Opening a Combined Slate will display its contained Slates with an
-	 *      operating Bulky Button for closing/expanding.
-	 *      Clicking on a Button not connected to a Slate will carry out its action.
-	 *
+	 *     Opening a Combined Slate will display its contained Slates with an
+	 *     operating Bulky Button for closing/expanding.
+	 *     Clicking on a Button not connected to a Slate will carry out its action.
+ 	 *
 	 * context:
-	 *     - The Combined Slate is used in the Mainbar.
+	 *     - The Combined Slate is used in the Main Bar.
 	 *
 	 * ----
 	 *
