@@ -47,7 +47,7 @@ function getDemoEntryRepository($f)
 	$slate = $f->maincontrols()->slate()->combined('Repository', $symbol, '');
 
 	$icon = $f->icon()->standard('', '')->withSize('small')->withAbbreviation('X');
-	$button = $f->button()->bulky($icon, 'Button 1', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1');
+	$button = $f->button()->bulky($icon, 'Button 1', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1&mbactive=repository');
 	$slate = $slate
 		->withAdditionalEntry($button->withLabel('Repository - Home'))
 		->withAdditionalEntry($button->withLabel('Repository - Tree'))
@@ -64,11 +64,11 @@ function getDemoEntryRepository($f)
 function getDemoEntryPersonalWorkspace($f, $r)
 {
 	$icon = $f->icon()->standard('', '')->withSize('small')->withAbbreviation('X');
-	$button = $f->button()->bulky($icon, 'Button 1', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1');
+	$button = $f->button()->bulky($icon, 'Button 1', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1&mbactive=pws');
 
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/user.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->combined('Personal Workspace', $symbol, '')
-		->withBacklink('Home', '#');
+		->withBacklink('Home', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1&mbactive=repository');
 	;
 
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/bookmarks.svg', '')->withSize('small');
@@ -76,7 +76,8 @@ function getDemoEntryPersonalWorkspace($f, $r)
 		$r->render($f->button()->shy('my bookmark 1', '#')),
 		$r->render($f->button()->shy('my bookmark 2', '#'))
 	]);
-	$slate_bookmarks = $f->maincontrols()->slate()->legacy('Bookmarks', $symbol, $bookmarks);
+	$slate_bookmarks = $f->maincontrols()->slate()->legacy('Bookmarks', $symbol, $bookmarks)
+		->withEngaged(true);
 
 
 	$slate = $slate
@@ -127,7 +128,7 @@ function getDemoEntryTools($f)
 	$tools = [];
 
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/question.svg', '')->withSize('small');
-	$slate = $f->maincontrols()->slate()->legacy('Help', $symbol, '<h2>tool 1</h2><p>Some Text for Tool 1 entry</p>');
+	$slate = $f->maincontrols()->slate()->legacy('Help', $symbol, loremIpsum());
 	$tools['tool1'] = $slate;
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/pencil.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->legacy('Editor', $symbol, '<h2>tool 2</h2><p>Some Text for Tool 1 entry</p>');

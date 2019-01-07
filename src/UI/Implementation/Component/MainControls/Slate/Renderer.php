@@ -48,6 +48,12 @@ class Renderer extends AbstractComponentRenderer
 		}
 		$tpl->setVariable('CONTENTS', $default_renderer->render($contents));
 
+		if($component->getEngaged()) {
+			$tpl->touchBlock('engaged');
+		}else {
+			$tpl->touchBlock('disengaged');
+		}
+
 		$toggle_signal = $component->getToggleSignal();
 		$show_signal = $component->getShowSignal();
 		$component = $component->withOnLoadCode(function($id) use ($toggle_signal, $show_signal) {
