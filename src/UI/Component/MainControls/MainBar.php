@@ -31,10 +31,12 @@ interface MainBar extends \ILIAS\UI\Component\Component, JavaScriptBindable
 
 	/**
 	 * Append a tool-entry.
+	 * Define a tools-trigger via "withToolsButton" first.
 	 *
 	 * @param string $id
 	 * @param Button\Bulky|Slate $entry
 	 * @throws InvalidArgumentException 	if $id is already taken
+	 * @throws LogicException 	if no tool-button was set
 	 */
 	public function withAdditionalToolEntry(string $id, $entry): MainBar;
 
@@ -54,15 +56,13 @@ interface MainBar extends \ILIAS\UI\Component\Component, JavaScriptBindable
 	public function getActive();
 
 	/**
-	 * This sets the button for the tools-trigger.
+	 * Set button for the tools-trigger.
 	 */
-	//public function withToolsLabel(string $label): MainBar;
 	public function withToolsButton(Button\Bulky $button): MainBar;
 
 	/**
-	 * This returns the button of the tools-trigger.
+	 * Returns the button of the tools-trigger.
 	 */
-	//public function getToolsLabel(): string;
 	public function getToolsButton(): Button\Bulky;
 
 	/**

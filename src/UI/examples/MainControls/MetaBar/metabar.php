@@ -27,10 +27,10 @@ function buildMetabar($f)
 	$awareness = buildAwareness($f);
 
 	$metabar = $f->mainControls()->metabar()
-		->withEntry('search', $search)
-		->withEntry('help', $help)
-		->withEntry('notifications', $notifications)
-		->withEntry('awareness', $awareness)
+		->withAdditionalEntry('search', $search)
+		->withAdditionalEntry('help', $help)
+		->withAdditionalEntry('notifications', $notifications)
+		->withAdditionalEntry('awareness', $awareness)
 		;
 
 	return $metabar;

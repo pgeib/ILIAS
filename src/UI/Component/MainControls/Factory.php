@@ -73,7 +73,7 @@ interface Factory {
 	 *
 	 * @return  \ILIAS\UI\Component\MainControls\MetaBar
 	 */
-	public function metabar(): MetaBar;
+	public function metaBar(): MetaBar;
 
 	/**
 	 * ---

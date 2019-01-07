@@ -59,13 +59,6 @@ class Renderer extends AbstractComponentRenderer {
 		if (count($tools) > 0) {
 			$tools_active = array_key_exists($active, $tools);
 
-/*
-			$icon = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/icon-sb-more.svg', '');
-			$btn_tools = $f->button()
-				->bulky($icon->withSize('large'), $component->getToolsLabel(), '#')
-				->withOnClick($tools_signal)
-				->withEngagedState(false); //if a tool-entry is active, onLoadCode will "click" the button
-*/
 			$btn_tools = $component->getToolsButton()
 				->withOnClick($tools_signal)
 				->withEngagedState(false); //if a tool-entry is active, onLoadCode will "click" the button
