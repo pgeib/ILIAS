@@ -19,6 +19,12 @@ il.UI.maincontrols = il.UI.maincontrols || {};
 			engage(slate);
 		};
 
+		var onReplaceContentSignal = function(event, signalData, id) {
+			var slate = $('#' + id),
+				url = signalData.options.url;
+			il.UI.core.replaceContent(id, url, "content");
+		}
+
 		var toggle = function(slate) {
 			_isEngaged(slate) ? disengage(slate) : engage(slate);
 		};
@@ -44,6 +50,7 @@ il.UI.maincontrols = il.UI.maincontrols || {};
 		return {
 			onToggleSignal: onToggleSignal,
 			onShowSignal: onShowSignal,
+			onReplaceContentSignal: onReplaceContentSignal,
 			engage: engage,
 			disengage: disengage,
 			_cls_single_slate: _cls_single_slate,

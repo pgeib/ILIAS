@@ -56,7 +56,9 @@ class Renderer extends AbstractComponentRenderer
 
 		$toggle_signal = $component->getToggleSignal();
 		$show_signal = $component->getShowSignal();
-		$component = $component->withOnLoadCode(function($id) use ($toggle_signal, $show_signal) {
+		$replace_content_signal = $component->getReplaceContentSignal();
+
+		$component = $component->withOnLoadCode(function($id) use ($toggle_signal, $show_signal, $replace_content_signal) {
 			return "
 				$(document).on('{$toggle_signal}', function(event, signalData) {
 					il.UI.maincontrols.slate.onToggleSignal(event, signalData, '{$id}');
@@ -64,6 +66,10 @@ class Renderer extends AbstractComponentRenderer
 				});
 				$(document).on('{$show_signal}', function(event, signalData) {
 					il.UI.maincontrols.slate.onShowSignal(event, signalData, '{$id}');
+					return false;
+				});
+				$(document).on('{$replace_content_signal}', function(event, signalData) {
+					il.UI.maincontrols.slate.onReplaceContentSignal(event, signalData, '{$id}');
 					return false;
 				});
 

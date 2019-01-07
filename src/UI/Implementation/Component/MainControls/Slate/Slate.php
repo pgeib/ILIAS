@@ -55,6 +55,11 @@ abstract class Slate implements ISlate\Slate
 	protected $backlink_url;
 
 	/**
+	 * @var ReplaceContentSignal
+	 */
+	protected $replace_content_signal;
+
+	/**
 	 * @param string 	$name 	name of the slate, also used as label
 	 * @param Icon|Glyph 	$symbol
 	 */
@@ -81,6 +86,11 @@ abstract class Slate implements ISlate\Slate
 	{
 		$this->toggle_signal = $this->signal_generator->create();
 		$this->show_signal = $this->signal_generator->create();
+		$this->replace_content_signal = $this->signal_generator->create("ILIAS\\UI\\Implementation\\Component\\ReplaceContentSignal");
+	}
+
+	public function getReplaceContentSignal() {
+		return $this->replace_content_signal;
 	}
 
 	/**

@@ -18,10 +18,7 @@ function buildMainbar($f, $r)
 	$mainbar = $f->mainControls()->mainbar()
 		->withToolsButton($tools_btn);
 
-
 	$entries = [];
-
-
 	$entries['repository'] = getDemoEntryRepository($f);
 	$entries['pws'] = getDemoEntryPersonalWorkspace($f, $r);
 	$entries['achievements'] = getDemoEntryAchievements($f);
@@ -48,6 +45,17 @@ function getDemoEntryRepository($f)
 
 	$icon = $f->icon()->standard('', '')->withSize('small')->withAbbreviation('X');
 	$button = $f->button()->bulky($icon, 'Button 1', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1&mbactive=repository');
+
+	$subslate = $f->maincontrols()->slate()->combined('Subslate', $symbol, '');
+	$subslate = $subslate ->withAdditionalEntry(
+		$f->button()->bulky($icon, 'Replace Sub-Slate', '#')
+		->withOnClick(
+			$subslate->getReplaceContentSignal()
+				->withAsyncRenderUrl('./src/UI/examples/Layout/Page/Standard/ui.php?slate_contents=1')
+		)
+	)
+	;
+
 	$slate = $slate
 		->withAdditionalEntry($button->withLabel('Repository - Home'))
 		->withAdditionalEntry($button->withLabel('Repository - Tree'))
@@ -57,6 +65,17 @@ function getDemoEntryRepository($f)
 		->withAdditionalEntry($button->withLabel('Groups'))
 		->withAdditionalEntry($button->withLabel('Study Programme'))
 		->withAdditionalEntry($button->withLabel('Own Repository-Objects'))
+
+		->withAdditionalEntry(
+			$f->button()->bulky($icon, 'Replace whole Slate', '#')
+			->withOnClick(
+				$slate->getReplaceContentSignal()
+					->withAsyncRenderUrl('./src/UI/examples/Layout/Page/Standard/ui.php?slate_contents=1')
+			)
+		)
+		->withAdditionalEntry($subslate)
+
+
 		;
 	return $slate;
 }
@@ -68,7 +87,7 @@ function getDemoEntryPersonalWorkspace($f, $r)
 
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/user.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->combined('Personal Workspace', $symbol, '')
-		->withBacklink('Home', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1&mbactive=repository');
+	//	->withBacklink('Home', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1&mbactive=repository');
 	;
 
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/bookmarks.svg', '')->withSize('small');
@@ -131,7 +150,7 @@ function getDemoEntryTools($f)
 	$slate = $f->maincontrols()->slate()->legacy('Help', $symbol, loremIpsum());
 	$tools['tool1'] = $slate;
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/pencil.svg', '')->withSize('small');
-	$slate = $f->maincontrols()->slate()->legacy('Editor', $symbol, '<h2>tool 2</h2><p>Some Text for Tool 1 entry</p>');
+	$slate = $f->maincontrols()->slate()->legacy('Editor', $symbol, '<h2>tool 2</h2><p>Some Text for Tool 2 entry</p>');
 	$tools['tool2'] = $slate;
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/notebook.svg', '')->withSize('small');
 	$slate = $f->maincontrols()->slate()->legacy('Local Navigation', $symbol, loremIpsum());

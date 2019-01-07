@@ -46,3 +46,15 @@ if ($_GET['new_ui'] == '1') {
 
 	echo $renderer->render($page);
 }
+
+if ($_GET['slate_contents'] == '1') {
+	_initIliasForPreview();
+	$f = $DIC->ui()->factory();
+	$renderer = $DIC->ui()->renderer();
+
+	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/user.svg', '')->withSize('small');
+	$slate = $f->maincontrols()->slate()->legacy('Replaced', $symbol, 'This is replaced content.')
+		->withBacklink('Back to Repository', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1&mbactive=repository');
+	echo $renderer->renderAsync($slate);
+	exit();
+}
