@@ -24,9 +24,9 @@ class Renderer extends AbstractComponentRenderer
 		RendererInterface $default_renderer
 	) {
 		$tpl = $this->getTemplate("Slate/tpl.slate.html", true, true);
+		$f = $this->getUIFactory();
 
 		if ($component instanceof ISlate\Combined) {
-			$f = $this->getUIFactory();
 			$contents = [];
 			foreach ($component->getContents() as $entry) {
 				if($entry instanceof ISlate\Slate) {
@@ -40,6 +40,12 @@ class Renderer extends AbstractComponentRenderer
 			$contents = $component->getContents();
 		}
 
+		list($bl_label, $bl_url) = $component->getBacklink();
+		if($bl_url && $bl_label) {
+			$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/arrow_left.svg', '')->withSize('small');
+			$backlink = $f->button()->bulky($symbol, $bl_label, $bl_url);
+			$tpl->setVariable('BACKLINK', $default_renderer->render($backlink));
+		}
 		$tpl->setVariable('CONTENTS', $default_renderer->render($contents));
 
 		$toggle_signal = $component->getToggleSignal();

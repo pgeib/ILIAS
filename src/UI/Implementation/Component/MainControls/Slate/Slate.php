@@ -46,6 +46,15 @@ abstract class Slate implements ISlate\Slate
 	protected $engaged = false;
 
 	/**
+	 * @var string | null
+	 */
+	protected $backlink_label;
+	/**
+	 * @var string | null
+	 */
+	protected $backlink_url;
+
+	/**
 	 * @param string 	$name 	name of the slate, also used as label
 	 * @param Icon|Glyph 	$symbol
 	 */
@@ -128,4 +137,27 @@ abstract class Slate implements ISlate\Slate
 	 * @inheritdoc
 	 */
 	abstract public function getContents(): array;
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withBacklink(string $label, string $url): ISlate\Slate
+	{
+		$clone = clone $this;
+		$clone->backlink_label = $label;
+		$clone->backlink_url = $url;
+		return $clone;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getBacklink()
+	{
+		return [
+			$this->backlink_label,
+			$this->backlink_url
+		];
+	}
+
 }

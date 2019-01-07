@@ -47,4 +47,13 @@ interface Slate extends Component, JavaScriptBindable
 	 */
 	public function getContents();
 
+	/**
+	 * Set a backlink at this slate (for sub-lates, go up one level).
+	 */
+	public function withBacklink(string $label, string $url): Slate;
+
+	/**
+	 * @return array|null
+	 */
+	public function getBacklink();
 }

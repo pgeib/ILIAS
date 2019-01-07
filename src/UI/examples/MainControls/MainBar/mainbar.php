@@ -67,7 +67,9 @@ function getDemoEntryPersonalWorkspace($f, $r)
 	$button = $f->button()->bulky($icon, 'Button 1', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1');
 
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/user.svg', '')->withSize('small');
-	$slate = $f->maincontrols()->slate()->combined('Personal Workspace', $symbol, '');
+	$slate = $f->maincontrols()->slate()->combined('Personal Workspace', $symbol, '')
+		->withBacklink('Home', '#');
+	;
 
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/bookmarks.svg', '')->withSize('small');
 	$bookmarks = implode('<br />', [
