@@ -53,8 +53,7 @@ function getDemoEntryRepository($f)
 			$subslate->getReplaceContentSignal()
 				->withAsyncRenderUrl('./src/UI/examples/Layout/Page/Standard/ui.php?slate_contents=1')
 		)
-	)
-	;
+	);
 
 	$slate = $slate
 		->withAdditionalEntry($button->withLabel('Repository - Home'))
@@ -73,10 +72,8 @@ function getDemoEntryRepository($f)
 					->withAsyncRenderUrl('./src/UI/examples/Layout/Page/Standard/ui.php?slate_contents=1')
 			)
 		)
-		->withAdditionalEntry($subslate)
+		->withAdditionalEntry($subslate);
 
-
-		;
 	return $slate;
 }
 
@@ -124,7 +121,7 @@ function getDemoEntryAchievements($f)
 function getDemoEntryCommunication($f)
 {
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/communication.svg', '')->withSize('small');
-	$slate = $f->maincontrols()->slate()->combined('Communication', $symbol, '');
+	$slate = $f->maincontrols()->slate()->legacy('Communication', $symbol, loremIpsum());
 	return $slate;
 }
 

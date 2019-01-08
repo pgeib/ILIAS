@@ -40,12 +40,6 @@ class Renderer extends AbstractComponentRenderer
 			$contents = $component->getContents();
 		}
 
-		list($bl_label, $bl_url) = $component->getBacklink();
-		if($bl_url && $bl_label) {
-			$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/arrow_left.svg', '')->withSize('small');
-			$backlink = $f->button()->bulky($symbol, $bl_label, $bl_url);
-			$tpl->setVariable('BACKLINK', $default_renderer->render($backlink));
-		}
 		$tpl->setVariable('CONTENTS', $default_renderer->render($contents));
 
 		if($component->getEngaged()) {
@@ -57,6 +51,15 @@ class Renderer extends AbstractComponentRenderer
 		$toggle_signal = $component->getToggleSignal();
 		$show_signal = $component->getShowSignal();
 		$replace_content_signal = $component->getReplaceContentSignal();
+
+		list($bl_label, $bl_url) = $component->getBacklink();
+		if($bl_url && $bl_label) {
+			$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/arrow_left.svg', '')->withSize('small');
+			$backlink = $f->button()->bulky($symbol, $bl_label, $bl_url)
+				->withOnClick($replace_content_signal->withAsyncRenderUrl($bl_url));
+
+			$tpl->setVariable('BACKLINK', $default_renderer->render($backlink));
+		}
 
 		$component = $component->withOnLoadCode(function($id) use ($toggle_signal, $show_signal, $replace_content_signal) {
 			return "

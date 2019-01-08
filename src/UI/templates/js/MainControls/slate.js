@@ -22,6 +22,10 @@ il.UI.maincontrols = il.UI.maincontrols || {};
 		var onReplaceContentSignal = function(event, signalData, id) {
 			var slate = $('#' + id),
 				url = signalData.options.url;
+
+			if(slate.length === 0) {
+				id = signalData.triggerer.parents('.il-maincontrols-slate').attr('id');
+			}
 			il.UI.core.replaceContent(id, url, "content");
 		}
 

@@ -47,14 +47,28 @@ if ($_GET['new_ui'] == '1') {
 	echo $renderer->render($page);
 }
 
-if ($_GET['slate_contents'] == '1') {
+if ($_GET['slate_contents']) {
 	_initIliasForPreview();
 	$f = $DIC->ui()->factory();
 	$renderer = $DIC->ui()->renderer();
 
 	$symbol = $f->icon()->custom('./src/UI/examples/Layout/Page/Standard/user.svg', '')->withSize('small');
-	$slate = $f->maincontrols()->slate()->legacy('Replaced', $symbol, 'This is replaced content.')
-		->withBacklink('Back to Repository', './src/UI/examples/Layout/Page/Standard/ui.php?new_ui=1&mbactive=repository');
+	if($_GET['slate_contents'] == '1') {
+		$slate = $f->maincontrols()->slate()->legacy('Replaced', $symbol, 'This is replaced content.')
+			->withBacklink('Back', './src/UI/examples/Layout/Page/Standard/ui.php?slate_contents=2');
+	}
+	if($_GET['slate_contents'] == '2') {
+		$slate = $f->maincontrols()->slate()->combined('Replace Content', $symbol, 'replace again');
+		$slate = $slate
+			->withAdditionalEntry(
+				$f->button()->bulky($symbol, 'Replace whole Slate', '#')
+				->withOnClick(
+					$slate->getReplaceContentSignal()
+						->withAsyncRenderUrl('./src/UI/examples/Layout/Page/Standard/ui.php?slate_contents=1')
+				)
+			);
+	}
+
 	echo $renderer->renderAsync($slate);
 	exit();
 }
