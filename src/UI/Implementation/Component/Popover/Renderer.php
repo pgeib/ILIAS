@@ -60,7 +60,7 @@ class Renderer extends AbstractComponentRenderer {
 			return
 				"$(document).on('{$show}', function(event, signalData) {
 					il.UI.popover.showFromSignal(signalData, JSON.parse('{$options}'));
-				});".
+				});"
 				"$(document).on('{$replace}', function(event, signalData) {
 					il.UI.popover.replaceContentFromSignal('{$show}', signalData);
 				});";
