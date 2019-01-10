@@ -9451,7 +9451,7 @@ glyphicon-cog<!-- END settings -->
   background-color: #efefef;
   display: flex;
   margin-bottom: 2px;
-  padding: 20px;
+  padding: 10px 20px;
   /* !variable! */
 }
 .il-maincontrols-slate .btn-bulky.disengaged:before {
