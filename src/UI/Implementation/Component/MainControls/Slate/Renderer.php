@@ -32,6 +32,17 @@ class Renderer extends AbstractComponentRenderer
 				if($entry instanceof ISlate\Slate) {
 					$triggerer = $f->button()->bulky($entry->getSymbol(), $entry->getName(), '#')
 						->withOnClick($entry->getToggleSignal());
+
+					$init_state = 'disengaged';
+					if($entry->getEngaged()) {
+						$init_state = 'engaged';
+					}
+					$triggerer = $triggerer->withAdditionalOnloadCode(
+						function($id) use ($init_state) {
+							return "$('#{$id}').addClass('{$init_state}');";
+						}
+					);
+
 					$contents[] = $triggerer;
 				}
 				$contents[] = $entry;
