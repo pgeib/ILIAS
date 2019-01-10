@@ -21,6 +21,13 @@
 		display: flex;
 		margin-bottom: @slate-content-spacing;
 		padding: 20px; /* !variable! */
+		&:hover,
+		&.engaged {
+			background-color: @slate-bg-bulky-engaged;
+		    border-color: #e0e0e0;
+		    color: inherit;
+		    box-shadow: 4px 0px 5px -2px inset #ccc;
+		}
 		.icon {
 			filter: invert(50%);
 			margin-right: 10px; /* !variable! */
