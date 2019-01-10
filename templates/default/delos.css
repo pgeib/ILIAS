@@ -7053,11 +7053,6 @@ button.close {
 .btn {
   font-size: 12px;
 }
-.btn:focus,
-.btn:active {
-  border: 0;
-  outline: 0;
-}
 input.btn {
   display: inline-block;
   min-width: 60px;
@@ -9633,6 +9628,13 @@ glyphicon-cog<!-- END settings -->
   white-space: normal;
   margin-top: 5px;
   display: block;
+}
+.il-maincontrols-mainbar .btn:focus,
+.il-maincontrols-metabar .btn:focus,
+.il-maincontrols-mainbar .btn:active,
+.il-maincontrols-metabar .btn:active {
+  border: 0;
+  outline: 0;
 }
 .il-mainbar-triggers {
   background: #4a4a4a;
