@@ -12,6 +12,11 @@ il.UI.maincontrols = il.UI.maincontrols || {};
 		var onToggleSignal = function(event, signalData, id) {
 			var slate = $('#' + id);
 			toggle(slate);
+			if(_isEngaged(slate)) {
+				signalData.triggerer.addClass(_cls_engaged);
+			} else {
+				signalData.triggerer.removeClass(_cls_engaged);
+			}
 		};
 
 		var onShowSignal = function(event, signalData, id) {
