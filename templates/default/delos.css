@@ -9443,6 +9443,21 @@ glyphicon-cog<!-- END settings -->
 .il-maincontrols-slate.disengaged {
   display: none;
 }
+.il-maincontrols-slate .btn-bulky {
+  align-items: center;
+  background-color: #efefef;
+  display: flex;
+  margin-bottom: 2px;
+  padding: 20px;
+  /* !variable! */
+}
+.il-maincontrols-slate .btn-bulky .icon {
+  margin-right: 10px;
+  /* !variable! */
+}
+.il-maincontrols-slate .btn-bulky .bulky-label {
+  font-size: 1.5rem;
+}
 .il-maincontrols-slate-overflow {
   min-height: 0;
 }
@@ -9452,9 +9467,7 @@ glyphicon-cog<!-- END settings -->
 .il-maincontrols-slate-content h3,
 .il-maincontrols-slate-content h4 {
   padding: 10px 20px;
-}
-.il-maincontrols-slate-content button {
-  margin-bottom: 1px;
+  /* !variable! */
 }
 .il-maincontrols-slate-close button,
 .il-maincontrols-slate-back button {
