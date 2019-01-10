@@ -26,6 +26,7 @@
 @bg-metabar-slates: #fafafa;
 
 @slate-bg-bulky: #efefef;
+@slate-bg-bulky-engaged: #D1D8E3;
 @slate-content-spacing: 2px;
 
 @logo-height: 45px;
@@ -140,6 +141,7 @@ grid-based layout
 				-ms-flex-direction: column;
 				flex-direction: column;
 				// height: calc(~"100vh - " @height-header-footer);
+				z-index: 994;
 				.il-maincontrols-slate {
 					overflow-y: auto;
 				}
@@ -242,6 +244,7 @@ nav.il-maincontrols {
 .il-mainbar {
 	background-color: @bg-mainbar;
 	.shadow-right();
+	z-index: 995;
 }
 
 // tools section

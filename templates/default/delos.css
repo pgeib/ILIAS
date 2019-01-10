@@ -9232,6 +9232,7 @@ grid-based layout
   display: flex;
   -ms-flex-direction: column;
   flex-direction: column;
+  z-index: 994;
 }
 .il-layout-page.with-engaged-slates .il-maincontrols-mainbar .il-mainbar-slates .il-maincontrols-slate {
   overflow-y: auto;
@@ -9321,6 +9322,7 @@ nav.il-maincontrols {
 .il-mainbar {
   background-color: #4a4a4a;
   box-shadow: 1px 3px 4px #ccc;
+  z-index: 995;
 }
 .il-mainbar-tools-button {
   display: -ms-flexbox;
@@ -9457,7 +9459,6 @@ glyphicon-cog<!-- END settings -->
   background-color: #D1D8E3;
   border-color: #e0e0e0;
   color: inherit;
-  box-shadow: 4px 0px 5px -2px inset #ccc;
 }
 .il-maincontrols-slate .btn-bulky .icon {
   filter: invert(50%);
