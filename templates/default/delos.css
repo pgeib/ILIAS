@@ -9454,6 +9454,18 @@ glyphicon-cog<!-- END settings -->
   padding: 20px;
   /* !variable! */
 }
+.il-maincontrols-slate .btn-bulky.disengaged:before {
+  content: " \e606";
+  font-family: "il-icons";
+  font-size: 2.1rem;
+  margin-right: 10px;
+}
+.il-maincontrols-slate .btn-bulky.engaged:before {
+  content: " \e604";
+  font-family: "il-icons";
+  font-size: 2.1rem;
+  margin-right: 10px;
+}
 .il-maincontrols-slate .btn-bulky:hover,
 .il-maincontrols-slate .btn-bulky.engaged {
   background-color: #D1D8E3;
@@ -9467,6 +9479,20 @@ glyphicon-cog<!-- END settings -->
 }
 .il-maincontrols-slate .btn-bulky .bulky-label {
   font-size: 1.5rem;
+}
+.il-maincontrols-slate .backlink .btn-bulky {
+  background-color: #fff;
+  /* !variable! */
+  height: 80px;
+}
+.il-maincontrols-slate .backlink .btn-bulky .bulky-label {
+  color: #4c6586;
+}
+.il-maincontrols-slate .backlink .btn-bulky .icon.small,
+.il-maincontrols-slate .backlink .btn-bulky .icon.small img {
+  height: 17px;
+  line-height: 17px;
+  width: 17px;
 }
 .il-maincontrols-slate-overflow {
   min-height: 0;
