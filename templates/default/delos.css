@@ -7196,6 +7196,7 @@ fieldset[disabled] .btn.active {
   border-color: #e0e0e0;
   color: white;
   cursor: default;
+  outline: none;
 }
 .btn.engaged,
 .btn.engaged:hover,
@@ -9375,8 +9376,6 @@ main {
   display: block;
 }
 .il-layout-page-content {
-  display: -ms-grid;
-  display: grid;
   -ms-grid-column: 2;
   -ms-grid-row: 3;
   grid-column: 2;
