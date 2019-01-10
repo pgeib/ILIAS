@@ -9320,6 +9320,10 @@ nav.il-maincontrols {
 }
 .il-mainbar {
   background-color: #4a4a4a;
+  -ms-grid-column: 1;
+  -ms-grid-row: 1;
+  grid-column: 1;
+  grid-row: 1;
   box-shadow: 1px 3px 4px #ccc;
   z-index: 995;
 }
@@ -9342,6 +9346,12 @@ nav.il-maincontrols {
   display: flex;
   -ms-flex-direction: row;
   flex-direction: row;
+}
+.il-mainbar-slates {
+  -ms-grid-column: 2;
+  -ms-grid-row: 1;
+  grid-column: 2;
+  grid-row: 1;
 }
 .il-mainbar-remove-tool {
   display: none;
