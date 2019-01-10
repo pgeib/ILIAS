@@ -1,5 +1,10 @@
 .btn {
   font-size: @il-button-font-size;
+  &:focus,
+  &:active {
+      border: 0;
+      outline: 0;
+  }
 }
 
 //This is legacy for the old forms implementation. Can be removed as soon as the old implementation is removed.
@@ -34,7 +39,6 @@ input.btn{
       border-color: @il-disabled-btn-border;
       color: @il-disabled-btn-color;
       cursor: default;
-      outline: none;
     }
   }
   &.engaged {
