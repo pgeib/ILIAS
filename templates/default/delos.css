@@ -9317,6 +9317,8 @@ nav.il-maincontrols {
   height: 100%;
   -ms-grid-colums: 80px 400px;
   grid-template-columns: 80px 400px;
+  -ms-grid-rows: 1fr;
+  grid-template-rows: 1fr;
   width: 80px;
 }
 .il-mainbar {
