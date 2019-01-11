@@ -9581,6 +9581,9 @@ glyphicon-cog<!-- END settings -->
 .il-metabar-entry {
   position: relative;
 }
+.il-metabar-entry .btn .badge {
+  margin-top: -20px;
+}
 .il-metabar-entry .il-counter-status {
   margin-top: -4px;
 }
