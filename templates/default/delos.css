@@ -7196,6 +7196,7 @@ fieldset[disabled] .btn.active {
   border-color: #e0e0e0;
   color: white;
   cursor: default;
+  outline: none;
 }
 .btn.engaged,
 .btn.engaged:hover,
@@ -9160,22 +9161,6 @@ div.alert ul > li:before {
 .shadow-bottom {
   box-shadow: 0 1px 4px #ccc;
 }
-/* IE10+ not supported
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-	.il-layout-page {
-		&:before {
-			content: "Microsoft Internet Explorer is not supported in this ILIAS Version :("
-		}
-		header,
-		footer,
-		nav,
-		main,
-		.layout-page-content {
-			display:none;
-		}
-	}
-}
-*/
 * {
   box-sizing: border-box;
 }
@@ -9196,7 +9181,6 @@ grid-based layout
 */
 .il-layout-page {
   background: #f0f0f0;
-  /* MOVE */
   display: -ms-grid;
   display: grid;
   grid-gap: 0px;
@@ -9240,7 +9224,7 @@ grid-based layout
   display: -ms-flexbox;
   display: flex;
 }
-/* Metabar */
+/* metabar */
 header {
   -ms-grid-column: 1;
   -ms-grid-column-span: 2;
@@ -9274,9 +9258,7 @@ header {
   -ms-flex-align: center;
   align-items: center;
   background-color: #fff;
-  /* move style */
   border-top: 1px solid #ddd;
-  /* move style */
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: row;
@@ -9289,17 +9271,14 @@ header {
   grid-row: 2;
   z-index: 997;
   box-shadow: 0 1px 4px #ccc;
-  /* move style */
 }
 .breadcrumbs ul.breadcrumb {
   padding-left: 100px;
 }
 .breadcrumbs ul.breadcrumb > li + li:before {
   content: " \e606";
-  /* move style */
   color: #bbb;
   font-family: "il-icons";
-  /* move style */
 }
 /* mainbar */
 nav.il-maincontrols {
@@ -9316,10 +9295,16 @@ nav.il-maincontrols {
   height: 100%;
   -ms-grid-colums: 80px 400px;
   grid-template-columns: 80px 400px;
+  -ms-grid-rows: 1fr;
+  grid-template-rows: 1fr;
   width: 80px;
 }
 .il-mainbar {
   background-color: #4a4a4a;
+  -ms-grid-column: 1;
+  -ms-grid-row: 1;
+  grid-column: 1;
+  grid-row: 1;
   box-shadow: 1px 3px 4px #ccc;
   z-index: 995;
 }
@@ -9343,6 +9328,12 @@ nav.il-maincontrols {
   -ms-flex-direction: row;
   flex-direction: row;
 }
+.il-mainbar-slates {
+  -ms-grid-column: 2;
+  -ms-grid-row: 1;
+  grid-column: 2;
+  grid-row: 1;
+}
 .il-mainbar-remove-tool {
   display: none;
 }
@@ -9356,17 +9347,11 @@ nav.il-maincontrols {
   height: 45px;
   width: 45px;
 }
-/*
-main-tag is important for screenreader
-fix due to main-tag is not supported in IE
-*/
-/* Content */
+/* content */
 main {
   display: block;
 }
 .il-layout-page-content {
-  display: -ms-grid;
-  display: grid;
   -ms-grid-column: 2;
   -ms-grid-row: 3;
   grid-column: 2;
@@ -9433,15 +9418,6 @@ glyphicon-cog<!-- END settings -->
     content: "\e82a";
 }
 */
-.il-maincontrols-slate.engaged {
-  /*
-		// quick solution, better use flex or grid
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		position: relative;
-		*/
-}
 .il-maincontrols-slate.disengaged {
   display: none;
 }
@@ -9569,6 +9545,9 @@ glyphicon-cog<!-- END settings -->
 }
 .il-metabar-entry {
   position: relative;
+}
+.il-metabar-entry .btn .badge {
+  margin-top: -20px;
 }
 .il-metabar-entry .il-counter-status {
   margin-top: -4px;
