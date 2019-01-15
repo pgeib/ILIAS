@@ -7846,7 +7846,9 @@ hr.il-divider-with-label {
   background-image: url("images/icon_iass.svg");
 }
 .il-viewcontrol-mode .ilSubmitInactive,
-.il-viewcontrol-mode .ilSubmitInactive:hover {
+.il-viewcontrol-section .ilSubmitInactive,
+.il-viewcontrol-mode .ilSubmitInactive:hover,
+.il-viewcontrol-section .ilSubmitInactive:hover {
   background-color: #557196;
   color: white;
   border-color: transparent;
@@ -7859,6 +7861,9 @@ hr.il-divider-with-label {
 }
 .il-viewcontrol-sortation .dropdown-toggle .caret:before {
   content: "\21f5";
+}
+.il-viewcontrol-pagination .dropdown {
+  display: inline;
 }
 .ilBlockContent .il-viewcontrol-section .btn.btn-default {
   background-color: transparent;
@@ -8276,7 +8281,7 @@ ul.breadcrumb li:hover {
   padding: 0;
 }
 .il-popover i.icon-refresh {
-  background: url("libs/bower/bower_components/webui-popover/img/loading.gif") no-repeat;
+  background: url("images/loading.gif") no-repeat;
   height: 30px;
 }
 .il-popover .il-popover-title-container {
@@ -9490,6 +9495,11 @@ footer.ilFooter .ilPermalinkContainer > label {
   margin-top: 25px;
 }
 @media only screen and (max-width: 767px) {
+  #devmodeBlock {
+    position: absolute;
+  }
+}
+@media only screen and (max-width: 767px) {
   #devmodeBlock table {
     table-layout: fixed;
     width: 100%;
@@ -9808,9 +9818,6 @@ div.ilSideBarContent {
   -webkit-box-shadow: 2px 2px 4px #c0c0c0;
   box-shadow: 2px 2px 4px #c0c0c0;
 }
-[dir="rtl"] .ui-menu {
-  float: right;
-}
 .ui-menu .ui-menu-item {
   margin: 0;
   padding: 0;
@@ -9819,9 +9826,25 @@ div.ilSideBarContent {
   clear: left;
   width: 100%;
 }
-[dir="rtl"] .ui-menu .ui-menu-item {
-  float: right;
-  clear: right;
+.ui-menu .ui-menu-item > * {
+  text-decoration: none;
+  display: block;
+  padding: 2px 4px;
+  line-height: 1.5;
+  color: #5d5d5d;
+  background-color: transparent;
+}
+.ui-menu .ui-menu-item > *:hover,
+.ui-menu .ui-menu-item > *.ui-state-hover,
+.ui-menu .ui-menu-item > *.ui-state-active {
+  background-color: #ecf0f4;
+  color: #5d5d5d;
+}
+.ui-menu .ui-menu-item a {
+  color: #5d5d5d;
+}
+.ui-menu .ui-menu-item a:hover {
+  color: #444444;
 }
 .ui-menu .ui-menu-category {
   margin: 0;
@@ -9832,10 +9855,6 @@ div.ilSideBarContent {
   width: 100%;
   font-weight: bold;
 }
-[dir="rtl"] .ui-menu .ui-menu-category {
-  float: right;
-  clear: right;
-}
 .ui-menu .ui-menu-more {
   display: block;
   zoom: 1;
@@ -9845,33 +9864,32 @@ div.ilSideBarContent {
   clear: left;
   width: 100%;
 }
-[dir="rtl"] .ui-menu .ui-menu-more {
-  float: right;
-  clear: right;
-}
 .ui-menu .ui-menu-more span {
   padding: 2px;
 }
 .ui-menu .ui-menu-more:hover {
   background-color: white;
 }
+[dir="rtl"] .ui-menu {
+  float: right;
+}
+[dir="rtl"] .ui-menu .ui-menu-item {
+  float: right;
+  clear: right;
+}
+[dir="rtl"] .ui-menu .ui-menu-category {
+  float: right;
+  clear: right;
+}
+[dir="rtl"] .ui-menu .ui-menu-more {
+  float: right;
+  clear: right;
+}
 .ui-autocomplete {
   max-height: 400px;
   overflow-y: auto;
   /* prevent horizontal scrollbar */
   overflow-x: hidden;
-}
-.ui-menu .ui-menu-item a {
-  text-decoration: none;
-  display: block;
-  padding: 2px 4px;
-  line-height: 1.5;
-  zoom: 1;
-  color: #03a;
-}
-.ui-menu .ui-menu-item a.ui-state-hover,
-.ui-menu .ui-menu-item a.ui-state-active {
-  background-color: #ff9;
 }
 /* Icon Default */
 img.ilIcon {
@@ -10512,9 +10530,17 @@ div.ilForumQuoteHead {
 }
 .ilFrmPostImage img {
   vertical-align: top;
-  padding: 5px 20px 5px 5px;
+  margin: 5px 20px 5px 5px;
   border: none;
+}
+.ilFrmPostImage img[src*="data:image/"] {
   max-width: 100%;
+}
+@media only screen and (min-width: 768px) {
+  .ilFrmPostImage img[src*="data:image/"] {
+    margin: 0 !important;
+    padding: 5px 20px 5px 5px;
+  }
 }
 .ilFrmPostClear {
   clear: both;
@@ -10545,7 +10571,7 @@ div.ilFrmPostHeader span.small {
     width: 100%;
   }
 }
-@media only screen and (max-width: 767px) {
+@media only screen {
   .ilFrmPostContentContainer img {
     width: 100%;
     height: auto !important;
@@ -11298,6 +11324,14 @@ table.il-cal-week tr.calstd {
   border-top-width: 2px;
   border-top-style: solid;
 }
+table.il-cal-week {
+  table-layout: fixed;
+  width: 100%;
+  white-space: nowrap;
+}
+table.il-cal-week td.calevent {
+  overflow: hidden;
+}
 tr.calstdtime {
   height: 1.2em;
   background-color: inherit;
@@ -11551,6 +11585,14 @@ li.ilWikiBlockItem {
   min-width: 100%;
   background-color: #fafafa;
 }
+#ilTopNav .dropdown-menu li a {
+  background-color: transparent;
+  color: #5d5d5d;
+}
+#ilTopNav .dropdown-menu li a:hover {
+  background-color: #ecf0f4;
+  color: #444444;
+}
 @media only screen and (max-width: 767px) {
   #ilTopNav .dropdown-menu {
     float: none;
@@ -11585,7 +11627,7 @@ li.ilWikiBlockItem {
     margin: 0 10px 0 0;
     padding: 5px 10px 6px;
     border-top: 0;
-    color: #5d5d5d;
+    color: #808080;
   }
 }
 #ilTopNav .navbar-nav > li > a:hover,
@@ -12221,12 +12263,6 @@ tr.tblheader {
 td > img[src$="icon_custom.svg"] {
   max-width: 32px;
 }
-@media (max-width: 767px) {
-  .table-responsive .dropdown-menu,
-  .table-responsive .dropdown-toggle {
-    position: static !important;
-  }
-}
 @media (min-width: 768px) {
   .table-responsive {
     overflow: visible;
@@ -12815,6 +12851,12 @@ div.ilProfile {
   background-color: #f6f6f6;
   border: 1px solid #d0d5ea;
   padding: 15px;
+}
+div.ilProfile + div.ilPermalinkContainer {
+  margin-top: 20px;
+}
+div.ilProfile + div.ilPermalinkContainer .input-group-btn {
+  vertical-align: bottom;
 }
 h3.ilProfileName {
   margin: 0 0 10px;
@@ -14454,6 +14496,12 @@ body.ilPrtfPdfBody .ilPCMyCoursesToggle img {
 [data-onscreenchat-inact-userid] {
   opacity: .3 !important;
 }
+.ilOnScreenChatWindowHeaderTooltip ul {
+  text-align: left;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
 #onscreenchat-container {
   position: fixed;
   bottom: 0;
@@ -14742,6 +14790,7 @@ body.ilPrtfPdfBody .ilPCMyCoursesToggle img {
 .ilOnScreenChatMenuItem .media-body .media-heading {
   text-overflow: ellipsis;
   overflow: hidden;
+  max-width: 225px;
 }
 .ilOnScreenChatMenuItem .media-body .media-heading a {
   color: #557196 !important;
@@ -14755,6 +14804,10 @@ body.ilPrtfPdfBody .ilPCMyCoursesToggle img {
   text-overflow: ellipsis;
   overflow-x: hidden;
   color: #606060;
+}
+.ilOnScreenChatMenuItem .media-body p.lastMessage img {
+  max-width: 15px;
+  max-height: 15px;
 }
 .ilOnScreenChatMenuItem .media-body p a {
   color: #557196 !important;
@@ -14791,6 +14844,11 @@ div.ilBadgeBackpackPanelContent img {
 span.ilProfileBadge {
   display: inline-block;
   padding: 5px;
+}
+span.ilProfileBadge a {
+  width: 50px;
+  height: 50px;
+  display: inline-block;
 }
 /*!
  * Datetimepicker for Bootstrap 3
