@@ -1,4 +1,4 @@
-@import "less/font.less"; 
+@import "less/font.less";
  /* rtl-review is this font safe for RTL languages? */
 
  /* rtl-review */
@@ -17,7 +17,7 @@ In theory, you should also invert shadow... but i think we could postpone this t
 All parts that aren't checked yet are actually marked with "rtl-review"
 */
 
-@bsbase: "../../libs/bower/bower_components/bootstrap/less/";
+@bsbase: "./libs/bower/bower_components/bootstrap/less/";
 
 // This part should be a copy of the less/bootstrap.less file
 // containing all imports needed.
@@ -75,7 +75,7 @@ All parts that aren't checked yet are actually marked with "rtl-review"
 @import "@{bsbase}responsive-utilities.less";
 
 // UI framework
-@uibase: "../../src/UI/templates/default/";
+@uibase: "./src/UI/";
 @import "@{uibase}Counter/counter.less";
 @import "@{uibase}Glyph/glyph.less";
 @import "@{uibase}Panel/panel.less";
@@ -527,7 +527,7 @@ img {
 		max-width: 100%;
 	}
 	&.olTileImage {
-		@media only screen and (max-width: @grid-float-breakpoint-max) {	
+		@media only screen and (max-width: @grid-float-breakpoint-max) {
 			// this fixes the open street map images, not the best place to
 			// to this. another option would be to not put the
 			// max-width behaviour above on every img...
@@ -2140,4 +2140,3 @@ div.ilGoogleMap {
 		content: "";
 	}
 }
-
