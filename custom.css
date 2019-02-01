@@ -1082,7 +1082,7 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-family: 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.42857143;
   color: #000;
@@ -5972,7 +5972,7 @@ button.close {
   position: absolute;
   z-index: 1070;
   display: block;
-  font-family: 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -6090,7 +6090,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -16132,13 +16132,74 @@ no display items
 *******************
 */
 /*
+*********************
+    image-tiles
+*********************
+*/
+/*
+// topic list container
+.ilc_section_TopicListContainer {
+    .ilc_section_TopicListTile {
+        background-color: @white;
+        border: 1px solid @border-gray;
+        display: inline-block !important;
+        margin: 0 2% 2% 0;
+    	overflow: hidden;
+    	padding-bottom: 55px;
+        position: relative;
+        width: 23%;
+        &:nth-child(4),
+        &:nth-child(8),
+        &:nth-child(12),
+        &:nth-child(16) {
+            margin-right: 0;
+        }
+    }
+}
+
+// images
+.ilc_section_TopicListTile figure.ilc_media_cont_MediaContainer {
+    margin: 0px !important; //override inline style
+	width: 101%;
+}
+
+// tile text
+.ilc_text_block_TopicListText {
+    background-color: @white;
+    bottom: 0;
+    height: auto;
+    min-height: 43px;
+    padding: 5px 40px 4px 10px;
+    position: absolute;
+    width: 100%;
+	&:before {
+        bottom: 3px;
+	    content: "\e907";
+	    font-family: "cat icons";
+	    font-size: 2rem;
+	    position: absolute;
+	    right: 10px;
+	}
+}
+// none styling for list:content-styles
+td > .ilc_text_block_TopicListText {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    min-height: auto;
+    &:before {
+        display: none;
+    }
+}
+*/
+/*
 ==========================================
     global styles
 ==========================================
 */
 body {
   color: #000;
-  font-family: 'Open Sans', Arial, Verdana, sans-serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   font-size: 16px;
 }
 body h1,
@@ -16148,11 +16209,8 @@ body h4,
 body h5,
 body h6 {
   color: #4c6586;
-  font-family: 'Open Sans', Arial, Verdana, sans-serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   font-weight: 700;
-}
-body .ilc_Paragraph {
-  line-height: 1.6rem;
 }
 /*
 ==========================================
@@ -17214,51 +17272,36 @@ body div.ilc_question_Standard .ilc_answers {
     topic list
 ==============================
 */
-.ilc_section_TopicListContainer .ilc_section_TopicListTile {
+/*
+******************************
+    text-tiles with image
+******************************
+*/
+.ilc_section_TopicListContainer figure.ilc_media_cont_MediaContainer {
+  margin: 0 0 20px !important;
+}
+.ilc_section_TopicListTile {
+  align-items: center;
   background-color: #fff;
   border: 1px solid #ddd;
-  display: inline-block !important;
-  margin: 0 2% 2% 0;
-  overflow: hidden;
-  padding-bottom: 55px;
+  display: flex;
+  height: 53px;
+  margin-bottom: 10px;
   position: relative;
-  width: 23%;
-}
-.ilc_section_TopicListContainer .ilc_section_TopicListTile:nth-child(4),
-.ilc_section_TopicListContainer .ilc_section_TopicListTile:nth-child(8),
-.ilc_section_TopicListContainer .ilc_section_TopicListTile:nth-child(12),
-.ilc_section_TopicListContainer .ilc_section_TopicListTile:nth-child(16) {
-  margin-right: 0;
-}
-.ilc_section_TopicListTile figure.ilc_media_cont_MediaContainer {
-  margin: 0px !important;
-  width: 101%;
 }
 .ilc_text_block_TopicListText {
-  background-color: #fff;
-  bottom: 0;
-  height: auto;
-  min-height: 43px;
-  padding: 5px 40px 4px 10px;
-  position: absolute;
-  width: 100%;
+  padding: 5px 40px 5px 10px;
 }
 .ilc_text_block_TopicListText:before {
-  bottom: 3px;
   content: "\e907";
   font-family: "cat icons";
   font-size: 2rem;
   position: absolute;
-  right: 10px;
+  right: 5px;
+  bottom: 5px;
 }
-td > .ilc_text_block_TopicListText {
-  position: relative;
-  margin: 0;
-  padding: 0;
-  min-height: auto;
-}
-td > .ilc_text_block_TopicListText:before {
-  display: none;
+.ilc_text_block_TopicListClearFix {
+  clear: both;
 }
 /*
 ==============================
@@ -17682,7 +17725,7 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
 .ilc_section_LmContainer div.ilc_qfeedw_FeedbackWrong:before {
   bottom: 45px;
   content: "+";
-  font-family: 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   font-size: 30px;
   font-weight: 400;
   transform: rotate(45deg);

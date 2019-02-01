@@ -1,21 +1,82 @@
 // customer specific styles
-@white:                     #fff;
-@black:                     #000;
+
 //@brand-primary:           #009bea;
 //@brand-secondary:         #818181;
-
-@font-family:               'Open Sans', Arial, Verdana, sans-serif;
-@font-family-headline:      'Open Sans', Arial, Verdana, sans-serif;
+@font-family-sans-serif:    'Open Sans', Helvetica, Arial, sans-serif;
+@font-family-headline:      @font-family-sans-serif;
 @font-size-base:            16px;
 @font-weight-headline:      700;
-@line-height:               1.6rem;
 @text-color:                @black;
 @text-color-headline:       @brand-primary;
+
+/*
+*********************
+    image-tiles
+*********************
+*/
+/*
+// topic list container
+.ilc_section_TopicListContainer {
+    .ilc_section_TopicListTile {
+        background-color: @white;
+        border: 1px solid @border-gray;
+        display: inline-block !important;
+        margin: 0 2% 2% 0;
+    	overflow: hidden;
+    	padding-bottom: 55px;
+        position: relative;
+        width: 23%;
+        &:nth-child(4),
+        &:nth-child(8),
+        &:nth-child(12),
+        &:nth-child(16) {
+            margin-right: 0;
+        }
+    }
+}
+
+// images
+.ilc_section_TopicListTile figure.ilc_media_cont_MediaContainer {
+    margin: 0px !important; //override inline style
+	width: 101%;
+}
+
+// tile text
+.ilc_text_block_TopicListText {
+    background-color: @white;
+    bottom: 0;
+    height: auto;
+    min-height: 43px;
+    padding: 5px 40px 4px 10px;
+    position: absolute;
+    width: 100%;
+	&:before {
+        bottom: 3px;
+	    content: "\e907";
+	    font-family: "cat icons";
+	    font-size: 2rem;
+	    position: absolute;
+	    right: 10px;
+	}
+}
+// none styling for list:content-styles
+td > .ilc_text_block_TopicListText {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    min-height: auto;
+    &:before {
+        display: none;
+    }
+}
+*/
+@white:                     #fff;
+@black:                     #000;
 
 @border:                    1px solid @border-gray;
 
 // learning modul variables
-@lm-font-size:				15px;
+@lm-font-size:				ceil(@font-size-base*0.9375);
 @lm-gray:           		#aaa;
 @lm-gray-darken:            #888;
 @lm-lighten:        		@white;
@@ -41,15 +102,12 @@
 */
 body {
     color: @text-color;
-    font-family: @font-family;
+    font-family: @font-family-sans-serif;
     font-size: @font-size-base;
     h1, h2, h3, h4, h5, h6 {
         color: @text-color-headline;
         font-family: @font-family-headline;
         font-weight: @font-weight-headline;
-    }
-    .ilc_Paragraph {
-        line-height: @line-height;
     }
 }
 
