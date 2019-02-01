@@ -1,1 +1,729 @@
 // customer specific styles
+@white:                     #fff;
+@black:                     #000;
+@brand-primary:             red;
+@brand-secondary:           yellow;
+
+@font-family:               Arial, sans-serif;
+@font-family-headline:      Arial, sans-serif;
+@font-size-base:            16px;
+@text-color:                @black;
+@text-color-headline:       @brand-primary;
+
+@border:                    1px solid @border-gray;
+
+// learning modul variables
+@lm-font-size:				15px;
+@lm-gray:           		#aaa;
+@lm-gray-darken:            #888;
+@lm-lighten:        		@white;
+@lm-darken:         		@black;
+@lm-fail:			        @brand-warning;
+
+@lm-primary:        		mix(@lm-gray, @brand-primary, 95%);
+@lm-secondary:     			mix(@lm-gray-darken, @brand-primary, 95%);
+
+@lm-height:					600px;
+@lm-height-subtab:			50px;
+
+@lm-border:					@border;
+@lm-border-lighten:			1px solid fade(@lm-lighten, 30%);
+@lm-border-lighten-50:		1px solid fade(@lm-lighten, 50%);
+@lm-border-darken:			1px solid fade(@lm-darken, 10%);
+
+
+/*
+==========================================
+    global styles
+==========================================
+*/
+body {
+    font-family: @font-family;
+    font-size: @font-size-base;
+    h1, h2, h3, h4, h5, h6 {
+        font-family: @font-family-headline;
+    }
+}
+
+/*
+==========================================
+    LEARNING MODUL
+    ILIAS
+==========================================
+*/
+
+// display none --> start
+.ilLMNoMenu .il_HeaderInner,
+div#fixed_content.ilLM .il_HeaderInner,
+li#exp_node_ilLMProgressTree_1.jstree-open .jstree-leaf .jstree-icon,
+li#exp_node_ilLMProgressTree_1.jstree-closed a,
+li#exp_node_ilLMProgressTree_1.jstree-open a {
+    display: none;
+}
+
+.ilLMNoMenu,
+.ilLM {
+	div.ilc_page_frame_PageFrame .ilFloatRight,
+	div.ilc_page_frame_PageFrame label[for="current_perma_link"],
+	div.ilc_page_frame_PageFrame #current_perma_link,
+	#subtab_content,
+	#subtab_info_short,
+	//#subtab_cont_toc,
+	#subtab_cont_print_view,
+	#subtab_download {
+		display: none;
+	}
+}
+// display none <-- end
+
+// generell settings learning-modul
+.ilLMNoMenu .ilLMMenu,
+.ilLM .ilLMMenu {
+    margin: 0 300px 0 0;
+	min-width: 400px;
+    position: relative;
+}
+.ilc_section_LmContainer {
+	font-size: @lm-font-size;
+}
+
+// centering learning-modul
+.ilLMNoMenu .row,
+.row.ilLM {
+    left: 0;
+    margin: 0 auto;
+	right: 0;
+    top: 25px;
+}
+
+/*
+==============================
+    navigation panel
+==============================
+*/
+div.ilLMMenu #ilSubTab {
+    background-color: @lm-primary;
+	border-top: @lm-border-lighten;
+	margin: 0;
+	padding: 0;
+    position: absolute;
+    top: @lm-height - @lm-height-subtab;
+	width: 100%;
+	z-index: 1;
+    #subtab_edit_page,
+    #subtab_cont_toc {
+		border-right: @lm-border-lighten;
+        height: @lm-height-subtab - 1;
+        left: 100px;
+        margin-left: 0px;
+		width: 60px;
+        a {
+            color: transparent;
+            font-size: 0;
+            height: @lm-height-subtab;
+            padding: 0;
+			width: 60px;
+            &:before {
+                content: "\e941";
+                font-family: cat icons;
+                color: fade(@lm-lighten, 40%);
+                font-size: 30px;
+                position: absolute;
+                left: 16px;
+                top: 4px;
+                transition: color .3s ease;
+            }
+            &:hover:before {
+                color: @lm-lighten;
+            }
+        }
+    }
+    #subtab_edit_page {
+        border-left: @lm-border-lighten;
+        border-right: none;
+        left: auto;
+        position: absolute;
+        right: 100px;
+    }
+    #subtab_cont_toc a:before {
+        content: "\e90e";
+        left: 14px;
+    }
+    > li > a:hover,
+    > li > a:focus {
+        text-decoration: none;
+    }
+}
+.ilLM ol.breadcrumb {
+    bottom: 0;
+    color: fade(@lm-lighten, 50%);
+    height: @lm-height-subtab;
+    margin: 0 460px 0 170px;
+    padding: 10px 0 0;
+    position: absolute;
+    z-index: 10;
+    li {
+        color: fade(@lm-lighten, 50%);
+        max-width: 200px;
+        overflow: hidden;
+        position: relative;
+        text-overflow: ellipsis;
+        top: 6px;
+        white-space: nowrap;
+        + li:before,
+        a {
+            color: fade(@lm-lighten, 50%);
+        }
+        a:hover,
+        a:focus {
+            color: @lm-lighten;
+            outline: 0;
+            text-decoration: none;
+        }
+    }
+}
+.ilLMNoMenu div.ilc_page_frame_PageFrame,
+.ilLM div.ilc_page_frame_PageFrame {
+    height: @lm-height;
+    padding: 0;
+    position: relative;
+    top: 0;
+    margin-right: 300px;
+    min-width: 400px;
+    outline: @lm-border-darken;
+	// switches --> start
+    div.ilc_page_tnav_TopNavigation {
+        border: none;
+        padding: 0;
+        position: absolute;
+        bottom: @lm-height-subtab - 1;
+        width: 100%;
+        &:before,
+        &:after {
+            background-color: @lm-secondary;
+            border-right: @lm-border-lighten-50;
+            color: fade(@lm-lighten, 10%);
+            content: "\e902";
+            font-family: cat icons;
+            font-size: 30px;
+            font-weight: 600;
+            height: @lm-height-subtab - 1;
+            left: 0;
+            line-height: 1.35em;
+            padding: 5px 0 0 34px;
+            position: absolute;
+            text-shadow:    1px 0px 0px fade(@lm-lighten, 10%),
+                            -1px 0px 0px fade(@lm-lighten, 10%),
+                            0px 1px 0px fade(@lm-lighten, 10%),
+                            0px -1px fade(@lm-lighten, 10%);
+            width: 100px;
+            z-index: 1;
+        }
+        &:after {
+            content: "\e903";
+            padding: 5px 0 0 38px;
+            left: auto;
+            right: 0;
+            border-left: @lm-border-lighten;
+            border-right: none;
+        }
+        .ilc_page_rnav_RightNavigation a,
+        .ilc_page_lnav_LeftNavigation a {
+            color: transparent;
+            position: absolute;
+            width: 100px;
+            height: @lm-height-subtab - 1;
+            right: 0;
+            transition: background-color 0.3s ease;
+            overflow: hidden;
+            z-index: 100;
+            border-left: @lm-border-lighten;
+            &:before {
+                content: "\e903";
+                font-family: cat icons;
+                color: @lm-lighten;
+                font-size: 30px;
+                font-weight: 600;
+                line-height: 1.35em;
+                text-shadow:    1px 0px 0px @lm-lighten,
+                                -1px 0px 0px @lm-lighten,
+                                0px 1px 0px @lm-lighten,
+                                0px -1px 0px @lm-lighten;
+                left: 38px;
+                position: absolute;
+                top: 5px;
+                opacity: .6;
+            }
+            img {
+              display: none;
+            }
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
+            &:hover:before,
+            &:focus:before {
+                opacity: 1;
+            }
+        }
+        div.ilc_page_lnav_LeftNavigation a {
+            left: 0;
+            right: auto;
+            border-right: @lm-border-lighten;
+            border-left: none;
+            &:before {
+                left: 34px;
+                position: absolute;
+                transform: rotate(180deg);
+            }
+        }
+    }
+    // switches <-- end
+    .ilc_page_cont_PageContainer {
+        background-color: @lm-lighten;
+        height: @lm-height - @lm-height-subtab;
+        padding: 0;
+        border: none;
+        position: absolute;
+        width: 100%;
+        ul {
+            padding-left: 0;
+            list-style: none;
+            li{
+                margin-bottom: 5px;
+				padding-left: 25px;
+				position: relative;
+				&:before {
+					color: @lm-primary;
+				    content: "\ea3c";
+				    font-family: cat icons;
+				    font-size: .8rem;
+				    left: 5px;
+				    position: absolute;
+				    top: 1px;
+				}
+            }
+        }
+		ol {
+			padding-left: 25px;
+		}
+    }
+    //Rating
+    div#ilrtrpg {
+        position: absolute;
+        z-index: 10;
+        bottom: 16px;
+        left: 761px;
+        .badge {
+            background-color: @lm-lighten;
+            color: #5e7d8c;
+            height: 20px;
+            width: 20px;
+            line-height: 1.2em;
+            font-size: 12px;
+            margin: 2px;
+        }
+        .ilOverlay {
+            top: -13px !important;
+            height: 49px!important;
+            width: 270px !important;
+            left: -128px !important;
+            box-shadow: none;
+            background-color: rgba(255,255,255,.8);
+            border: none;
+            p {
+                display: inline-block;
+                padding-left: 12px;
+                margin: 14px 0;
+            }
+        }
+    }
+}
+
+/*
+==============================
+        sitemap
+==============================
+*/
+
+// ilLM-Tree start -->
+.ilLMNoMenu div#fixed_content.ilLeftNavSpace,
+div#fixed_content.ilLeftNavSpace.ilLM {
+    margin-left: 0px !important;
+	padding: 0;
+}
+.ilLM .ilLeftNav span.ilExp2NodeContent {
+	display: inline-block;
+	padding: 0 20px 0 0;
+	white-space: normal;
+}
+.ilLMNoMenu div.ilLeftNav,
+div.ilLeftNav.ilLM {
+    border-right: none;
+    height: @lm-height;
+	left: auto;
+	margin: 0;
+    outline: @lm-border-darken;
+	padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+	width: 290px;
+    a {
+        line-height: 1.6em;
+		margin-bottom: 10px;
+    }
+}
+div#il_expl2_jstree_cont_ilLMProgressTree {
+    span {
+        color: @lm-darken;
+		display: inline-table;
+        font-weight: 400;
+		line-height: 1.4rem;
+        opacity: .7;
+        white-space: normal;
+    }
+    li:hover > a span {
+        color: @brand-primary;
+        opacity: 1;
+    }
+    .ilHighlighted {
+        background-color: transparent;
+        font-size: 1.2em;
+		font-weight: 600;
+        opacity: 1;
+		padding: 0;
+		position: relative;
+		top: 2px;
+    }
+    img {
+        height: 24px;
+        margin: 0px 3px;
+        opacity: .9;
+        width: 26px;
+    }
+}
+li#exp_node_ilLMProgressTree_1 {
+    > ins.jstree-icon {
+        display: none;
+    }
+    &.jstree-open,
+    &.jstree-closed {
+        overflow: hidden;
+        .jstree-icon {
+            background: none;
+        }
+        ul {
+            padding: 20px 20px 30px 0;
+            a {
+                display: inline-block;
+                height: auto;
+                position: relative;
+                top: 4px;
+                width: 100%;
+            }
+            .jstree-icon:before {
+				color: @lm-primary;
+                content: "\e90b";
+                font-family: cat icons;
+                font-size: 20px;
+                position: relative;
+                text-shadow: 1px 0px 0px @lm-primary, 2px 0px 0px @lm-primary;
+                top: 6px;
+            }
+            .jstree-open .jstree-icon:before {
+                content: "\e908";
+                text-shadow: 0px 1px 0px @lm-primary, 0px 2px 0px @lm-primary;
+            }
+            .jstree-leaf .jstree-icon:before {
+                display: none;
+            }
+            ul {
+                margin-top: none;
+                padding: 0px;
+            }
+        }
+    }
+    li li.jstree-open,
+    li li.jstree-closed {
+        margin-left: 26px;
+    }
+    li li {
+        margin-left: 45px;
+    }
+}
+.ilLM li#exp_node_ilLMProgressTree_1 {
+	&.jstree-open,
+	&.jstree-closed {
+		ul a {
+			width: 85%;
+		}
+	}
+}
+li#exp_node_ilLMProgressTree_1 > ul > li {
+	line-height: 1.3rem;
+    margin-bottom: 10px;
+}
+// ilLM-Tree <-- end
+
+// ilLM Sitemap --> start
+div#il_expl2_jstree_cont_out_ilLMProgressTree {
+    background: url("images/lernmodul-sitemap-bg.jpg") no-repeat right;
+	outline: @lm-border-darken;
+    li#exp_node_ilLMProgressTree_1 > ul {
+        background-color: fade(@lm-lighten, 85%);
+        height: @lm-height;
+        min-width: 350px;
+        overflow: auto;
+		overflow-x: hidden;
+        width: 35%;
+    }
+}
+
+.ilLMNoMenu,
+.ilLM {
+    div#il_expl2_jstree_cont_out_ilLMProgressTree li#exp_node_ilLMProgressTree_1 > ul {
+        background-color: @lm-lighten;
+        min-width: 290px;
+    }
+}
+// ilLM Sitemap <-- end
+
+/*
+==============================
+ editmode and generell stuff
+==============================
+*/
+.il_editarea_disabled .ilc_section_LmContainer:before,
+.il_editarea_disabled_selected .ilc_section_LmContainer:before,
+.il_editarea .ilc_section_LmContainer:before,
+.il_editarea_active .ilc_section_LmContainer:before {
+    content: "Hier klicken zum Deaktivieren/Aktivieren";
+    cursor: pointer;
+    padding-top: 9px;
+    background-color: fade(@lm-darken, 20%);
+    height: 40px;
+    display: block;
+    text-align: center;
+    font-weight: 400;
+}
+ul.dropdown-menu,
+#il_center_col,
+.table-responsive {
+    .ilc_section_LmChapter,
+    .ilc_section_LmLeft33,
+    .ilc_section_LmLeft50,
+    .ilc_section_LmLeft67,
+    .ilc_section_LmRight33,
+    .ilc_section_LmRight50,
+    .ilc_section_LmRight67,
+    .ilc_section_LmCenter33,
+    .ilc_section_LmCenter50,
+    .ilc_section_LmIntro,
+    .ilc_section_LmTitle,
+    .ilc_section_LmPadding,
+    .ilc_section_LmPicture,
+    .ilc_section_LmContainer,
+    .ilc_section_LmMediaBackground,
+	.ilc_section_LmMediaVideo,
+	.ilc_section_LmBlock,
+    .ilc_section_LmBlock100,
+    .ilc_section_LmCopyright,
+	.ilc_section_LmBullet,
+    .ilc_section_LmHint,
+    .ilc_section_LmDialog1,
+    .ilc_section_LmDialog2 {
+        height: auto;
+        position: inherit;
+        left: 0;
+        max-height: none;
+        padding: 0;
+        margin: 0;
+        color: @lm-darken;
+		background-color: transparent;
+        text-align: left;
+    }
+}
+.ilc_section_LmContainer .il_editarea div.flex-col.flex-grow,
+.ilc_section_LmContainer .il_editarea div.flex-col.flex-grow iframe {
+    padding: 0 15px;
+}
+.ilc_section_LmContainer {
+    .il_editarea,
+    .il_editarea_active {
+        cursor: pointer;
+        div {
+            color: @lm-darken;
+            padding: 0;
+            height: auto;
+            &:before,
+            &:after {
+                display: none;
+            }
+        }
+    }
+}
+// audio Playbar
+.ilc_section_LmContainer {
+    .il_editarea .ilCOPageSection .ilPageAudio {
+        z-index: 10;
+    }
+    .ilCOPageSection .ilPageAudio {
+        position: absolute;
+        z-index: -10;
+    }
+}
+// background-images
+div.ilc_section_LmContainer figure,
+a.ilc_section_LmContainer figure {
+    width: 100%;
+    .ilc_media_caption_MediaCaption {
+        padding: 0;
+    }
+}
+// popups
+.ilLMNoMenu,
+.ilLM,
+.ilc_section_LmContainer {
+    table.fullwidth_invisible,
+    table.fullwidth_invisible tr.std {
+        background-color: @lm-gray;
+        height: 100%;
+        position: absolute;
+        width: 100%;
+    }
+}
+.ilLMNoMenu,
+.ilLM,
+.ilc_section_LmContainer {
+    table.fullwidth_invisible tr.std {
+        background-color: fade(@brand-primary, 5%);
+        td.std {
+            color: @lm-lighten;
+            font-weight: 400;
+            left: 0;
+            margin: 160px auto;
+            position: absolute;
+            right: 0;
+            text-align: center;
+            width: 400px;
+        }
+    }
+}
+// onclicks accordion
+#ilLMPageContent .ilc_section_LmContainer {
+	div.ilc_va_icont_VAccordICont {
+		padding: 0;
+		> a {
+		    display: block;
+		    margin-top: 15px;
+		}
+		> div {
+		    overflow: hidden;
+			figure {
+				width: 101%;
+			}
+		}
+	}
+	div.ilc_va_cntr_VAccordCntr {
+		// border: @lm-border;
+	}
+	div .ilc_va_cntr_VAccordCntr div.ilc_va_ihead_VAccordIHead {
+		color: @brand-secondary;
+		&:hover,
+		&.ilc_va_iheada_VAccordIHeadActive {
+			background-color: transparent;
+			color: @lm-darken;
+		}
+	}
+	div div.ilc_va_icntr_VAccordICntr,
+	div > div.ilc_va_cntr_VAccordCntr {
+		margin: 0;
+		div.ilc_va_ihead_VAccordIHead .ilc_va_ihead_VAccordIHeadCap:before {
+		    content: "\e907";
+		    font-weight: 600;
+		    width: 25px;
+		    position: relative;
+		    top: 2px;
+		}
+		div.ilc_va_iheada_VAccordIHeadActive .ilc_va_ihead_VAccordIHeadCap:before {
+			content: "\e905";
+		}
+		.ilc_Paragraph {
+		    padding: 0 20px;
+			&:first-child {
+				margin-top: 20px;
+			}
+		}
+		.ilc_Paragraph.ilc_text_block_Standard + div {
+		    margin-top: 20px;
+		}
+	}
+	.ilc_section_LmPicture + div > .ilc_va_cntr_VAccordCntr {
+	    border: @lm-border;
+	    border-top: none;
+	}
+}
+
+/*
+==============================
+   learning modul responsive
+==============================
+*/
+.row.ilLM {
+    @media only screen and (max-width: 1024px) {
+        top: 0;
+    }
+}
+.ilLM ol.breadcrumb {
+    @media only screen and (max-width: 1024px) {
+        margin: 0 170px;
+    }
+}
+.ilLM .ilLMMenu,
+.ilLM div.ilc_page_frame_PageFrame {
+    @media only screen and (max-width: 1024px) {
+        margin-right: 0;
+    }
+}
+div.ilLeftNav.ilLM {
+    @media only screen and (max-width: @screen-lg-min) {
+        display: block;
+    }
+    @media only screen and (max-width: 1024px) {
+        display: none;
+    }
+}
+.ilc_page_frame_PageFrame {
+    .ilc_section_LmLeft33,
+    .ilc_section_LmLeft50,
+    .ilc_section_LmLeft67,
+    .ilc_section_LmRight33,
+    .ilc_section_LmRight50,
+    .ilc_section_LmRight67,
+    .ilc_section_LmCenter33,
+    .ilc_section_LmCenter50,
+	.ilc_section_LmBlock100,
+	.ilc_section_LmBlock,
+    .ilc_section_LmChapter,
+    .ilc_section_LmMediaBackground,
+	.ilc_section_LmMediaBackground,
+    .ilc_section_LmMediaVideo,
+    .ilc_section_LmPicture,
+    .ilc_section_LmTitle,
+    .ilc_section_LmDialog1,
+    .ilc_section_LmDialog2 {
+        @media only screen and (max-width: 760px) {
+            width: 100%;
+            position: relative;
+            overflow: initial;
+            max-height: none;
+            height: auto;
+            bottom: auto;
+            top: auto;
+            div {
+                overflow: initial;
+            }
+        }
+    }
+}
