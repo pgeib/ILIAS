@@ -11,8 +11,7 @@ body {
     h3.ilc_heading3_Headline3,
     div.ilc_text_block_Headline3,
     body.ilc_text_block_Headline3 {
-        color: @text-color;
-        font-weight: 600;
+        font-weight: @font-weight-headline;
         margin-top: .7rem;
     }
     h1.ilc_heading1_Headline1,
@@ -21,7 +20,6 @@ body {
         font-size: 2.25rem;
         line-height: 3rem;
         margin-bottom: 1.5rem;
-        text-transform: uppercase;
     }
 
     h2.ilc_heading2_Headline2,
@@ -53,10 +51,9 @@ body {
         padding: 10px;
     }
     div.ilc_text_block_Citation, body.ilc_text_block_Citation {
-        margin-bottom: 10px;
-        margin-top: 10px;
-        font-style: italic;
         color: @brand-primary;
+        font-style: italic;
+        margin: 10px 0;
     }
     div.ilc_text_block_List, body.ilc_text_block_List {
         margin: 3px 0;
@@ -70,21 +67,37 @@ body {
     }
     // Block
     div.ilc_section_AdvancedKnowledge, a.ilc_section_AdvancedKnowledge {
-        color: @white;
-        margin-bottom: 20px 0;
         background-color: @brand-primary;
+        background-image: none;
+        border: none;
+        color: @white;
+        margin: 20px 0;
         padding: 10px 20px;
     }
     div.ilc_section_Block, a.ilc_section_Block {
-        margin-bottom: 10px 0;
         background-color: @white;
         border: @border;
-        padding-bottom: 5px 10px;
+        margin: 10px 0;
+        padding: 5px 10px;
+    }
+    div.ilc_section_Excursus, a.ilc_section_Excursus {
+        background-color: fade(@brand-primary, 15%);
+        border: @border;
+        margin: 10px 0;
+        padding: 5px 10px;
+    }
+    div.ilc_section_Remark, a.ilc_section_Remark {
+        background-color: fade(@black, 25%);
+        border: @border;
+        border-color: @black;
+        margin: 10px 0;
+        padding: 10px;
+        text-align: center;
     }
     div.ilc_section_Special, a.ilc_section_Special {
-        margin: 10px 0;
         background-color: fade(@brand-primary, 5%);
         border: @border;
+        margin: 10px 0;
         padding: 5px 10px;
     }
     // similar styles
@@ -102,8 +115,8 @@ body {
     }
     div.ilc_text_block_Mnemonic, body.ilc_text_block_Mnemonic ,
     div.ilc_section_Mnemonic, a.ilc_section_Mnemonic {
-        margin: 10px 20px;
         border: 2px solid @brand-primary;
+        margin: 10px 20px;
         padding: 10px;
     }
 
@@ -111,8 +124,7 @@ body {
 
     // accordion
     div.ilc_va_cntr_VAccordCntr {
-        margin-top: 25px;
-        margin-bottom: 15px;
+        margin: 25px 0;
     }
     div.ilc_va_icntr_VAccordICntr {
         background-color: @white;
@@ -149,9 +161,6 @@ body {
     }
     div.ilc_va_iheada_VAccordIHeadActive {
         background-color: @white;
-        &:hover {
-
-        }
         .ilc_va_ihead_VAccordIHeadCap {
             &:before {
                 background-image: none;
@@ -175,10 +184,11 @@ body {
 // Questions
 body {
     div.ilc_question_Standard {
-        margin: 20px 0 0;
-        padding: 10px 30px 60px 10px;
         background-color: transparent;
         background-image: none !important;
+        border: none;
+        margin: 20px 0 0;
+        padding: 10px 30px 60px 10px;
         .ilc_qtitle_Title  {
             font-size: 1.1rem;
             line-height: 1.6rem;
@@ -195,6 +205,52 @@ body {
     topic list
 ==============================
 */
+
+/*
+*********************
+    tile-text
+*********************
+*/
+.ilc_section_TopicListContainer {
+	figure.ilc_media_cont_MediaContainer {
+		margin: 0 0 20px !important;
+	}
+}
+
+// topic list title
+.ilc_section_TopicListTile {
+	align-items: center;
+	background-color: @white;
+    border: 1px solid @border-gray;
+	display: flex;
+	height: 53px;
+	margin-bottom: 10px;
+	position: relative;
+}
+
+// tile text
+.ilc_text_block_TopicListText {
+    padding: 5px 40px 5px 10px;
+	&:before {
+		content: "\e907";
+	    font-family: "cat icons";
+	    font-size: 2rem;
+	    position: absolute;
+	    right: 5px;
+	    bottom: 5px;
+	}
+}
+
+// clearfix
+.ilc_text_block_TopicListClearFix {
+	clear: both;
+}
+/*
+*********************
+    tile-images
+*********************
+*/
+/*
 // topic list container
 .ilc_section_TopicListContainer {
     .ilc_section_TopicListTile {
@@ -248,7 +304,7 @@ td > .ilc_text_block_TopicListText {
     &:before {
         display: none;
     }
-}
+}*/
 
 /*
 ==============================

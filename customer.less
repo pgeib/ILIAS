@@ -1,12 +1,14 @@
 // customer specific styles
 @white:                     #fff;
 @black:                     #000;
-@brand-primary:             red;
-@brand-secondary:           yellow;
+//@brand-primary:           #009bea;
+//@brand-secondary:         #818181;
 
-@font-family:               Arial, sans-serif;
-@font-family-headline:      Arial, sans-serif;
+@font-family:               'Open Sans', Arial, Verdana, sans-serif;
+@font-family-headline:      'Open Sans', Arial, Verdana, sans-serif;
 @font-size-base:            16px;
+@font-weight-headline:      700;
+@line-height:               1.6rem;
 @text-color:                @black;
 @text-color-headline:       @brand-primary;
 
@@ -38,10 +40,16 @@
 ==========================================
 */
 body {
+    color: @text-color;
     font-family: @font-family;
     font-size: @font-size-base;
     h1, h2, h3, h4, h5, h6 {
+        color: @text-color-headline;
         font-family: @font-family-headline;
+        font-weight: @font-weight-headline;
+    }
+    .ilc_Paragraph {
+        line-height: @line-height;
     }
 }
 
