@@ -1,10 +1,12 @@
-@tep-event-color-session: #9aa7bc;
-@tep-event-color-session-highlight: #428bca;
-@tep-event-color-global: #428bca;
-@tep-event-color-personal: #428bca;
-@tep-event-color-personal-undisclosed: #428bca;
-@tep-event-color-personal-undisclosed-own: #428bca;
+
+@tep-event-color-session: fade(@brand-primary, 30%);
+@tep-event-color-session-highlight: fade(@brand-primary, 45%);
+@tep-event-color-global: fade(@brand-secondary, 20%);
+@tep-event-color-personal: fade(@brand-secondary, 20%);
+@tep-event-color-personal-undisclosed: fade(@brand-secondary, 20%);
+@tep-event-color-personal-undisclosed-own: fade(@brand-secondary, 20%);
 @tep-row-color-weekend: #efefef;
+@tep-padding: 2px 5px 0;
 
 
 .tep_col_selector {
@@ -20,41 +22,57 @@
 		/*position: fixed;*/
 	}
 
-	.calrow{
+	.calrow {
 		height: 30px;
 		&.weekend {
 			background-color: @tep-row-color-weekend;
 		}
 	}
 
+	th.calstd {
+		font-size: .85rem;
+		min-width: 100px;
+		padding: @tep-padding;
+		text-align: left;
+	}
+
 	td.calstd {
 		background-color: transparent;
 		.date {
-			font-size: 75%;
+			font-size: .7rem;
+			padding: @tep-padding;
 		}
 	}
 
 	.il_calevent {
-		border: 1px dotted;
+		border: none;
 		color: #222;
+		font-size: .85rem;
+		.btn {
+			font-size: .85rem;
+			line-height: 1.2rem;
+		}
 		.fullday {
 			font-style: italic;
 		}
 
-		.title a{
+		.title a {
 			color: black;
 		}
 
 		.description {
-			font-size: 75%;
+			font-size: .85rem
 		}
 
 
 		&.session {
+			// background: linear-gradient(45deg, white 25%, transparent 25%, transparent 50%, white 50%, white 75%, transparent 75%, transparent);
+			// background-size: 10px 10px;
 			background-color: @tep-event-color-session;
+			padding: @tep-padding;
 
 			&.highlighted {
-				background-color: red;
+				background-color: @tep-event-color-session-highlight;
 			}
 		}
 		&.global {
