@@ -1,12 +1,12 @@
 
-@tep-event-color-session: fade(@brand-primary, 30%);
-@tep-event-color-session-highlight: fade(@brand-primary, 45%);
-@tep-event-color-global: fade(@brand-secondary, 20%);
-@tep-event-color-personal: fade(@brand-secondary, 20%);
-@tep-event-color-personal-undisclosed: fade(@brand-secondary, 20%);
-@tep-event-color-personal-undisclosed-own: fade(@brand-secondary, 20%);
+@tep-event-color-session: fade(@brand-primary, 50%);
+@tep-event-color-session-highlight: fade(@brand-primary, 70%);
+@tep-event-color-global: fade(black, 50%);
+@tep-event-color-personal: fade(@brand-secondary, 50%);
+@tep-event-color-personal-undisclosed: fade(@brand-secondary, 70%);
+@tep-event-color-personal-undisclosed-own: fade(@brand-secondary, 70%);
 @tep-row-color-weekend: #efefef;
-@tep-padding: 2px 5px 0;
+@tep-padding: 2px 5px;
 
 
 .tep_col_selector {
@@ -38,6 +38,7 @@
 
 	td.calstd {
 		background-color: transparent;
+		padding: 0;
 		.date {
 			font-size: .7rem;
 			padding: @tep-padding;
@@ -46,22 +47,30 @@
 
 	.il_calevent {
 		border: none;
-		color: #222;
-		font-size: .85rem;
+		color: white;
+		font-size: .8rem;
+		padding: @tep-padding;
+		span {
+			display: block;
+		}
 		.btn {
-			font-size: .85rem;
+			font-size: .8rem;
 			line-height: 1.2rem;
+		}
+		.partial,
+		.title {
+			font-weight: 700;
 		}
 		.fullday {
 			font-style: italic;
 		}
 
 		.title a {
-			color: black;
+			color: white;
 		}
 
 		.description {
-			font-size: .85rem
+			font-size: .8rem
 		}
 
 
@@ -69,7 +78,6 @@
 			// background: linear-gradient(45deg, white 25%, transparent 25%, transparent 50%, white 50%, white 75%, transparent 75%, transparent);
 			// background-size: 10px 10px;
 			background-color: @tep-event-color-session;
-			padding: @tep-padding;
 
 			&.highlighted {
 				background-color: @tep-event-color-session-highlight;
