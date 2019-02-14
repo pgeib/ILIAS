@@ -1712,8 +1712,8 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
     }
 }
 
-// typography distances
-#ilLMPageContent {
+// typography
+body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
     .ilc_Paragraph.ilc_text_block_Standard {
         margin-top: 0;
         & + h2.ilc_heading2_Headline2 {
@@ -1727,6 +1727,9 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
         & + div {
             margin-top: 30px;
         }
+        & + a + .ilc_heading3_Headline3 {
+            margin-top: 25px;
+        }
     }
     .ilc_section_LmChapter h2.ilc_heading2_Headline2 {
         margin-top: 10px;
@@ -1737,14 +1740,23 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
 			color: @lm-lighten;
 		}
 	}
-}
+    .ilc_section_LmTitle {
+	    text-align: center;
+	}
+    // Hintbox-Farben Bullets
+	.ilc_section_LmHint ul li:before {
+		background-color: @lm-lighten;
+	}
+    // small Text (Zeichen)
+    span.ilc_text_inline_LmSmall {
+        font-size: .85rem;
+    }
 
-// OnClick
-.ilc_section_LmPadding div.row.row-flex.row-flex-wrap + div.row.row-flex.row-flex-wrap > div {
-    margin: 10px 0;
-}
-// accordion start -->
-.ilc_section_LmContainer {
+    // OnClick
+    .ilc_section_LmPadding div.row.row-flex.row-flex-wrap + div.row.row-flex.row-flex-wrap > div {
+        margin: 10px 0;
+    }
+    // accordion start -->
     div.ilc_va_icont_VAccordICont > a {
         display: block;
         margin-top: 15px;
@@ -1765,15 +1777,17 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
     div > div.ilc_va_cntr_VAccordCntr {
         margin: 0;
         .ilc_va_ihead_VAccordIHeadCap:before {
-            content: "\e907";
-            font-family: "cat icons";
-            font-size: 1rem;
-            position: relative;
-            top: 2px;
-            width: 25px;
+            content: "\e909";
+			position: relative;
+			right: 4px;
+			top: 6px;
+			transform: rotate(90deg);
+			width: 25px;
         }
         div.ilc_va_iheada_VAccordIHeadActive .ilc_va_ihead_VAccordIHeadCap:before {
-            content: "\e909";
+            right: auto;
+			top: 1px;
+			transform: none;
         }
         .ilc_Paragraph {
             padding: 0 20px;
@@ -1795,72 +1809,91 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
             display: none;
         }
     }
-}
-// <-- end accordion
-
-// Dialog
-.ilc_section_LmDialog1,
-.ilc_section_LmDialog2 {
-    background-color: @lm-primary;
-    border-radius: 0 10px 10px;
-    margin: 25px 70px 10px 0;
-    padding: 10px 10px 5px;
-    position: relative;
-    .ilc_Paragraph {
-        color: @lm-lighten;
+    // <-- end accordion
+    // tables
+    .ilc_table_StandardTable {
+        td.ilc_table_cell_Cell1,
+        th.ilc_table_cell_Cell1 {
+            background-color: @brand-primary;
+            font-weight: 700;
+            h3.ilc_heading3_Headline3 {
+                color: @white;
+            }
+        }
+        h3.ilc_heading3_Headline3,
+        div.ilc_Paragraph,
+        body.ilc_Paragraph  {
+            padding: 10px;
+            margin: 0;
+        }
+        td.ilc_table_cell_Cell2,
+        th.ilc_table_cell_Cell2 {
+            background-color: lighten(@lm-darken, 95%);
+        }
+        td + td {
+            border-left: @border;
+        }
     }
-}
-.ilc_section_LmDialog2 {
-    background-color: @lm-secondary;
-    border-radius: 10px 0 10px 10px;
-    margin: 25px 0 10px 70px;
-}
-.ilc_text_block_LmDialogDescription1,
-.ilc_text_block_LmDialogDescription2 {
-    + .ilc_section_LmDialog1,
-    + .ilc_section_LmDialog2 {
-        margin-top: 5px;
+    // Dialog
+    .ilc_section_LmDialog1,
+    .ilc_section_LmDialog2 {
+        background-color: @lm-primary;
+        border-radius: 0 10px 10px;
+        margin: 25px 70px 10px 0;
+        padding: 10px 10px 5px;
+        position: relative;
+        .ilc_Paragraph {
+            color: @lm-lighten;
+        }
     }
-}
-.ilc_text_block_LmDialogDescription1,
-.ilc_text_block_LmDialogDescription2 {
-    color: @lm-darken;
-    font-size: .8rem;
-    font-weight: 600;
-    margin-top: 20px;
-    padding: 0 80px 0 10px;
-    position: relative;
-}
-.ilc_text_block_LmDialogDescription2 {
-    padding: 0 10px 0 80px;
-    text-align: right;
-}
-
-// Video
-.ilc_section_LmMediaVideo {
-	align-items: center;
-    display: flex;
-	height: 550px;
-	overflow: hidden;
-	> div {
-	    left: 0;
-	    right: 0;
-	    margin: auto;
-	}
-    figure.ilc_media_cont_MediaContainer {
-        background-color: transparent;
-		margin: 0;
+    .ilc_section_LmDialog2 {
+        background-color: @lm-secondary;
+        border-radius: 10px 0 10px 10px;
+        margin: 25px 0 10px 70px;
     }
-}
-.ilc_section_LmContainer .mejs-controls .mejs-time-rail .mejs-time-current {
-    background: linear-gradient(lighten(@brand-primary, 20%), @brand-primary);
-}
-.ilc_section_LmContainer .mejs-controls .mejs-time-rail .mejs-time-loaded {
-    background: fade(@lm-lighten, 20%);
-}
-
-// Questions learning modul
-.ilc_section_LmContainer {
+    .ilc_text_block_LmDialogDescription1,
+    .ilc_text_block_LmDialogDescription2 {
+        + .ilc_section_LmDialog1,
+        + .ilc_section_LmDialog2 {
+            margin-top: 5px;
+        }
+    }
+    .ilc_text_block_LmDialogDescription1,
+    .ilc_text_block_LmDialogDescription2 {
+        color: @lm-darken;
+        font-size: .8rem;
+        font-weight: 600;
+        margin-top: 20px;
+        padding: 0 80px 0 10px;
+        position: relative;
+    }
+    .ilc_text_block_LmDialogDescription2 {
+        padding: 0 10px 0 80px;
+        text-align: right;
+    }
+    // Video
+    .ilc_section_LmMediaVideo {
+    	align-items: center;
+        display: flex;
+    	height: 550px;
+    	overflow: hidden;
+    	> div {
+    	    left: 0;
+    	    right: 0;
+    	    margin: auto;
+    	}
+        figure.ilc_media_cont_MediaContainer {
+            background-color: transparent;
+    		margin: 0;
+        }
+    }
+    .mejs-controls .mejs-time-rail .mejs-time-current {
+        background: linear-gradient(lighten(@brand-primary, 20%), @brand-primary);
+    }
+    .mejs-controls .mejs-time-rail .mejs-time-loaded {
+        background: fade(@lm-lighten, 20%);
+    }
+    // Questions learning modul
     div.ilc_qtitle_Title {
         font-size: 1.1rem;
         font-weight: 400;
@@ -1898,6 +1931,10 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
             font-weight: inherit;
         }
     }
+    .ilc_qanswer_Answer input {
+		position: relative;
+		top: 2px;
+	}
     div.ilc_qfeedw_FeedbackWrong,
     div.ilc_qfeedr_FeedbackRight {
         background-color: transparent;
@@ -1907,7 +1944,7 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
         margin: 10px 0 0;
         padding: 10px 5px 0 50px;
         &:before {
-            bottom: 55px;
+            bottom: 57px;
             content: "\ea10";
             font-family: cat icons;
             font-size: 15px;
@@ -1920,7 +1957,7 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
         border-top-color: @lm-fail;
         color: @lm-fail;
         &:before {
-            bottom: 45px;
+            bottom: 47px;
             content: "+";
             font-family: @font-family-sans-serif;
             font-size: 30px;
@@ -1949,6 +1986,9 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
         pointer-events: none;
     }
     // richtig/falsch
+    .ilc_question_KprimChoice .ilc_qtitle_Title {
+	    margin-bottom: 5px;
+	}
     div.ilAssKprimChoiceTable {
         div.optionLabel {
             background-color: transparent;
@@ -2039,6 +2079,35 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
                 border-right: @lm-border-lighten;
             }
         }
+        .ilc_qtitle_Title > tbody .draggable,
+		div[data-type="ilMatchingQuestion"] > table > tbody .draggable {
+			&.droppedDraggable {
+				border: none;
+			}
+			&:hover {
+	    		border-color: @brand-primary;
+			}
+		}
+        div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea.ui-droppable-active.ui-droppable-hover {
+			border-color: @text-color;
+			opacity: 1;
+		}
+        .ui-draggable-dragging .ilc_qanswer_Answer {
+			color: @text-color;
+			margin: 0;
+			padding: 0;
+		}
+        .ui-draggable-disabled {
+            pointer-events: none;
+        }
+		.droppedDraggable .ilc_qanswer_Answer {
+			color: @brand-primary;
+		}
+		td.ilMatchingQuestionTerm {
+		    width: 40%;
+		    border-left: @border;
+            border-left-style: dashed;
+		}
         .ilc_qsubmit_Submit {
             left: 50%;
             width: 50%;
