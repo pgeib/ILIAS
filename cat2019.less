@@ -68,9 +68,9 @@
 @lm-border-darken:			1px solid fade(@lm-darken, 10%);
 
 /*
-==========================================
+*******************************
     global styles
-==========================================
+*******************************
 */
 html, body {
     font-family: @font-family-sans-serif;
@@ -285,9 +285,11 @@ a#il_mhead_t_focus {
     display: block;
 }
 
-/* =========================================================================================
-=========================================================================================*/
-// Slick Slider Integration
+/*
+********************************************************************************
+            Slick Slider Integration
+********************************************************************************
+*/
 .slider-outer {
     background-color: transparent;
     background-image: url(images/login-bg.jpg);
@@ -599,9 +601,311 @@ fixes width-issue when option-texts within select boxes are too long
 
 
 /*
-=========================================================================================
-    learning module
-=========================================================================================
+********************************************************************************
+    general content styles
+********************************************************************************
+*/
+
+body {
+    // Text(Block)
+    h1.ilc_heading1_Headline1,
+    div.ilc_text_block_Headline1,
+    body.ilc_text_block_Headline1,
+    h2.ilc_heading2_Headline2,
+    div.ilc_text_block_Headline2,
+    body.ilc_text_block_Headline2,
+    h3.ilc_heading3_Headline3,
+    div.ilc_text_block_Headline3,
+    body.ilc_text_block_Headline3 {
+        margin-top: .7rem;
+    }
+    h1.ilc_heading1_Headline1,
+    div.ilc_text_block_Headline1,
+    body.ilc_text_block_Headline1 {
+        font-size: 2.25rem;
+        line-height: 3rem;
+        margin-bottom: 1.5rem;
+    }
+
+    h2.ilc_heading2_Headline2,
+    div.ilc_text_block_Headline2,
+    body.ilc_text_block_Headline2 {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    h3.ilc_heading3_Headline3,
+    div.ilc_text_block_Headline3,
+    body.ilc_text_block_Headline3 {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        margin-bottom: .8rem;
+    }
+
+    div.ilc_text_block_Standard,
+    body.ilc_text_block_Standard {
+        color: @text-color;
+        margin: .6rem 0;
+    }
+
+    div.ilc_text_block_Additional,
+    body.ilc_text_block_Additional {
+        border: 1px solid @brand-primary;
+        color: @brand-primary;
+        margin: 10px 0;
+        padding: 10px;
+    }
+    div.ilc_text_block_Citation,
+    body.ilc_text_block_Citation {
+        color: @brand-primary;
+        font-style: italic;
+        margin: 10px 0;
+    }
+    div.ilc_text_block_List,
+    body.ilc_text_block_List {
+        margin: 3px 0;
+    }
+    div.ilc_text_block_Remark,
+    body.ilc_text_block_Remark {
+        background-color: fade(@text-color, 20%);
+        border: 1px solid fade(@text-color, 40%);
+        margin: 10px 0;
+        padding: 10px;
+        text-align: center;
+    }
+    // Block
+    div.ilc_section_AdvancedKnowledge,
+    a.ilc_section_AdvancedKnowledge {
+        background-color: @brand-primary;
+        background-image: none;
+        border: none;
+        color: @white;
+        margin: 20px 0;
+        padding: 10px 20px;
+    }
+    div.ilc_section_Block,
+    a.ilc_section_Block {
+        background-color: @white;
+        border: @border;
+        margin: 10px 0;
+        padding: 5px 10px;
+    }
+    div.ilc_section_Excursus,
+    a.ilc_section_Excursus {
+        background-color: fade(@brand-primary, 15%);
+        border: @border;
+        margin: 10px 0;
+        padding: 5px 10px;
+    }
+    div.ilc_section_Remark,
+    a.ilc_section_Remark {
+        background-color: fade(@black, 25%);
+        border: @border;
+        border-color: @black;
+        margin: 10px 0;
+        padding: 10px;
+        text-align: center;
+    }
+    div.ilc_section_Special,
+    a.ilc_section_Special {
+        background-color: fade(@brand-primary, 5%);
+        border: @border;
+        margin: 10px 0;
+        padding: 5px 10px;
+    }
+    // similar styles
+    div.ilc_text_block_Additional,
+    body.ilc_text_block_Additional,
+    div.ilc_section_Additional,
+    a.ilc_section_Additional {
+        border: 1px solid @brand-primary;
+        margin: 10px 0;
+        padding: 10px;
+    }
+    div.ilc_text_block_Example,
+    body.ilc_text_block_Example,
+    div.ilc_section_Example,
+    a.ilc_section_Example {
+        border-left: 3px solid @brand-primary;
+        margin: 10px 0;
+        padding-left: 20px;
+    }
+    div.ilc_text_block_Mnemonic,
+    body.ilc_text_block_Mnemonic ,
+    div.ilc_section_Mnemonic,
+    a.ilc_section_Mnemonic {
+        border: 2px solid @brand-primary;
+        margin: 10px 20px;
+        padding: 10px;
+    }
+
+    // accordion
+    div.ilc_va_cntr_VAccordCntr {
+        margin: 25px 0;
+    }
+    div.ilc_va_icntr_VAccordICntr {
+        background-color: @white;
+        border: none;
+        margin-bottom: 4px;
+    }
+    div.ilc_va_ihead_VAccordIHead {
+        background-color: @white;
+        background-image: none;
+        color: @text-color;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 40px;
+        min-height: 40px;
+        padding: 3px 3px 3px 15px;
+        text-transform: none;
+        transition: .3s all;
+        &:hover {
+            background-color: fade(@brand-primary, 5%);
+        }
+        .ilc_va_ihead_VAccordIHeadCap {
+            &:before {
+            background-image: none;
+            content: "\e908";
+            color: @brand-primary;
+            display: inline-block;
+            font-family: cat icons;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 30px;
+            }
+        }
+    }
+    div.ilc_va_iheada_VAccordIHeadActive {
+        background-color: @white;
+        .ilc_va_ihead_VAccordIHeadCap {
+            &:before {
+                content: "\e909";
+            }
+        }
+    }
+    div.ilc_va_icont_VAccordICont {
+        background-color: @white;
+        font-weight: 200;
+        padding: 3px 40px 3px 47px;
+    }
+
+    // Questions
+    div.ilc_question_Standard {
+        background-color: transparent;
+        background-image: none !important;
+        border: none;
+        margin: 20px 0 0;
+        padding: 10px 30px 60px 10px;
+        .ilc_qtitle_Title  {
+            font-size: 1.1rem;
+            line-height: 1.6rem;
+            margin-bottom: 1rem;
+        }
+        .ilc_answers  {
+            color: @text-color;
+        }
+    }
+}
+
+
+/*
+********************************************************************************
+            topic list
+********************************************************************************
+*/
+/*
+*********************
+    text-tiles
+*********************
+*/
+.ilc_section_TopicListContainer {
+	figure.ilc_media_cont_MediaContainer {
+		margin: 0 0 20px !important;
+	}
+}
+
+// topic list title
+.ilc_section_TopicListTile {
+	align-items: center;
+	background-color: @white;
+    border: 1px solid @border-gray;
+	display: flex;
+	height: 53px;
+	margin-bottom: 10px;
+	position: relative;
+}
+
+// tile text
+.ilc_text_block_TopicListText {
+    padding: 5px 40px 5px 10px;
+	&:before {
+		content: "\e907";
+	    font-family: "cat icons";
+	    font-size: 2rem;
+	    position: absolute;
+	    right: 5px;
+	    bottom: 5px;
+	}
+}
+
+// clearfix
+.ilc_text_block_TopicListClearFix {
+	clear: both;
+}
+
+/*
+*********************
+    image-tiles
+*********************
+*/
+/*
+.ilc_section_TopicListContainer {
+    .ilc_section_TopicListTile {
+        display: inline-block !important;
+        margin: 0 2% 2% 0;
+        overflow: hidden;
+        padding-bottom: 55px;
+        width: 23%;
+        height: auto;
+        &:nth-child(4),
+        &:nth-child(8),
+        &:nth-child(12),
+        &:nth-child(16) {
+            margin-right: 0;
+        }
+    }
+}
+// images
+.ilc_section_TopicListTile figure.ilc_media_cont_MediaContainer {
+    margin: 0px !important; //override inline style
+	width: 101%;
+}
+// tile text
+.ilc_text_block_TopicListText {
+    background-color: @white;
+    bottom: 0;
+    height: auto;
+    min-height: 43px;
+    padding: 5px 40px 4px 10px;
+    position: absolute;
+    width: 100%;
+	&:before {
+        bottom: 3px;
+	    content: "\e907";
+	    font-family: "cat icons";
+	    font-size: 2rem;
+	    position: absolute;
+	    right: 10px;
+	}
+}
+*/
+
+/*
+********************************************************************************
+            learning modul
+********************************************************************************
 */
 
 // display none --> start
@@ -649,9 +953,9 @@ li#exp_node_ilLMProgressTree_1.jstree-open a {
 }
 
 /*
-==============================
+************************************
     navigation panel
-==============================
+************************************
 */
 div.ilLMMenu #ilSubTab {
     background-color: @lm-primary;
@@ -672,7 +976,7 @@ div.ilLMMenu #ilSubTab {
         a {
             color: transparent;
             font-size: 0;
-            height: @lm-height-subtab;
+            height: @lm-height-subtab - 1;
             padding: 0;
 			width: 60px;
             &:before {
@@ -685,8 +989,11 @@ div.ilLMMenu #ilSubTab {
                 top: 4px;
                 transition: color .3s ease;
             }
-            &:hover:before {
-                color: @lm-lighten;
+            &:hover {
+                background-color: transparent;
+                &:before {
+                    color: @lm-lighten;
+                }
             }
         }
     }
@@ -894,11 +1201,10 @@ div.ilLMMenu #ilSubTab {
 }
 
 /*
-==============================
-        sitemap
-==============================
+************************************
+    sitemap
+************************************
 */
-
 // ilLM-Tree start -->
 .ilLMNoMenu div#fixed_content.ilLeftNavSpace,
 div#fixed_content.ilLeftNavSpace.ilLM {
@@ -965,6 +1271,7 @@ li#exp_node_ilLMProgressTree_1 {
         overflow: hidden;
         .jstree-icon {
             background: none;
+            position: relative;
         }
         ul {
             padding: 20px 20px 30px 0;
@@ -978,6 +1285,7 @@ li#exp_node_ilLMProgressTree_1 {
             .jstree-icon:before {
 				color: @lm-primary;
                 content: "\e90b";
+                cursor: pointer;
                 font-family: cat icons;
                 font-size: 20px;
                 position: relative;
@@ -985,8 +1293,8 @@ li#exp_node_ilLMProgressTree_1 {
                 top: 6px;
             }
             .jstree-open .jstree-icon:before {
-                content: "\e908";
-                text-shadow: 0px 1px 0px @lm-primary, 0px 2px 0px @lm-primary;
+                transform: rotate(90deg);
+                position: absolute;
             }
             .jstree-leaf .jstree-icon:before {
                 display: none;
@@ -1043,9 +1351,9 @@ div#il_expl2_jstree_cont_out_ilLMProgressTree {
 // ilLM Sitemap <-- end
 
 /*
-==============================
- editmode and generell stuff
-==============================
+************************************
+    editmode and generell stuff
+************************************
 */
 .il_editarea_disabled .ilc_section_LmContainer:before,
 .il_editarea_disabled_selected .ilc_section_LmContainer:before,
@@ -1114,6 +1422,9 @@ ul.dropdown-menu,
                 display: none;
             }
         }
+        .ilc_Paragraph {
+            color: @text-color !important;
+        }
     }
 }
 // audio Playbar
@@ -1164,315 +1475,48 @@ a.ilc_section_LmContainer figure {
     }
 }
 
+
 /*
-==============================
-   learning modul responsive
-==============================
+************************************
+   center content without tree
+************************************
 */
-.row.ilLM {
-    @media only screen and (max-width: 1024px) {
-        top: 0;
-    }
+/*
+Dieser Code muss in die customer.less kopiert und auskommentiert werden,
+wenn der Ilias-Tree neben dem lernmodul ausgeblendet werden soll.
+*/
+/*
+.ilLMNoMenu div.ilLeftNav,
+div.ilLeftNav.ilLM {
+	display: none;
+}
+.ilLM div#mainscrolldiv {
+    margin: auto;
+	max-width: 1040px;
+	position: relative;
+    width: 100%;
 }
 .ilLM ol.breadcrumb {
-    @media only screen and (max-width: 1024px) {
-        margin: 0 170px;
-    }
+    left: 0;
+    margin: 0 170px;
+    max-width: 700px;
+    right: 0;
 }
-.ilLM .ilLMMenu,
+.ilLM .ilLMMenu {
+	margin: auto;
+    max-width: 1040px;
+    width: 100%;
+}
+.ilLMNoMenu div.ilc_page_frame_PageFrame,
 .ilLM div.ilc_page_frame_PageFrame {
-    @media only screen and (max-width: 1024px) {
-        margin-right: 0;
-    }
+    margin: auto;
 }
-div.ilLeftNav.ilLM {
-    @media only screen and (max-width: @screen-lg-min) {
-        display: block;
-    }
-    @media only screen and (max-width: 1024px) {
-        display: none;
-    }
-}
-.ilc_page_frame_PageFrame {
-    .ilc_section_LmLeft33,
-    .ilc_section_LmLeft50,
-    .ilc_section_LmLeft67,
-    .ilc_section_LmRight33,
-    .ilc_section_LmRight50,
-    .ilc_section_LmRight67,
-    .ilc_section_LmCenter33,
-    .ilc_section_LmCenter50,
-	.ilc_section_LmBlock100,
-	.ilc_section_LmBlock,
-    .ilc_section_LmChapter,
-    .ilc_section_LmMediaBackground,
-	.ilc_section_LmMediaBackground,
-    .ilc_section_LmMediaVideo,
-    .ilc_section_LmPicture,
-    .ilc_section_LmTitle,
-    .ilc_section_LmDialog1,
-    .ilc_section_LmDialog2 {
-        @media only screen and (max-width: 760px) {
-            width: 100%;
-            position: relative;
-            overflow: initial;
-            max-height: none;
-            height: auto;
-            bottom: auto;
-            top: auto;
-            div {
-                overflow: initial;
-            }
-        }
-    }
-}
-
-/*****************************************************************************************
-                                    content styles
-*****************************************************************************************/
-body {
-    // Text(Block)
-    h1.ilc_heading1_Headline1,
-    div.ilc_text_block_Headline1,
-    body.ilc_text_block_Headline1,
-    h2.ilc_heading2_Headline2,
-    div.ilc_text_block_Headline2,
-    body.ilc_text_block_Headline2,
-    h3.ilc_heading3_Headline3,
-    div.ilc_text_block_Headline3,
-    body.ilc_text_block_Headline3 {
-        margin-top: .7rem;
-    }
-    h1.ilc_heading1_Headline1,
-    div.ilc_text_block_Headline1,
-    body.ilc_text_block_Headline1 {
-        font-size: 2.25rem;
-        line-height: 3rem;
-        margin-bottom: 1.5rem;
-    }
-
-    h2.ilc_heading2_Headline2,
-    div.ilc_text_block_Headline2,
-    body.ilc_text_block_Headline2 {
-        font-size: 1.5rem;
-        line-height: 2rem;
-        margin-bottom: 1rem;
-    }
-
-    h3.ilc_heading3_Headline3,
-    div.ilc_text_block_Headline3,
-    body.ilc_text_block_Headline3 {
-        font-size: 1.2rem;
-        line-height: 1.6rem;
-        margin-bottom: .8rem;
-    }
-
-    div.ilc_text_block_Standard,
-    body.ilc_text_block_Standard {
-        color: @text-color;
-        margin: .6rem 0;
-    }
-
-    div.ilc_text_block_Additional,
-    body.ilc_text_block_Additional {
-        border: 1px solid @brand-primary;
-        color: @brand-primary;
-        margin: 10px 0;
-        padding: 10px;
-    }
-    div.ilc_text_block_Citation,
-    body.ilc_text_block_Citation {
-        color: @brand-primary;
-        font-style: italic;
-        margin: 10px 0;
-    }
-    div.ilc_text_block_List,
-    body.ilc_text_block_List {
-        margin: 3px 0;
-    }
-    div.ilc_text_block_Remark,
-    body.ilc_text_block_Remark {
-        background-color: fade(@text-color, 20%);
-        border: 1px solid fade(@text-color, 40%);
-        margin: 10px 0;
-        padding: 10px;
-        text-align: center;
-    }
-    // Block
-    div.ilc_section_AdvancedKnowledge,
-    a.ilc_section_AdvancedKnowledge {
-        background-color: @brand-primary;
-        background-image: none;
-        border: none;
-        color: @white;
-        margin: 20px 0;
-        padding: 10px 20px;
-    }
-    div.ilc_section_Block,
-    a.ilc_section_Block {
-        background-color: @white;
-        border: @border;
-        margin: 10px 0;
-        padding: 5px 10px;
-    }
-    div.ilc_section_Excursus,
-    a.ilc_section_Excursus {
-        background-color: fade(@brand-primary, 15%);
-        border: @border;
-        margin: 10px 0;
-        padding: 5px 10px;
-    }
-    div.ilc_section_Remark,
-    a.ilc_section_Remark {
-        background-color: fade(@black, 25%);
-        border: @border;
-        border-color: @black;
-        margin: 10px 0;
-        padding: 10px;
-        text-align: center;
-    }
-    div.ilc_section_Special,
-    a.ilc_section_Special {
-        background-color: fade(@brand-primary, 5%);
-        border: @border;
-        margin: 10px 0;
-        padding: 5px 10px;
-    }
-    // similar styles
-    div.ilc_text_block_Additional,
-    body.ilc_text_block_Additional,
-    div.ilc_section_Additional,
-    a.ilc_section_Additional {
-        border: 1px solid @brand-primary;
-        margin: 10px 0;
-        padding: 10px;
-    }
-    div.ilc_text_block_Example,
-    body.ilc_text_block_Example,
-    div.ilc_section_Example,
-    a.ilc_section_Example {
-        border-left: 3px solid @brand-primary;
-        margin: 10px 0;
-        padding-left: 20px;
-    }
-    div.ilc_text_block_Mnemonic,
-    body.ilc_text_block_Mnemonic ,
-    div.ilc_section_Mnemonic,
-    a.ilc_section_Mnemonic {
-        border: 2px solid @brand-primary;
-        margin: 10px 20px;
-        padding: 10px;
-    }
-
-    // accordion
-    div.ilc_va_cntr_VAccordCntr {
-        margin: 25px 0;
-    }
-    div.ilc_va_icntr_VAccordICntr {
-        background-color: @white;
-        border: none;
-        margin-bottom: 4px;
-    }
-    div.ilc_va_ihead_VAccordIHead {
-        background-color: @white;
-        background-image: none;
-        color: @text-color;
-        cursor: pointer;
-        font-size: 1.1rem;
-        font-weight: 400;
-        line-height: 40px;
-        min-height: 40px;
-        padding: 3px 3px 3px 15px;
-        text-transform: none;
-        transition: .3s all;
-        &:hover {
-            background-color: fade(@brand-primary, 5%);
-        }
-        .ilc_va_ihead_VAccordIHeadCap {
-            &:before {
-            background-image: none;
-            content: "\e908";
-            color: @brand-primary;
-            display: inline-block;
-            font-family: cat icons;
-            font-size: 1rem;
-            font-weight: 600;
-            width: 30px;
-            }
-        }
-    }
-    div.ilc_va_iheada_VAccordIHeadActive {
-        background-color: @white;
-        .ilc_va_ihead_VAccordIHeadCap {
-            &:before {
-                content: "\e909";
-            }
-        }
-    }
-    div.ilc_va_icont_VAccordICont {
-        background-color: @white;
-        font-weight: 200;
-        padding: 3px 40px 3px 47px;
-    }
-
-    // Questions
-    div.ilc_question_Standard {
-        background-color: transparent;
-        background-image: none !important;
-        border: none;
-        margin: 20px 0 0;
-        padding: 10px 30px 60px 10px;
-        .ilc_qtitle_Title  {
-            font-size: 1.1rem;
-            line-height: 1.6rem;
-            margin-bottom: 1rem;
-        }
-        .ilc_answers  {
-            color: @text-color;
-        }
-    }
-}
-
-/*
-***********    text-tiles with image    ***********
 */
-.ilc_section_TopicListContainer {
-	figure.ilc_media_cont_MediaContainer {
-		margin: 0 0 20px !important;
-	}
-}
-
-// topic list title
-.ilc_section_TopicListTile {
-	align-items: center;
-	background-color: @white;
-    border: @border;
-	display: flex;
-	height: 53px;
-	margin-bottom: 10px;
-	position: relative;
-}
-
-// tile text
-.ilc_text_block_TopicListText {
-    padding: 5px 40px 5px 10px;
-	&:before {
-		content: "\e907";
-	    font-family: "cat icons";
-	    font-size: 2rem;
-	    position: absolute;
-	    right: 5px;
-	    bottom: 5px;
-	}
-}
-
-// clearfix
-.ilc_text_block_TopicListClearFix {
-	clear: both;
-}
 
 /*
-***********    learning modul    ***********
+************************************
+   content-styles for learning module
+************************************
 */
 // text (block)
 .ilc_section_LmContainer {
@@ -1506,6 +1550,10 @@ body {
         position: relative;
         top: 8px;
     }
+}
+// text (zeichen)
+span.ilc_text_inline_LmSmall {
+    font-size: .85rem;
 }
 
 // block
@@ -1626,7 +1674,7 @@ body {
         position: relative;
         text-decoration: none;
         &:before {
-            content: "\e975";
+            content: "\ea1c";
             font-family: cat icons;
             margin-right: 3px;
             position: relative;
@@ -1681,6 +1729,7 @@ body {
     }
 }
 
+// attached files
 .ilLM div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer,
 div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer {
      .ilc_flist_cont_FileListContainer {
@@ -1713,7 +1762,10 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
 }
 
 // typography
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer {
+    a[name] {
+        display: none;
+    }
     .ilc_Paragraph.ilc_text_block_Standard {
         margin-top: 0;
         & + h2.ilc_heading2_Headline2 {
@@ -1747,16 +1799,12 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
 	.ilc_section_LmHint ul li:before {
 		background-color: @lm-lighten;
 	}
-    // small Text (Zeichen)
-    span.ilc_text_inline_LmSmall {
-        font-size: .85rem;
-    }
 
-    // OnClick
+// OnClick
     .ilc_section_LmPadding div.row.row-flex.row-flex-wrap + div.row.row-flex.row-flex-wrap > div {
         margin: 10px 0;
     }
-    // accordion start -->
+    // accordion
     div.ilc_va_icont_VAccordICont > a {
         display: block;
         margin-top: 15px;
@@ -1778,6 +1826,7 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
         margin: 0;
         .ilc_va_ihead_VAccordIHeadCap:before {
             content: "\e909";
+            font-family: cat icons;
 			position: relative;
 			right: 4px;
 			top: 6px;
@@ -1809,8 +1858,8 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
             display: none;
         }
     }
-    // <-- end accordion
-    // tables
+
+// tables
     .ilc_table_StandardTable {
         td.ilc_table_cell_Cell1,
         th.ilc_table_cell_Cell1 {
@@ -1834,7 +1883,8 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
             border-left: @border;
         }
     }
-    // Dialog
+
+// Dialog
     .ilc_section_LmDialog1,
     .ilc_section_LmDialog2 {
         background-color: @lm-primary;
@@ -1871,7 +1921,8 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
         padding: 0 10px 0 80px;
         text-align: right;
     }
-    // Video
+
+// Video
     .ilc_section_LmMediaVideo {
     	align-items: center;
         display: flex;
@@ -1886,6 +1937,15 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
             background-color: transparent;
     		margin: 0;
         }
+        .mejs-container {
+            background: transparent;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .mejs-mediaelement {
+            line-height: 0;
+            position: relative;
+        }
     }
     .mejs-controls .mejs-time-rail .mejs-time-current {
         background: linear-gradient(lighten(@brand-primary, 20%), @brand-primary);
@@ -1893,7 +1953,39 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
     .mejs-controls .mejs-time-rail .mejs-time-loaded {
         background: fade(@lm-lighten, 20%);
     }
-    // Questions learning modul
+    .mejs-controls div.mejs-time-rail {
+        padding: 7px 7px 0 0;
+        span {
+            height: 5px;
+        }
+    }
+    .mejs-overlay-play {
+        background-color: fade(@lm-darken, 50%);
+        &:after {
+            content: "";
+            background-color: fade(@lm-darken, 50%);
+            width: 100%;
+            bottom: -30px;
+            position: absolute;
+            height: 30px;
+        }
+    }
+    .mejs-overlay-button {
+        background-image: none;
+        &:after {
+            color: fade(@lm-lighten, 40%);
+            content: "\e975";
+            font-family: cat icons;
+            font-size: 100px;
+            top: -22px;
+            position: relative;
+        }
+        &:hover:after {
+            color: @lm-lighten;
+        }
+    }
+
+// Questions
     div.ilc_qtitle_Title {
         font-size: 1.1rem;
         font-weight: 400;
@@ -2113,6 +2205,7 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
             width: 50%;
         }
     }
+    // special template for questions
 	div.ilc_section_LmMediaBackground + div.ilc_question_Standard {
 		background-color: fade(@lm-lighten, 0%);
 		border: none;
@@ -2146,7 +2239,64 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer {
 }
 
 /*
-*******************
-no display items
-*******************
+************************************
+   learning modul responsive
+************************************
 */
+.row.ilLM {
+    @media only screen and (max-width: 1024px) {
+        top: 0;
+    }
+}
+.ilLM ol.breadcrumb {
+    @media only screen and (max-width: 1024px) {
+        margin: 0 170px;
+    }
+}
+.ilLM .ilLMMenu,
+.ilLM div.ilc_page_frame_PageFrame {
+    @media only screen and (max-width: 1024px) {
+        margin-right: 0;
+    }
+}
+div.ilLeftNav.ilLM {
+    @media only screen and (max-width: @screen-lg-min) {
+        display: block;
+    }
+    @media only screen and (max-width: 1024px) {
+        display: none;
+    }
+}
+.ilc_page_frame_PageFrame {
+    .ilc_section_LmLeft33,
+    .ilc_section_LmLeft50,
+    .ilc_section_LmLeft67,
+    .ilc_section_LmRight33,
+    .ilc_section_LmRight50,
+    .ilc_section_LmRight67,
+    .ilc_section_LmCenter33,
+    .ilc_section_LmCenter50,
+	.ilc_section_LmBlock100,
+	.ilc_section_LmBlock,
+    .ilc_section_LmChapter,
+    .ilc_section_LmMediaBackground,
+	.ilc_section_LmMediaBackground,
+    .ilc_section_LmMediaVideo,
+    .ilc_section_LmPicture,
+    .ilc_section_LmTitle,
+    .ilc_section_LmDialog1,
+    .ilc_section_LmDialog2 {
+        @media only screen and (max-width: 760px) {
+            width: 100%;
+            position: relative;
+            overflow: initial;
+            max-height: none;
+            height: auto;
+            bottom: auto;
+            top: auto;
+            div {
+                overflow: initial;
+            }
+        }
+    }
+}
