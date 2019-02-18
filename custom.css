@@ -15625,9 +15625,9 @@ table.mceToolbar td {
   src: url("fonts/cat/cat-icons-v1_0_0.eot?#iefix") format("embedded-opentype"), url("fonts/cat/cat-icons-v1_0_0.woff") format("woff"), url("fonts/cat/cat-icons-v1_0_0.ttf") format("truetype"), url("fonts/cat/cat-icons-v1_0_0.svg#cat") format("svg");
 }
 /*
-==========================================
+*******************************
     global styles
-==========================================
+*******************************
 */
 html,
 body {
@@ -15817,8 +15817,11 @@ a#il_mhead_t_focus {
 .il-table-presentation-row-expanded .il-item-property-value {
   display: block;
 }
-/* =========================================================================================
-=========================================================================================*/
+/*
+********************************************************************************
+            Slick Slider Integration
+********************************************************************************
+*/
 .slider-outer {
   background-color: transparent;
   background-image: url(images/login-bg.jpg);
@@ -16125,9 +16128,281 @@ fixes width-issue when option-texts within select boxes are too long
   padding-left: 40px;
 }
 /*
-=========================================================================================
-    learning module
-=========================================================================================
+********************************************************************************
+    general content styles
+********************************************************************************
+*/
+body h1.ilc_heading1_Headline1,
+body div.ilc_text_block_Headline1,
+body body.ilc_text_block_Headline1,
+body h2.ilc_heading2_Headline2,
+body div.ilc_text_block_Headline2,
+body body.ilc_text_block_Headline2,
+body h3.ilc_heading3_Headline3,
+body div.ilc_text_block_Headline3,
+body body.ilc_text_block_Headline3 {
+  margin-top: .7rem;
+}
+body h1.ilc_heading1_Headline1,
+body div.ilc_text_block_Headline1,
+body body.ilc_text_block_Headline1 {
+  font-size: 2.25rem;
+  line-height: 3rem;
+  margin-bottom: 1.5rem;
+}
+body h2.ilc_heading2_Headline2,
+body div.ilc_text_block_Headline2,
+body body.ilc_text_block_Headline2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  margin-bottom: 1rem;
+}
+body h3.ilc_heading3_Headline3,
+body div.ilc_text_block_Headline3,
+body body.ilc_text_block_Headline3 {
+  font-size: 1.2rem;
+  line-height: 1.6rem;
+  margin-bottom: .8rem;
+}
+body div.ilc_text_block_Standard,
+body body.ilc_text_block_Standard {
+  color: #000;
+  margin: .6rem 0;
+}
+body div.ilc_text_block_Additional,
+body body.ilc_text_block_Additional {
+  border: 1px solid #4c6586;
+  color: #4c6586;
+  margin: 10px 0;
+  padding: 10px;
+}
+body div.ilc_text_block_Citation,
+body body.ilc_text_block_Citation {
+  color: #4c6586;
+  font-style: italic;
+  margin: 10px 0;
+}
+body div.ilc_text_block_List,
+body body.ilc_text_block_List {
+  margin: 3px 0;
+}
+body div.ilc_text_block_Remark,
+body body.ilc_text_block_Remark {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  margin: 10px 0;
+  padding: 10px;
+  text-align: center;
+}
+body div.ilc_section_AdvancedKnowledge,
+body a.ilc_section_AdvancedKnowledge {
+  background-color: #4c6586;
+  background-image: none;
+  border: none;
+  color: #fff;
+  margin: 20px 0;
+  padding: 10px 20px;
+}
+body div.ilc_section_Block,
+body a.ilc_section_Block {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 5px 10px;
+}
+body div.ilc_section_Excursus,
+body a.ilc_section_Excursus {
+  background-color: rgba(76, 101, 134, 0.15);
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 5px 10px;
+}
+body div.ilc_section_Remark,
+body a.ilc_section_Remark {
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 1px solid #ddd;
+  border-color: #000;
+  margin: 10px 0;
+  padding: 10px;
+  text-align: center;
+}
+body div.ilc_section_Special,
+body a.ilc_section_Special {
+  background-color: rgba(76, 101, 134, 0.05);
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 5px 10px;
+}
+body div.ilc_text_block_Additional,
+body body.ilc_text_block_Additional,
+body div.ilc_section_Additional,
+body a.ilc_section_Additional {
+  border: 1px solid #4c6586;
+  margin: 10px 0;
+  padding: 10px;
+}
+body div.ilc_text_block_Example,
+body body.ilc_text_block_Example,
+body div.ilc_section_Example,
+body a.ilc_section_Example {
+  border-left: 3px solid #4c6586;
+  margin: 10px 0;
+  padding-left: 20px;
+}
+body div.ilc_text_block_Mnemonic,
+body body.ilc_text_block_Mnemonic,
+body div.ilc_section_Mnemonic,
+body a.ilc_section_Mnemonic {
+  border: 2px solid #4c6586;
+  margin: 10px 20px;
+  padding: 10px;
+}
+body div.ilc_va_cntr_VAccordCntr {
+  margin: 25px 0;
+}
+body div.ilc_va_icntr_VAccordICntr {
+  background-color: #fff;
+  border: none;
+  margin-bottom: 4px;
+}
+body div.ilc_va_ihead_VAccordIHead {
+  background-color: #fff;
+  background-image: none;
+  color: #000;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 40px;
+  min-height: 40px;
+  padding: 3px 3px 3px 15px;
+  text-transform: none;
+  transition: .3s all;
+}
+body div.ilc_va_ihead_VAccordIHead:hover {
+  background-color: rgba(76, 101, 134, 0.05);
+}
+body div.ilc_va_ihead_VAccordIHead .ilc_va_ihead_VAccordIHeadCap:before {
+  background-image: none;
+  content: "\e908";
+  color: #4c6586;
+  display: inline-block;
+  font-family: cat icons;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 30px;
+}
+body div.ilc_va_iheada_VAccordIHeadActive {
+  background-color: #fff;
+}
+body div.ilc_va_iheada_VAccordIHeadActive .ilc_va_ihead_VAccordIHeadCap:before {
+  content: "\e909";
+}
+body div.ilc_va_icont_VAccordICont {
+  background-color: #fff;
+  font-weight: 200;
+  padding: 3px 40px 3px 47px;
+}
+body div.ilc_question_Standard {
+  background-color: transparent;
+  background-image: none !important;
+  border: none;
+  margin: 20px 0 0;
+  padding: 10px 30px 60px 10px;
+}
+body div.ilc_question_Standard .ilc_qtitle_Title {
+  font-size: 1.1rem;
+  line-height: 1.6rem;
+  margin-bottom: 1rem;
+}
+body div.ilc_question_Standard .ilc_answers {
+  color: #000;
+}
+/*
+********************************************************************************
+            topic list
+********************************************************************************
+*/
+/*
+*********************
+    text-tiles
+*********************
+*/
+.ilc_section_TopicListContainer figure.ilc_media_cont_MediaContainer {
+  margin: 0 0 20px !important;
+}
+.ilc_section_TopicListTile {
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  display: flex;
+  height: 53px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.ilc_text_block_TopicListText {
+  padding: 5px 40px 5px 10px;
+}
+.ilc_text_block_TopicListText:before {
+  content: "\e907";
+  font-family: "cat icons";
+  font-size: 2rem;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+}
+.ilc_text_block_TopicListClearFix {
+  clear: both;
+}
+/*
+*********************
+    image-tiles
+*********************
+*/
+/*
+.ilc_section_TopicListContainer {
+    .ilc_section_TopicListTile {
+        display: inline-block !important;
+        margin: 0 2% 2% 0;
+        overflow: hidden;
+        padding-bottom: 55px;
+        width: 23%;
+        height: auto;
+        &:nth-child(4),
+        &:nth-child(8),
+        &:nth-child(12),
+        &:nth-child(16) {
+            margin-right: 0;
+        }
+    }
+}
+// images
+.ilc_section_TopicListTile figure.ilc_media_cont_MediaContainer {
+    margin: 0px !important; //override inline style
+	width: 101%;
+}
+// tile text
+.ilc_text_block_TopicListText {
+    background-color: @white;
+    bottom: 0;
+    height: auto;
+    min-height: 43px;
+    padding: 5px 40px 4px 10px;
+    position: absolute;
+    width: 100%;
+	&:before {
+        bottom: 3px;
+	    content: "\e907";
+	    font-family: "cat icons";
+	    font-size: 2rem;
+	    position: absolute;
+	    right: 10px;
+	}
+}
+*/
+/*
+********************************************************************************
+            learning modul
+********************************************************************************
 */
 .ilLMNoMenu .il_HeaderInner,
 div#fixed_content.ilLM .il_HeaderInner,
@@ -16169,9 +16444,9 @@ li#exp_node_ilLMProgressTree_1.jstree-open a {
   top: 25px;
 }
 /*
-==============================
+************************************
     navigation panel
-==============================
+************************************
 */
 div.ilLMMenu #ilSubTab {
   background-color: #a5a7a8;
@@ -16195,7 +16470,7 @@ div.ilLMMenu #ilSubTab #subtab_edit_page a,
 div.ilLMMenu #ilSubTab #subtab_cont_toc a {
   color: transparent;
   font-size: 0;
-  height: 50px;
+  height: 49px;
   padding: 0;
   width: 60px;
 }
@@ -16209,6 +16484,10 @@ div.ilLMMenu #ilSubTab #subtab_cont_toc a:before {
   left: 16px;
   top: 4px;
   transition: color .3s ease;
+}
+div.ilLMMenu #ilSubTab #subtab_edit_page a:hover,
+div.ilLMMenu #ilSubTab #subtab_cont_toc a:hover {
+  background-color: transparent;
 }
 div.ilLMMenu #ilSubTab #subtab_edit_page a:hover:before,
 div.ilLMMenu #ilSubTab #subtab_cont_toc a:hover:before {
@@ -16442,9 +16721,9 @@ div.ilLMMenu #ilSubTab > li > a:focus {
   margin: 14px 0;
 }
 /*
-==============================
-        sitemap
-==============================
+************************************
+    sitemap
+************************************
 */
 .ilLMNoMenu div#fixed_content.ilLeftNavSpace,
 div#fixed_content.ilLeftNavSpace.ilLM {
@@ -16511,6 +16790,7 @@ li#exp_node_ilLMProgressTree_1.jstree-closed {
 li#exp_node_ilLMProgressTree_1.jstree-open .jstree-icon,
 li#exp_node_ilLMProgressTree_1.jstree-closed .jstree-icon {
   background: none;
+  position: relative;
 }
 li#exp_node_ilLMProgressTree_1.jstree-open ul,
 li#exp_node_ilLMProgressTree_1.jstree-closed ul {
@@ -16528,6 +16808,7 @@ li#exp_node_ilLMProgressTree_1.jstree-open ul .jstree-icon:before,
 li#exp_node_ilLMProgressTree_1.jstree-closed ul .jstree-icon:before {
   color: #a5a7a8;
   content: "\e90b";
+  cursor: pointer;
   font-family: cat icons;
   font-size: 20px;
   position: relative;
@@ -16536,8 +16817,8 @@ li#exp_node_ilLMProgressTree_1.jstree-closed ul .jstree-icon:before {
 }
 li#exp_node_ilLMProgressTree_1.jstree-open ul .jstree-open .jstree-icon:before,
 li#exp_node_ilLMProgressTree_1.jstree-closed ul .jstree-open .jstree-icon:before {
-  content: "\e908";
-  text-shadow: 0px 1px 0px #a5a7a8, 0px 2px 0px #a5a7a8;
+  transform: rotate(90deg);
+  position: absolute;
 }
 li#exp_node_ilLMProgressTree_1.jstree-open ul .jstree-leaf .jstree-icon:before,
 li#exp_node_ilLMProgressTree_1.jstree-closed ul .jstree-leaf .jstree-icon:before {
@@ -16581,9 +16862,9 @@ div#il_expl2_jstree_cont_out_ilLMProgressTree li#exp_node_ilLMProgressTree_1 > u
   min-width: 290px;
 }
 /*
-==============================
- editmode and generell stuff
-==============================
+************************************
+    editmode and generell stuff
+************************************
 */
 .il_editarea_disabled .ilc_section_LmContainer:before,
 .il_editarea_disabled_selected .ilc_section_LmContainer:before,
@@ -16697,6 +16978,10 @@ ul.dropdown-menu .ilc_section_LmDialog2,
 .ilc_section_LmContainer .il_editarea_active div:after {
   display: none;
 }
+.ilc_section_LmContainer .il_editarea .ilc_Paragraph,
+.ilc_section_LmContainer .il_editarea_active .ilc_Paragraph {
+  color: #000 !important;
+}
 .ilc_section_LmContainer .il_editarea .ilCOPageSection .ilPageAudio {
   z-index: 10;
 }
@@ -16741,303 +17026,45 @@ a.ilc_section_LmContainer figure .ilc_media_caption_MediaCaption {
   width: 400px;
 }
 /*
-==============================
-   learning modul responsive
-==============================
+************************************
+   center content without tree
+************************************
 */
-@media only screen and (max-width: 1024px) {
-  .row.ilLM {
-    top: 0;
-  }
+/*
+Dieser Code muss in die customer.less kopiert und auskommentiert werden,
+wenn der Ilias-Tree neben dem lernmodul ausgeblendet werden soll.
+*/
+/*
+.ilLMNoMenu div.ilLeftNav,
+div.ilLeftNav.ilLM {
+	display: none;
 }
-@media only screen and (max-width: 1024px) {
-  .ilLM ol.breadcrumb {
-    margin: 0 170px;
-  }
-}
-@media only screen and (max-width: 1024px) {
-  .ilLM .ilLMMenu,
-  .ilLM div.ilc_page_frame_PageFrame {
-    margin-right: 0;
-  }
-}
-@media only screen and (max-width: 1200px) {
-  div.ilLeftNav.ilLM {
-    display: block;
-  }
-}
-@media only screen and (max-width: 1024px) {
-  div.ilLeftNav.ilLM {
-    display: none;
-  }
-}
-@media only screen and (max-width: 760px) {
-  .ilc_page_frame_PageFrame .ilc_section_LmLeft33,
-  .ilc_page_frame_PageFrame .ilc_section_LmLeft50,
-  .ilc_page_frame_PageFrame .ilc_section_LmLeft67,
-  .ilc_page_frame_PageFrame .ilc_section_LmRight33,
-  .ilc_page_frame_PageFrame .ilc_section_LmRight50,
-  .ilc_page_frame_PageFrame .ilc_section_LmRight67,
-  .ilc_page_frame_PageFrame .ilc_section_LmCenter33,
-  .ilc_page_frame_PageFrame .ilc_section_LmCenter50,
-  .ilc_page_frame_PageFrame .ilc_section_LmBlock100,
-  .ilc_page_frame_PageFrame .ilc_section_LmBlock,
-  .ilc_page_frame_PageFrame .ilc_section_LmChapter,
-  .ilc_page_frame_PageFrame .ilc_section_LmMediaBackground,
-  .ilc_page_frame_PageFrame .ilc_section_LmMediaBackground,
-  .ilc_page_frame_PageFrame .ilc_section_LmMediaVideo,
-  .ilc_page_frame_PageFrame .ilc_section_LmPicture,
-  .ilc_page_frame_PageFrame .ilc_section_LmTitle,
-  .ilc_page_frame_PageFrame .ilc_section_LmDialog1,
-  .ilc_page_frame_PageFrame .ilc_section_LmDialog2 {
+.ilLM div#mainscrolldiv {
+    margin: auto;
+	max-width: 1040px;
+	position: relative;
     width: 100%;
-    position: relative;
-    overflow: initial;
-    max-height: none;
-    height: auto;
-    bottom: auto;
-    top: auto;
-  }
-  .ilc_page_frame_PageFrame .ilc_section_LmLeft33 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmLeft50 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmLeft67 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmRight33 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmRight50 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmRight67 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmCenter33 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmCenter50 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmBlock100 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmBlock div,
-  .ilc_page_frame_PageFrame .ilc_section_LmChapter div,
-  .ilc_page_frame_PageFrame .ilc_section_LmMediaBackground div,
-  .ilc_page_frame_PageFrame .ilc_section_LmMediaBackground div,
-  .ilc_page_frame_PageFrame .ilc_section_LmMediaVideo div,
-  .ilc_page_frame_PageFrame .ilc_section_LmPicture div,
-  .ilc_page_frame_PageFrame .ilc_section_LmTitle div,
-  .ilc_page_frame_PageFrame .ilc_section_LmDialog1 div,
-  .ilc_page_frame_PageFrame .ilc_section_LmDialog2 div {
-    overflow: initial;
-  }
 }
-/*****************************************************************************************
-                                    content styles
-*****************************************************************************************/
-body h1.ilc_heading1_Headline1,
-body div.ilc_text_block_Headline1,
-body body.ilc_text_block_Headline1,
-body h2.ilc_heading2_Headline2,
-body div.ilc_text_block_Headline2,
-body body.ilc_text_block_Headline2,
-body h3.ilc_heading3_Headline3,
-body div.ilc_text_block_Headline3,
-body body.ilc_text_block_Headline3 {
-  margin-top: .7rem;
+.ilLM ol.breadcrumb {
+    left: 0;
+    margin: 0 170px;
+    max-width: 700px;
+    right: 0;
 }
-body h1.ilc_heading1_Headline1,
-body div.ilc_text_block_Headline1,
-body body.ilc_text_block_Headline1 {
-  font-size: 2.25rem;
-  line-height: 3rem;
-  margin-bottom: 1.5rem;
+.ilLM .ilLMMenu {
+	margin: auto;
+    max-width: 1040px;
+    width: 100%;
 }
-body h2.ilc_heading2_Headline2,
-body div.ilc_text_block_Headline2,
-body body.ilc_text_block_Headline2 {
-  font-size: 1.5rem;
-  line-height: 2rem;
-  margin-bottom: 1rem;
+.ilLMNoMenu div.ilc_page_frame_PageFrame,
+.ilLM div.ilc_page_frame_PageFrame {
+    margin: auto;
 }
-body h3.ilc_heading3_Headline3,
-body div.ilc_text_block_Headline3,
-body body.ilc_text_block_Headline3 {
-  font-size: 1.2rem;
-  line-height: 1.6rem;
-  margin-bottom: .8rem;
-}
-body div.ilc_text_block_Standard,
-body body.ilc_text_block_Standard {
-  color: #000;
-  margin: .6rem 0;
-}
-body div.ilc_text_block_Additional,
-body body.ilc_text_block_Additional {
-  border: 1px solid #4c6586;
-  color: #4c6586;
-  margin: 10px 0;
-  padding: 10px;
-}
-body div.ilc_text_block_Citation,
-body body.ilc_text_block_Citation {
-  color: #4c6586;
-  font-style: italic;
-  margin: 10px 0;
-}
-body div.ilc_text_block_List,
-body body.ilc_text_block_List {
-  margin: 3px 0;
-}
-body div.ilc_text_block_Remark,
-body body.ilc_text_block_Remark {
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  margin: 10px 0;
-  padding: 10px;
-  text-align: center;
-}
-body div.ilc_section_AdvancedKnowledge,
-body a.ilc_section_AdvancedKnowledge {
-  background-color: #4c6586;
-  background-image: none;
-  border: none;
-  color: #fff;
-  margin: 20px 0;
-  padding: 10px 20px;
-}
-body div.ilc_section_Block,
-body a.ilc_section_Block {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  margin: 10px 0;
-  padding: 5px 10px;
-}
-body div.ilc_section_Excursus,
-body a.ilc_section_Excursus {
-  background-color: rgba(76, 101, 134, 0.15);
-  border: 1px solid #ddd;
-  margin: 10px 0;
-  padding: 5px 10px;
-}
-body div.ilc_section_Remark,
-body a.ilc_section_Remark {
-  background-color: rgba(0, 0, 0, 0.25);
-  border: 1px solid #ddd;
-  border-color: #000;
-  margin: 10px 0;
-  padding: 10px;
-  text-align: center;
-}
-body div.ilc_section_Special,
-body a.ilc_section_Special {
-  background-color: rgba(76, 101, 134, 0.05);
-  border: 1px solid #ddd;
-  margin: 10px 0;
-  padding: 5px 10px;
-}
-body div.ilc_text_block_Additional,
-body body.ilc_text_block_Additional,
-body div.ilc_section_Additional,
-body a.ilc_section_Additional {
-  border: 1px solid #4c6586;
-  margin: 10px 0;
-  padding: 10px;
-}
-body div.ilc_text_block_Example,
-body body.ilc_text_block_Example,
-body div.ilc_section_Example,
-body a.ilc_section_Example {
-  border-left: 3px solid #4c6586;
-  margin: 10px 0;
-  padding-left: 20px;
-}
-body div.ilc_text_block_Mnemonic,
-body body.ilc_text_block_Mnemonic,
-body div.ilc_section_Mnemonic,
-body a.ilc_section_Mnemonic {
-  border: 2px solid #4c6586;
-  margin: 10px 20px;
-  padding: 10px;
-}
-body div.ilc_va_cntr_VAccordCntr {
-  margin: 25px 0;
-}
-body div.ilc_va_icntr_VAccordICntr {
-  background-color: #fff;
-  border: none;
-  margin-bottom: 4px;
-}
-body div.ilc_va_ihead_VAccordIHead {
-  background-color: #fff;
-  background-image: none;
-  color: #000;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 400;
-  line-height: 40px;
-  min-height: 40px;
-  padding: 3px 3px 3px 15px;
-  text-transform: none;
-  transition: .3s all;
-}
-body div.ilc_va_ihead_VAccordIHead:hover {
-  background-color: rgba(76, 101, 134, 0.05);
-}
-body div.ilc_va_ihead_VAccordIHead .ilc_va_ihead_VAccordIHeadCap:before {
-  background-image: none;
-  content: "\e908";
-  color: #4c6586;
-  display: inline-block;
-  font-family: cat icons;
-  font-size: 1rem;
-  font-weight: 600;
-  width: 30px;
-}
-body div.ilc_va_iheada_VAccordIHeadActive {
-  background-color: #fff;
-}
-body div.ilc_va_iheada_VAccordIHeadActive .ilc_va_ihead_VAccordIHeadCap:before {
-  content: "\e909";
-}
-body div.ilc_va_icont_VAccordICont {
-  background-color: #fff;
-  font-weight: 200;
-  padding: 3px 40px 3px 47px;
-}
-body div.ilc_question_Standard {
-  background-color: transparent;
-  background-image: none !important;
-  border: none;
-  margin: 20px 0 0;
-  padding: 10px 30px 60px 10px;
-}
-body div.ilc_question_Standard .ilc_qtitle_Title {
-  font-size: 1.1rem;
-  line-height: 1.6rem;
-  margin-bottom: 1rem;
-}
-body div.ilc_question_Standard .ilc_answers {
-  color: #000;
-}
-/*
-***********    text-tiles with image    ***********
 */
-.ilc_section_TopicListContainer figure.ilc_media_cont_MediaContainer {
-  margin: 0 0 20px !important;
-}
-.ilc_section_TopicListTile {
-  align-items: center;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  display: flex;
-  height: 53px;
-  margin-bottom: 10px;
-  position: relative;
-}
-.ilc_text_block_TopicListText {
-  padding: 5px 40px 5px 10px;
-}
-.ilc_text_block_TopicListText:before {
-  content: "\e907";
-  font-family: "cat icons";
-  font-size: 2rem;
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-}
-.ilc_text_block_TopicListClearFix {
-  clear: both;
-}
 /*
-***********    learning modul    ***********
+************************************
+   content-styles for learning module
+************************************
 */
 .ilc_section_LmContainer h1.ilc_heading1_Headline1 {
   font-size: 32px;
@@ -17068,6 +17095,9 @@ body div.ilc_question_Standard .ilc_answers {
   font-size: 30px;
   position: relative;
   top: 8px;
+}
+span.ilc_text_inline_LmSmall {
+  font-size: .85rem;
 }
 .ilc_section_LmContainer {
   height: 550px;
@@ -17184,7 +17214,7 @@ body div.ilc_question_Standard .ilc_answers {
   text-decoration: none;
 }
 .ilc_section_LmTitle a.ilc_link_IntLink:before {
-  content: "\e975";
+  content: "\ea1c";
   font-family: cat icons;
   margin-right: 3px;
   position: relative;
@@ -17266,149 +17296,150 @@ div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContain
 div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_flist_cont_FileListContainer a.ilc_flist_a_FileListItemLink:hover {
   color: #4c6586;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer a[name] {
+  display: none;
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard {
   margin-top: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + h2.ilc_heading2_Headline2 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + h2.ilc_heading2_Headline2 {
   padding-top: 10px;
   margin-top: 15px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + .ilc_Paragraph.ilc_text_block_Standard,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + .ilc_Paragraph.ilc_text_block_LmInfo {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + .ilc_Paragraph.ilc_text_block_Standard,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + .ilc_Paragraph.ilc_text_block_LmInfo {
   margin-top: 10px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + div {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + div {
   margin-top: 30px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + a + .ilc_heading3_Headline3 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_Paragraph.ilc_text_block_Standard + a + .ilc_heading3_Headline3 {
   margin-top: 25px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmChapter h2.ilc_heading2_Headline2 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmChapter h2.ilc_heading2_Headline2 {
   margin-top: 10px;
   margin-bottom: 40px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint h1,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint h2,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint h3,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint .ilc_text_block_Standard {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint h1,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint h2,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint h3,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint .ilc_text_block_Standard {
   color: #fff;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmTitle {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmTitle {
   text-align: center;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint ul li:before {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmHint ul li:before {
   background-color: #fff;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer span.ilc_text_inline_LmSmall {
-  font-size: .85rem;
-}
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmPadding div.row.row-flex.row-flex-wrap + div.row.row-flex.row-flex-wrap > div {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmPadding div.row.row-flex.row-flex-wrap + div.row.row-flex.row-flex-wrap > div {
   margin: 10px 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_va_icont_VAccordICont > a {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_va_icont_VAccordICont > a {
   display: block;
   margin-top: 15px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_va_cntr_VAccordCntr div.ilc_va_ihead_VAccordIHead {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_va_cntr_VAccordCntr div.ilc_va_ihead_VAccordIHead {
   color: #6ea03c;
   font-size: 1rem;
   line-height: 2rem;
   min-height: 2rem;
   padding-left: 1rem;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_va_cntr_VAccordCntr div.ilc_va_ihead_VAccordIHead:hover,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_va_cntr_VAccordCntr div.ilc_va_ihead_VAccordIHead.ilc_va_iheada_VAccordIHeadActive {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_va_cntr_VAccordCntr div.ilc_va_ihead_VAccordIHead:hover,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_va_cntr_VAccordCntr div.ilc_va_ihead_VAccordIHead.ilc_va_iheada_VAccordIHeadActive {
   background-color: transparent;
   color: #000;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr {
   margin: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr .ilc_va_ihead_VAccordIHeadCap:before,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr .ilc_va_ihead_VAccordIHeadCap:before {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr .ilc_va_ihead_VAccordIHeadCap:before,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr .ilc_va_ihead_VAccordIHeadCap:before {
   content: "\e909";
+  font-family: cat icons;
   position: relative;
   right: 4px;
   top: 6px;
   transform: rotate(90deg);
   width: 25px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr div.ilc_va_iheada_VAccordIHeadActive .ilc_va_ihead_VAccordIHeadCap:before,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr div.ilc_va_iheada_VAccordIHeadActive .ilc_va_ihead_VAccordIHeadCap:before {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr div.ilc_va_iheada_VAccordIHeadActive .ilc_va_ihead_VAccordIHeadCap:before,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr div.ilc_va_iheada_VAccordIHeadActive .ilc_va_ihead_VAccordIHeadCap:before {
   right: auto;
   top: 1px;
   transform: none;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr .ilc_Paragraph,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr .ilc_Paragraph {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr .ilc_Paragraph,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr .ilc_Paragraph {
   padding: 0 20px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr .ilc_Paragraph:first-child,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr .ilc_Paragraph:first-child {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr .ilc_Paragraph:first-child,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr .ilc_Paragraph:first-child {
   margin-top: 20px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr .ilc_Paragraph.ilc_text_block_Standard + div,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr .ilc_Paragraph.ilc_text_block_Standard + div {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div div.ilc_va_icntr_VAccordICntr .ilc_Paragraph.ilc_text_block_Standard + div,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div > div.ilc_va_cntr_VAccordCntr .ilc_Paragraph.ilc_text_block_Standard + div {
   margin-top: 20px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmPicture + div > .ilc_va_cntr_VAccordCntr {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmPicture + div > .ilc_va_cntr_VAccordCntr {
   border: 1px solid #ddd;
   border-top: none;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_va_icont_VAccordICont {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_va_icont_VAccordICont {
   padding: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_va_icont_VAccordICont .ilc_Paragraph.ilc_text_block_Standard + div:last-child {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_va_icont_VAccordICont .ilc_Paragraph.ilc_text_block_Standard + div:last-child {
   display: none;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable td.ilc_table_cell_Cell1,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable th.ilc_table_cell_Cell1 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable td.ilc_table_cell_Cell1,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable th.ilc_table_cell_Cell1 {
   background-color: #4c6586;
   font-weight: 700;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable td.ilc_table_cell_Cell1 h3.ilc_heading3_Headline3,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable th.ilc_table_cell_Cell1 h3.ilc_heading3_Headline3 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable td.ilc_table_cell_Cell1 h3.ilc_heading3_Headline3,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable th.ilc_table_cell_Cell1 h3.ilc_heading3_Headline3 {
   color: #fff;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable h3.ilc_heading3_Headline3,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable div.ilc_Paragraph,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable body.ilc_Paragraph {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable h3.ilc_heading3_Headline3,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable div.ilc_Paragraph,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable body.ilc_Paragraph {
   padding: 10px;
   margin: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable td.ilc_table_cell_Cell2,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable th.ilc_table_cell_Cell2 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable td.ilc_table_cell_Cell2,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable th.ilc_table_cell_Cell2 {
   background-color: #f2f2f2;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable td + td {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_table_StandardTable td + td {
   border-left: 1px solid #ddd;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog1,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog2 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog1,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog2 {
   background-color: #a5a7a8;
   border-radius: 0 10px 10px;
   margin: 25px 70px 10px 0;
   padding: 10px 10px 5px;
   position: relative;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog1 .ilc_Paragraph,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog2 .ilc_Paragraph {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog1 .ilc_Paragraph,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog2 .ilc_Paragraph {
   color: #fff;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog2 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmDialog2 {
   background-color: #858688;
   border-radius: 10px 0 10px 10px;
   margin: 25px 0 10px 70px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription1 + .ilc_section_LmDialog1,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription2 + .ilc_section_LmDialog1,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription1 + .ilc_section_LmDialog2,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription2 + .ilc_section_LmDialog2 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription1 + .ilc_section_LmDialog1,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription2 + .ilc_section_LmDialog1,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription1 + .ilc_section_LmDialog2,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription2 + .ilc_section_LmDialog2 {
   margin-top: 5px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription1,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription2 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription1,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription2 {
   color: #000;
   font-size: .8rem;
   font-weight: 600;
@@ -17416,86 +17447,126 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDia
   padding: 0 80px 0 10px;
   position: relative;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription2 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_text_block_LmDialogDescription2 {
   padding: 0 10px 0 80px;
   text-align: right;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmMediaVideo {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmMediaVideo {
   align-items: center;
   display: flex;
   height: 550px;
   overflow: hidden;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmMediaVideo > div {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmMediaVideo > div {
   left: 0;
   right: 0;
   margin: auto;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmMediaVideo figure.ilc_media_cont_MediaContainer {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmMediaVideo figure.ilc_media_cont_MediaContainer {
   background-color: transparent;
   margin: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-controls .mejs-time-rail .mejs-time-current {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmMediaVideo .mejs-container {
+  background: transparent;
+  width: 100% !important;
+  height: 100% !important;
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_section_LmMediaVideo .mejs-mediaelement {
+  line-height: 0;
+  position: relative;
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-controls .mejs-time-rail .mejs-time-current {
   background: linear-gradient(#8198b7, #4c6586);
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-controls .mejs-time-rail .mejs-time-loaded {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-controls .mejs-time-rail .mejs-time-loaded {
   background: rgba(255, 255, 255, 0.2);
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qtitle_Title {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-controls div.mejs-time-rail {
+  padding: 7px 7px 0 0;
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-controls div.mejs-time-rail span {
+  height: 5px;
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-overlay-play {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-overlay-play:after {
+  content: "";
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  bottom: -30px;
+  position: absolute;
+  height: 30px;
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-overlay-button {
+  background-image: none;
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-overlay-button:after {
+  color: rgba(255, 255, 255, 0.4);
+  content: "\e975";
+  font-family: cat icons;
+  font-size: 100px;
+  top: -22px;
+  position: relative;
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .mejs-overlay-button:hover:after {
+  color: #fff;
+}
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qtitle_Title {
   font-size: 1.1rem;
   font-weight: 400;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard {
   background-color: #fff;
   border: 1px solid rgba(165, 167, 168, 0.3);
   padding: 20px 0 0;
   position: relative;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer {
   padding: 0 20px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question div,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers div,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction div,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer div {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question div,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers div,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction div,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer div {
   padding: 0 5px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question.ilc_qfeedr_FeedbackRight,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers.ilc_qfeedr_FeedbackRight,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction.ilc_qfeedr_FeedbackRight,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer.ilc_qfeedr_FeedbackRight,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question.ilc_qfeedw_FeedbackWrong,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers.ilc_qfeedw_FeedbackWrong,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction.ilc_qfeedw_FeedbackWrong,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer.ilc_qfeedw_FeedbackWrong {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question.ilc_qfeedr_FeedbackRight,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers.ilc_qfeedr_FeedbackRight,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction.ilc_qfeedr_FeedbackRight,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer.ilc_qfeedr_FeedbackRight,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question.ilc_qfeedw_FeedbackWrong,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers.ilc_qfeedw_FeedbackWrong,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction.ilc_qfeedw_FeedbackWrong,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer.ilc_qfeedw_FeedbackWrong {
   padding: 10px 20px 0 50px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question.ilc_qfeedr_FeedbackRight,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers.ilc_qfeedr_FeedbackRight,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction.ilc_qfeedr_FeedbackRight,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer.ilc_qfeedr_FeedbackRight {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .question.ilc_qfeedr_FeedbackRight,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .answers.ilc_qfeedr_FeedbackRight,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .instruction.ilc_qfeedr_FeedbackRight,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard .ilc_qanswer_Answer.ilc_qfeedr_FeedbackRight {
   text-indent: -31px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard + div.ilc_question_Standard {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_Standard + div.ilc_question_Standard {
   margin: 20px 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qanswer_Answer div {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qanswer_Answer div {
   position: relative;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qanswer_Answer div .answertext {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qanswer_Answer div .answertext {
   display: table;
   margin: 0 0 10px;
   font-weight: inherit;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qanswer_Answer input {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qanswer_Answer input {
   position: relative;
   top: 2px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedw_FeedbackWrong,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedr_FeedbackRight {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedw_FeedbackWrong,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedr_FeedbackRight {
   background-color: transparent;
   border: none;
   border-top: 1px solid rgba(165, 167, 168, 0.3);
@@ -17503,8 +17574,8 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedr_Feedba
   margin: 10px 0 0;
   padding: 10px 5px 0 50px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedw_FeedbackWrong:before,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedr_FeedbackRight:before {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedw_FeedbackWrong:before,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedr_FeedbackRight:before {
   bottom: 57px;
   content: "\ea10";
   font-family: cat icons;
@@ -17513,11 +17584,11 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedr_Feedba
   margin: 0 10px 0 5px;
   position: absolute;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedw_FeedbackWrong {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedw_FeedbackWrong {
   border-top-color: #fa8228;
   color: #fa8228;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedw_FeedbackWrong:before {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedw_FeedbackWrong:before {
   bottom: 47px;
   content: "+";
   font-family: 'Open Sans', Helvetica, Arial, sans-serif;
@@ -17525,8 +17596,8 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_qfeedw_Feedba
   font-weight: 400;
   transform: rotate(45deg);
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qsubmit_Submit,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div[data-type="ilMatchingQuestion"] input[value="Anordnung zurücksetzen"] {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qsubmit_Submit,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div[data-type="ilMatchingQuestion"] input[value="Anordnung zurücksetzen"] {
   margin: 20px 0 0;
   position: relative;
   background-color: #a5a7a8;
@@ -17535,151 +17606,151 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer div[data-type="ilMatc
   padding: 7px 14px;
   width: 100%;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qsubmit_Submit:focus,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div[data-type="ilMatchingQuestion"] input[value="Anordnung zurücksetzen"]:focus {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qsubmit_Submit:focus,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div[data-type="ilMatchingQuestion"] input[value="Anordnung zurücksetzen"]:focus {
   outline: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qsubmit_Submit:hover,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div[data-type="ilMatchingQuestion"] input[value="Anordnung zurücksetzen"]:hover {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qsubmit_Submit:hover,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div[data-type="ilMatchingQuestion"] input[value="Anordnung zurücksetzen"]:hover {
   box-shadow: inset 0 -50px 0 0 #858688;
   transition: all .5s ease;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer input[disabled] {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer input[disabled] {
   pointer-events: none;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_question_KprimChoice .ilc_qtitle_Title {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_question_KprimChoice .ilc_qtitle_Title {
   margin-bottom: 5px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilAssKprimChoiceTable div.optionLabel {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilAssKprimChoiceTable div.optionLabel {
   background-color: transparent;
   padding: 0 20px 5px 0;
   width: 60px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilAssKprimChoiceTable .kprimInput {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilAssKprimChoiceTable .kprimInput {
   margin-left: 10px;
   width: 48px;
   z-index: 10;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilAssKprimChoiceTable .ilc_qanswer_Answer {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilAssKprimChoiceTable .ilc_qanswer_Answer {
   margin-bottom: 10px;
   position: relative;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilAssKprimChoiceTable .answers .col-sm-4 {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilAssKprimChoiceTable .answers .col-sm-4 {
   left: 0;
   padding: 0 0 7px 140px;
   position: absolute;
   width: 100%;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qanswer_Answer.clozetext {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer .ilc_qanswer_Answer.clozetext {
   line-height: 1.9rem;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table {
   padding: 0 20px;
   display: block;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody {
   display: table;
   width: 100%;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ilc_qanswer_Answer,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ilc_qanswer_Answer {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ilc_qanswer_Answer,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ilc_qanswer_Answer {
   padding: 5px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable {
   margin: 0 0 10px !important;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droparea,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droparea,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea {
   background: #fff;
   border: 1px solid #ddd;
   margin-right: 10px !important;
   padding: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droparea .ilc_qanswer_Answer,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea .ilc_qanswer_Answer {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droparea .ilc_qanswer_Answer,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea .ilc_qanswer_Answer {
   padding: 5px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droparea.ui-droppable-active,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea.ui-droppable-active {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droparea.ui-droppable-active,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea.ui-droppable-active {
   border: 1px dashed #ddd;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droparea.ui-droppable-active.ui-droppable-hover,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea.ui-droppable-active.ui-droppable-hover {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droparea.ui-droppable-active.ui-droppable-hover,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea.ui-droppable-active.ui-droppable-hover {
   border-color: #000;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .droppableTarget,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .droppableTarget {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .droppableTarget,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .droppableTarget {
   background: yellow;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .draggable,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .draggable {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .draggable,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .draggable {
   background-color: #fff;
   border: 1px dashed #ddd;
   color: #000;
   padding: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-draggable-dragging,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-draggable-dragging {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-draggable-dragging,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-draggable-dragging {
   background: transparent;
   border: none;
   padding: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droppedDraggable,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droppedDraggable {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droppedDraggable,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droppedDraggable {
   background: #fff;
   color: #000;
   margin: 0 !important;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droppedDraggable .ilc_qanswer_Answer,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droppedDraggable .ilc_qanswer_Answer {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .ui-droppable.droppedDraggable .ilc_qanswer_Answer,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droppedDraggable .ilc_qanswer_Answer {
   padding: 4px 5px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > div:first-child {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > div:first-child {
   bottom: 0;
   left: 0;
   margin: 0 !important;
   position: absolute;
   width: 50%;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > div:first-child input {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > div:first-child input {
   border-right: 1px solid rgba(255, 255, 255, 0.3);
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .draggable.droppedDraggable,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .draggable.droppedDraggable {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .draggable.droppedDraggable,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .draggable.droppedDraggable {
   border: none;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .draggable:hover,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .draggable:hover {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qtitle_Title > tbody .draggable:hover,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .draggable:hover {
   border-color: #4c6586;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea.ui-droppable-active.ui-droppable-hover {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion div[data-type="ilMatchingQuestion"] > table > tbody .ui-droppable.droparea.ui-droppable-active.ui-droppable-hover {
   border-color: #000;
   opacity: 1;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ui-draggable-dragging .ilc_qanswer_Answer {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ui-draggable-dragging .ilc_qanswer_Answer {
   color: #000;
   margin: 0;
   padding: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ui-draggable-disabled {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ui-draggable-disabled {
   pointer-events: none;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .droppedDraggable .ilc_qanswer_Answer {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .droppedDraggable .ilc_qanswer_Answer {
   color: #4c6586;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion td.ilMatchingQuestionTerm {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion td.ilMatchingQuestionTerm {
   width: 40%;
   border-left: 1px solid #ddd;
   border-left-style: dashed;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qsubmit_Submit {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_question_MatchingQuestion .ilc_qsubmit_Submit {
   left: 50%;
   width: 50%;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard {
   background-color: rgba(255, 255, 255, 0);
   border: none;
   color: #fff;
@@ -17688,32 +17759,106 @@ body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMed
   top: 80px;
   width: 50%;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard .ilc_answers {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard .ilc_answers {
   color: #fff;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard div.ilc_qfeedw_FeedbackWrong,
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard div.ilc_qfeedr_FeedbackRight {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard div.ilc_qfeedw_FeedbackWrong,
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard div.ilc_qfeedr_FeedbackRight {
   border-top-color: rgba(255, 255, 255, 0.7);
   color: #fff;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard .ilc_qsubmit_Submit {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard .ilc_qsubmit_Submit {
   background-color: rgba(255, 255, 255, 0.7);
   color: #000;
   left: 20px;
   width: 140px;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard .ilc_qsubmit_Submit:focus {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard .ilc_qsubmit_Submit:focus {
   outline: 0;
 }
-body .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard .ilc_qsubmit_Submit:hover {
+body div.ilc_page_frame_PageFrame .ilc_page_cont_PageContainer .ilc_section_LmContainer div.ilc_section_LmMediaBackground + div.ilc_question_Standard .ilc_qsubmit_Submit:hover {
   box-shadow: inset 140px 0 0 0 #fff;
   transition: all .5s ease;
 }
 /*
-*******************
-no display items
-*******************
+************************************
+   learning modul responsive
+************************************
 */
+@media only screen and (max-width: 1024px) {
+  .row.ilLM {
+    top: 0;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .ilLM ol.breadcrumb {
+    margin: 0 170px;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .ilLM .ilLMMenu,
+  .ilLM div.ilc_page_frame_PageFrame {
+    margin-right: 0;
+  }
+}
+@media only screen and (max-width: 1200px) {
+  div.ilLeftNav.ilLM {
+    display: block;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  div.ilLeftNav.ilLM {
+    display: none;
+  }
+}
+@media only screen and (max-width: 760px) {
+  .ilc_page_frame_PageFrame .ilc_section_LmLeft33,
+  .ilc_page_frame_PageFrame .ilc_section_LmLeft50,
+  .ilc_page_frame_PageFrame .ilc_section_LmLeft67,
+  .ilc_page_frame_PageFrame .ilc_section_LmRight33,
+  .ilc_page_frame_PageFrame .ilc_section_LmRight50,
+  .ilc_page_frame_PageFrame .ilc_section_LmRight67,
+  .ilc_page_frame_PageFrame .ilc_section_LmCenter33,
+  .ilc_page_frame_PageFrame .ilc_section_LmCenter50,
+  .ilc_page_frame_PageFrame .ilc_section_LmBlock100,
+  .ilc_page_frame_PageFrame .ilc_section_LmBlock,
+  .ilc_page_frame_PageFrame .ilc_section_LmChapter,
+  .ilc_page_frame_PageFrame .ilc_section_LmMediaBackground,
+  .ilc_page_frame_PageFrame .ilc_section_LmMediaBackground,
+  .ilc_page_frame_PageFrame .ilc_section_LmMediaVideo,
+  .ilc_page_frame_PageFrame .ilc_section_LmPicture,
+  .ilc_page_frame_PageFrame .ilc_section_LmTitle,
+  .ilc_page_frame_PageFrame .ilc_section_LmDialog1,
+  .ilc_page_frame_PageFrame .ilc_section_LmDialog2 {
+    width: 100%;
+    position: relative;
+    overflow: initial;
+    max-height: none;
+    height: auto;
+    bottom: auto;
+    top: auto;
+  }
+  .ilc_page_frame_PageFrame .ilc_section_LmLeft33 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmLeft50 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmLeft67 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmRight33 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmRight50 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmRight67 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmCenter33 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmCenter50 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmBlock100 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmBlock div,
+  .ilc_page_frame_PageFrame .ilc_section_LmChapter div,
+  .ilc_page_frame_PageFrame .ilc_section_LmMediaBackground div,
+  .ilc_page_frame_PageFrame .ilc_section_LmMediaBackground div,
+  .ilc_page_frame_PageFrame .ilc_section_LmMediaVideo div,
+  .ilc_page_frame_PageFrame .ilc_section_LmPicture div,
+  .ilc_page_frame_PageFrame .ilc_section_LmTitle div,
+  .ilc_page_frame_PageFrame .ilc_section_LmDialog1 div,
+  .ilc_page_frame_PageFrame .ilc_section_LmDialog2 div {
+    overflow: initial;
+  }
+}
 /*
 *********************
     image-tiles
@@ -18554,6 +18699,20 @@ a.ilc_section_LmContainer figure .ilc_media_caption_MediaCaption {
 .ilToolbar .ilToolbarItems .navbar-text {
   margin-top: 5px;
 }
+.ilToolbar .modal-body .tep-form.session .sessiondetails .actions {
+  position: relative;
+}
+.ilToolbar .modal-body .tep-form.session .sessiondetails .actions .dropdown {
+  right: 0;
+  position: absolute;
+}
+.ilToolbar .modal-body .tep-form.session .sessiondetails .actions .dropdown .btn-default {
+  float: none;
+}
+.ilToolbar .modal-body .tep-form.session .sessiondetails .actions .dropdown ul.dropdown-menu {
+  right: 0;
+  left: auto;
+}
 .tep_col_selector {
   float: right;
 }
@@ -18572,52 +18731,60 @@ a.ilc_section_LmContainer figure .ilc_media_caption_MediaCaption {
 .cal-tep th.calstd {
   font-size: .85rem;
   min-width: 100px;
-  padding: 2px 5px 0;
+  padding: 2px 5px;
   text-align: left;
 }
 .cal-tep td.calstd {
   background-color: transparent;
+  padding: 0;
 }
 .cal-tep td.calstd .date {
   font-size: .7rem;
-  padding: 2px 5px 0;
+  padding: 2px 5px;
 }
 .cal-tep .il_calevent {
   border: none;
-  color: #222;
-  font-size: .85rem;
+  color: white;
+  font-size: .8rem;
+  padding: 2px 5px;
+}
+.cal-tep .il_calevent span {
+  display: block;
 }
 .cal-tep .il_calevent .btn {
-  font-size: .85rem;
+  font-size: .8rem;
   line-height: 1.2rem;
+}
+.cal-tep .il_calevent .partial,
+.cal-tep .il_calevent .title {
+  font-weight: 700;
 }
 .cal-tep .il_calevent .fullday {
   font-style: italic;
 }
 .cal-tep .il_calevent .title a {
-  color: black;
+  color: white;
 }
 .cal-tep .il_calevent .description {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 .cal-tep .il_calevent.session {
-  background-color: rgba(76, 101, 134, 0.3);
-  padding: 2px 5px 0;
+  background-color: rgba(76, 101, 134, 0.5);
 }
 .cal-tep .il_calevent.session.highlighted {
-  background-color: rgba(76, 101, 134, 0.45);
+  background-color: rgba(76, 101, 134, 0.7);
 }
 .cal-tep .il_calevent.global {
-  background-color: rgba(110, 160, 60, 0.2);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 .cal-tep .il_calevent.personal {
-  background-color: rgba(110, 160, 60, 0.2);
+  background-color: rgba(110, 160, 60, 0.5);
 }
 .cal-tep .il_calevent.personal.undisclosed {
-  background-color: rgba(110, 160, 60, 0.2);
+  background-color: rgba(110, 160, 60, 0.7);
 }
 .cal-tep .il_calevent.personal.undisclosed.mine {
-  background-color: rgba(110, 160, 60, 0.2);
+  background-color: rgba(110, 160, 60, 0.7);
 }
 .modal-body .tep-form.session .blur {
   width: 95%;
