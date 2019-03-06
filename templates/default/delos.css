@@ -9251,7 +9251,9 @@ header {
   justify-content: space-between;
 }
 .il-logo {
-  width: 40px;
+  height: 45px;
+  justify-self: start;
+  width: 45px;
 }
 /* breadcrumbs */
 .breadcrumbs {
@@ -9340,13 +9342,6 @@ nav.il-maincontrols {
 .il-mainbar-tools-entries.engaged .il-mainbar-remove-tool {
   display: block;
 }
-.il-logo {
-  justify-self: start;
-}
-.il-logo img {
-  height: 45px;
-  width: 45px;
-}
 /* content */
 main {
   display: block;
@@ -9364,6 +9359,169 @@ footer {
   background-color: #4c6586;
   grid-area: footer;
   z-index: 2;
+}
+/*
+**************************************************************
+       mobile Layout
+**************************************************************
+*/
+@media only screen and (max-width: 767px) {
+  .il-layout-page {
+    background: #f0f0f0;
+    display: -ms-grid;
+    display: grid;
+    grid-gap: 0px;
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+    -ms-grid-rows: 45px 33px 1fr 45px;
+    grid-template-rows: 45px 33px 1fr 45px;
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+  }
+  .il-layout-page .il-maincontrols-mainbar .il-mainbar-close-slates {
+    display: none;
+  }
+  .il-layout-page.with-engaged-slates {
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+  }
+  .il-layout-page.with-engaged-slates .il-maincontrols-mainbar {
+    width: 100%;
+  }
+  .il-layout-page.with-engaged-slates .il-maincontrols-mainbar .il-mainbar-slates {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    z-index: 994;
+  }
+  .il-layout-page.with-engaged-slates .il-maincontrols-mainbar .il-mainbar-slates .il-maincontrols-slate {
+    overflow-y: auto;
+  }
+  .il-layout-page.with-engaged-slates .il-maincontrols-mainbar .il-mainbar-close-slates {
+    display: -ms-flexbox;
+    display: flex;
+  }
+  /* metabar */
+  header {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 998;
+  }
+  .header-inner {
+    -ms-flex-align: center;
+    align-items: center;
+    background: #fff;
+    /* style move */
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    height: 45px;
+    position: fixed;
+    width: 100%;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+  /* breadcrumbs */
+  .breadcrumbs {
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-grid-column: 1;
+    -ms-grid-row: 2;
+    grid-column: 1;
+    grid-row: 2;
+    z-index: 997;
+    box-shadow: 0 1px 4px #ccc;
+  }
+  .breadcrumbs ul.breadcrumb {
+    padding-left: 100px;
+  }
+  .breadcrumbs ul.breadcrumb > li + li:before {
+    content: " \e606";
+    color: #bbb;
+    font-family: "il-icons";
+  }
+  /* mainbar */
+  nav.il-maincontrols {
+    -ms-grid-column: 1;
+    -ms-grid-row: 4;
+    grid-column: 1;
+    grid-row: 4;
+    z-index: 996;
+  }
+  .il-maincontrols-mainbar {
+    display: block;
+    width: 100%;
+  }
+  .il-mainbar {
+    background-color: #4a4a4a;
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+    grid-column: 1;
+    grid-row: 1;
+    box-shadow: 1px 3px 4px #ccc;
+    z-index: 995;
+  }
+  .il-mainbar-tools-button {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+  .il-mainbar-tools-button button {
+    height: 45px;
+    width: 45px;
+  }
+  .il-mainbar-tools-entries button {
+    height: 45px;
+    width: 45px;
+  }
+  .il-mainbar-tools-entries.engaged {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+  .il-mainbar-slates {
+    -ms-grid-column: 2;
+    -ms-grid-row: 1;
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .il-mainbar-remove-tool {
+    display: none;
+  }
+  .il-mainbar-tools-entries.engaged .il-mainbar-remove-tool {
+    display: block;
+  }
+  /* content */
+  main {
+    display: block;
+  }
+  .il-layout-page-content {
+    -ms-grid-column: 1;
+    -ms-grid-row: 3;
+    grid-column: 1;
+    grid-row: 3;
+    overflow: auto;
+    padding: 20px;
+  }
+  /* Footer */
+  footer {
+    background-color: #4c6586;
+    grid-area: footer;
+    z-index: 2;
+  }
 }
 /*
 glyphicon-cog<!-- END settings -->
