@@ -321,8 +321,9 @@ footer {
 **************************************************************
 */
 @height-header-sm: 45px;
-@height-mainbar-sm: 45px;
-@mainbar-btn-height-sm: 45px;
+@height-mainbar-sm: 50px;
+@mainbar-btn-height-sm: @height-mainbar-sm;
+@mainbar-btn-width-sm: 75px;
 
 @media only screen and (max-width: @grid-float-breakpoint-max) {
 	// main grid without slates
@@ -335,35 +336,70 @@ footer {
 	    grid-template-columns: 1fr;
 		-ms-grid-rows: @height-header-sm @height-breadcrumbs 1fr @height-mainbar-sm;
 	    grid-template-rows: @height-header-sm @height-breadcrumbs 1fr @height-mainbar-sm;
-
 	    height: 100%;
 		overflow: hidden;
 		width: 100%;
 		.il-maincontrols-mainbar {
+			display: grid;
+			display: -ms-grid;
+			-ms-grid-columns: 1fr;
+			grid-template-columns: 1fr;
+			-ms-grid-rows: 0 @height-mainbar-sm;
+			grid-template-rows: 0 @height-mainbar-sm;
 			.il-mainbar-close-slates {
 				display: none;
+			}
+			.il-mainbar {
+				-ms-grid-column: 1;
+				-ms-grid-row: 2;
+				grid-column: 1;
+				grid-row: 2;
+			}
+			.il-mainbar-slates {
+				-ms-grid-column: 1;
+				-ms-grid-row: 1;
+				grid-column: 1;
+				grid-row: 1;
 			}
 		}
 		&.with-engaged-slates {
 			-ms-grid-columns: 1fr;
 			grid-template-columns: 1fr;
-			.il-maincontrols-mainbar {
-				width: 100%;
-				// slate
-				.il-mainbar-slates {
-					display: -ms-flexbox;
-					display: flex;
-					-ms-flex-direction: column;
-					flex-direction: column;
-					z-index: 994;
-					.il-maincontrols-slate {
-						overflow-y: auto;
+			.nav.il-maincontrols {
+				height: 100%; // calc(100% - (@height-header-sm + @height-breadcrumbs);
+				.il-maincontrols-mainbar {
+					-ms-grid-columns: 1fr;
+				    grid-template-columns: 1fr;
+					-ms-grid-rows: 1fr @height-mainbar-sm;
+				    grid-template-rows: 1fr @height-mainbar-sm;
+					width: 100%;
+					.il-mainbar {
+						-ms-grid-column: 1;
+						-ms-grid-row: 2;
+						grid-column: 1;
+						grid-row: 2;
 					}
-				}
-				// show slate remove btn
-				.il-mainbar-close-slates {
-					display: -ms-flexbox;
-					display: flex;
+					// slate
+					.il-mainbar-slates {
+						-ms-grid-column: 1;
+						-ms-grid-row: 1;
+						grid-column: 1;
+						grid-row: 1;
+						display: -ms-flexbox;
+						display: flex;
+						-ms-flex-direction: column;
+						flex-direction: column;
+						width: 100%;
+						z-index: 994;
+						.il-maincontrols-slate {
+							overflow-y: auto;
+						}
+					}
+					// show slate remove btn
+					.il-mainbar-close-slates {
+						display: -ms-flexbox;
+						display: flex;
+					}
 				}
 			}
 		}
@@ -380,26 +416,10 @@ footer {
 
 	// head-container with logo and metabar
 	.header-inner {
-		-ms-flex-align: center;
-	    align-items: center;
-	    background: @bg-header; /* style move */
-		display: -ms-flexbox;
-	    display: flex;
-		-ms-flex-direction: row;
-	    flex-direction: row;
 	    height: @height-header-sm;
-	    position: fixed;
+	    padding: 0;
 	    width: 100%;
-		-ms-flex-pack: justify;
-	    justify-content: space-between;
-		// .shadow-bottom();
 	}
-
-	// logo-container
-	.il-logo {
-		// style goes here
-	}
-
 
 	/* breadcrumbs */
 	.breadcrumbs {
@@ -418,7 +438,7 @@ footer {
 		z-index: 997;
 		.shadow-bottom();
 		ul.breadcrumb {
-			padding-left: @mainbar-btn-width + @padding-content;
+			padding-left: @padding-content;
 			&>li+li:before {
 				content: " \e606";
 				color: @breadcrumb-divider-color;
@@ -429,10 +449,9 @@ footer {
 
 	/* mainbar */
 	nav.il-maincontrols {
-		-ms-grid-column: 1;
-		-ms-grid-row: 4;
-		grid-column: 1;
-		grid-row: 4;
+		bottom: 0;
+		position: absolute;
+		width: 100%;
 		z-index: 996;
 	}
 
@@ -448,11 +467,8 @@ footer {
 	// mainbar
 	.il-mainbar {
 		background-color: @bg-mainbar;
-		-ms-grid-column: 1;
-		-ms-grid-row: 1;
-		grid-column: 1;
-		grid-row: 1;
-		.shadow-right();
+		display: -ms-flexbox;
+		display: flex;
 		z-index: 995;
 	}
 
@@ -466,13 +482,13 @@ footer {
 
 	.il-mainbar-tools-button button {
 		height:@mainbar-btn-height-sm;
-		width: @mainbar-btn-height-sm;
+		width: @mainbar-btn-width-sm;
 	}
 
 	.il-mainbar-tools-entries {
 		button {
 			height:@mainbar-btn-height-sm;
-			width: @mainbar-btn-height-sm;
+			width: @mainbar-btn-width-sm;
 		}
 		&.engaged {
 			display: -ms-flexbox;
@@ -518,12 +534,5 @@ footer {
 		grid-row: 3;
 		overflow: auto;
 		padding: @padding-content;
-	}
-
-	/* Footer */
-	footer {
-		background-color: @brand-primary;
-		grid-area: footer;
-		z-index: 2;
 	}
 }
