@@ -9379,7 +9379,7 @@ footer {
     overflow: hidden;
     width: 100%;
   }
-  .il-layout-page .il-maincontrols-mainbar {
+  .il-layout-page .nav.il-maincontrols .il-maincontrols-mainbar {
     display: grid;
     display: -ms-grid;
     -ms-grid-columns: 1fr;
@@ -9387,16 +9387,16 @@ footer {
     -ms-grid-rows: 0 50px;
     grid-template-rows: 0 50px;
   }
-  .il-layout-page .il-maincontrols-mainbar .il-mainbar-close-slates {
+  .il-layout-page .nav.il-maincontrols .il-maincontrols-mainbar .il-mainbar-close-slates {
     display: none;
   }
-  .il-layout-page .il-maincontrols-mainbar .il-mainbar {
+  .il-layout-page .nav.il-maincontrols .il-maincontrols-mainbar .il-mainbar {
     -ms-grid-column: 1;
     -ms-grid-row: 2;
     grid-column: 1;
     grid-row: 2;
   }
-  .il-layout-page .il-maincontrols-mainbar .il-mainbar-slates {
+  .il-layout-page .nav.il-maincontrols .il-maincontrols-mainbar .il-mainbar-slates {
     -ms-grid-column: 1;
     -ms-grid-row: 1;
     grid-column: 1;
@@ -9407,6 +9407,12 @@ footer {
     grid-template-columns: 1fr;
   }
   .il-layout-page.with-engaged-slates .nav.il-maincontrols {
+    -ms-grid-column: 1;
+    -ms-grid-row: 3;
+    -ms-grid-row-span: 2;
+    grid-column: 1;
+    grid-row: 3;
+    grid-row-end: 4;
     height: 100%;
   }
   .il-layout-page.with-engaged-slates .nav.il-maincontrols .il-maincontrols-mainbar {
@@ -9481,8 +9487,10 @@ footer {
   }
   /* mainbar */
   nav.il-maincontrols {
-    bottom: 0;
-    position: absolute;
+    -ms-grid-column: 1;
+    -ms-grid-row: 4;
+    grid-column: 1;
+    grid-row: 4;
     width: 100%;
     z-index: 996;
   }
@@ -9843,6 +9851,7 @@ glyphicon-cog<!-- END settings -->
   background-color: #d2dae5;
   border: 0;
   color: #4a4a4a;
+  padding: 0;
 }
 .il-mainbar-tools-button .btn-bulky img,
 .il-mainbar-tools-button .btn-bulky.engaged img {
@@ -9858,6 +9867,7 @@ glyphicon-cog<!-- END settings -->
 .il-mainbar-tools-entries .btn-bulky {
   background-color: #91a5c1;
   color: #fff;
+  padding: 0;
 }
 .il-mainbar-tools-entries .btn-bulky .icon {
   filter: invert(100%);
