@@ -9422,12 +9422,6 @@ footer {
     grid-template-rows: 1fr 50px;
     width: 100%;
   }
-  .il-layout-page.with-engaged-slates .nav.il-maincontrols .il-maincontrols-mainbar .il-mainbar {
-    -ms-grid-column: 1;
-    -ms-grid-row: 2;
-    grid-column: 1;
-    grid-row: 2;
-  }
   .il-layout-page.with-engaged-slates .nav.il-maincontrols .il-maincontrols-mainbar .il-mainbar-slates {
     -ms-grid-column: 1;
     -ms-grid-row: 1;
